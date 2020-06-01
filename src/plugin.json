@@ -1,0 +1,43 @@
+{
+  "type": "app",
+  "name": "Performance Co-pilot",
+  "id": "grafana-pcp-app",
+  "info": {
+    "description": "Fulltext search for PCP",
+    "author": {
+      "name": "Miroslav Foltýn",
+      "url": "email@miroslavfoltyn.com"
+    },
+    "keywords": [],
+    "logos": {
+      "small": "assets/images/logo.svg",
+      "large": "assets/images/logo.svg"
+    },
+    "links": [
+      {
+        "name": "Website",
+        "url": "https://github.com/grafana/simple-react-panel"
+      },
+      {
+        "name": "License",
+        "url": "https://github.com/grafana/simple-react-panel/blob/master/LICENSE"
+      }
+    ],
+    "screenshots": [],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+  "includes": [
+    {
+      "type": "page",
+      "name": "Full-text search",
+      "path": "/a/grafana-pcp-app",
+      "addToNav": true,
+      "defaultNav": true
+    }
+  ],
+  "dependencies": {
+    "grafanaVersion": "7.0.x",
+    "plugins": []
+  }
+}
