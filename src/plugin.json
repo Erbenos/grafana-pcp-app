@@ -3,7 +3,7 @@
   "name": "Performance Co-pilot",
   "id": "grafana-pcp-app",
   "info": {
-    "description": "Fulltext search for PCP",
+    "description": "Full-Text search for PCP",
     "author": {
       "name": "Miroslav Foltýn",
       "url": "email@miroslavfoltyn.com"
@@ -30,11 +30,11 @@
   "includes": [
     {
       "type": "page",
-      "name": "Full-text search",
+      "name": "Full-Text search",
       "path": "/a/grafana-pcp-app",
       "addToNav": true,
       "defaultNav": true
-    }
+    },
   ],
   "dependencies": {
     "grafanaVersion": "7.0.x",

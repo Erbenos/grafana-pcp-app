@@ -2,7 +2,8 @@ import { css } from 'emotion';
 
 const SearchLayout = css`
   display: grid;
-  grid-template-areas: "header actions" "content aside";
+  grid-template-areas: "header actions"
+                       "content aside";
   grid-template-columns: auto 250px;
   grid-template-rows: auto auto;
   grid-gap: 32px;
@@ -14,25 +15,33 @@ const SearchLayout = css`
   }
 `;
 
-const Search = css`
+const SearchContainer = css`
   display: flex;
   grid-area: header;
 `;
 
-const Actions = css`
+const ActionsContainer = css`
   grid-area: actions;
 `;
 
-const Suggestions = css`
+const SuggestionsContainer = css`
   grid-area: content;
 `;
 
-const Results = css`
+const ResultsContainer = css`
   grid-area: content;
 `;
 
-const MetricsIndex = css`
+const DetailContainer = css`
+  grid-area: content;
+`;
+
+const MetricsIndexContainer = css`
   grid-area: aside;
+`;
+
+const PaginationContainer = css`
+  margin: 0 auto;
 `;
 
 const FormGroup = css`
@@ -40,4 +49,12 @@ const FormGroup = css`
   width: 100%;
 `;
 
-export { SearchLayout, Search, Actions, Suggestions, Results, MetricsIndex, FormGroup };
+const ButtonWithNoSpacing = css`
+  padding: 0;
+`;
+
+export { 
+  SearchLayout, SearchContainer, ActionsContainer, SuggestionsContainer,
+  ResultsContainer, PaginationContainer, MetricsIndexContainer,
+  FormGroup, ButtonWithNoSpacing, DetailContainer
+};
