@@ -1,9 +1,12 @@
 import React from 'react';
 import ReactPlaceholder from 'react-placeholder/lib';
-import { SearchResultItem, SearchResultHeader, SearchResultTitle, SearchResultDescription, SearchResultFooter } from './styles';
 import _ from 'lodash';
 import { HorizontalGroup, Button } from '@grafana/ui';
-import { ButtonWithNoSpacing } from 'pages/styles';
+
+import {
+  SearchResultItem, SearchResultHeader, SearchResultTitle, SearchResultDescription,
+  SearchResultFooter, SearchResultBtnWithNoSpacing
+} from './styles';
 
 const randomMetricNames = [
   'statsd.pmda.received',
@@ -20,7 +23,7 @@ const randomMetricNames = [
 ];
 
 interface SearchResultResponseItem {
-  clicked: () => void;
+  openDetail: () => void;
 };
 
 class SearchResult extends React.PureComponent<SearchResultResponseItem> {
@@ -30,6 +33,7 @@ class SearchResult extends React.PureComponent<SearchResultResponseItem> {
   }
   
   render() {
+    const { props } = this;
     return (
       <article className={SearchResultItem}>
         <header className={SearchResultHeader}>
@@ -45,30 +49,30 @@ class SearchResult extends React.PureComponent<SearchResultResponseItem> {
               variant="link"
               size="md"
               icon="eye"
-              className={ButtonWithNoSpacing}
-              onClick={this.props.clicked}>
+              className={SearchResultBtnWithNoSpacing}
+              onClick={props.openDetail}>
               Read More
             </Button>
             <HorizontalGroup spacing="md">
               <Button
                 variant="link"
                 size="md"
-                className={ButtonWithNoSpacing}
-                onClick={this.props.clicked}>
+                className={SearchResultBtnWithNoSpacing}
+                onClick={props.openDetail}>
                 Instance Domain
               </Button>
               <Button
                 variant="link"
                 size="md"
-                className={ButtonWithNoSpacing}
-                onClick={this.props.clicked}>
+                className={SearchResultBtnWithNoSpacing}
+                onClick={props.openDetail}>
                 Labels
               </Button>
               <Button
                 variant="link"
                 size="md"
-                className={ButtonWithNoSpacing}
-                onClick={this.props.clicked}>
+                className={SearchResultBtnWithNoSpacing}
+                onClick={props.openDetail}>
                 Other Meta
               </Button>
             </HorizontalGroup>

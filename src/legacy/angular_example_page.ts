@@ -3,6 +3,5 @@ export class AngularExamplePageCtrl {
 
   /** @ngInject */
   constructor($scope: any, $rootScope: any) {
-    console.log('AngularExamplePageCtrl:', this);
   }
 }

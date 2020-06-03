@@ -34,7 +34,7 @@
       "path": "/a/grafana-pcp-app",
       "addToNav": true,
       "defaultNav": true
-    },
+    }
   ],
   "dependencies": {
     "grafanaVersion": "7.0.x",

@@ -21,4 +21,8 @@ const SearchResultDescription = css`
 const SearchResultFooter = css`
 `;
 
-export { SearchResultItem, SearchResultHeader, SearchResultTitle, SearchResultDescription, SearchResultFooter };
+const SearchResultBtnWithNoSpacing = css`
+  padding: 0;
+`;
+
+export { SearchResultItem, SearchResultHeader, SearchResultTitle, SearchResultDescription, SearchResultFooter, SearchResultBtnWithNoSpacing };
