@@ -23,12 +23,16 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
 
   get initialState() {
     return {
-      // TODO: swap back to empty array after development
+      // TODO: swap back after development
       // results: [],
+      // pagination: {
+      //   currentPage: -1,
+      //   numberOfPages: 0,
+      // },
       results: [,],
       pagination: {
-        currentPage: -1,
-        numberOfPages: 0,
+        currentPage: 1,
+        numberOfPages: 5,
       },
     };
   }
