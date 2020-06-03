@@ -5,7 +5,7 @@ import 'react-placeholder/lib/reactPlaceholder.css';
 import { DetailPage } from './pages/Detail/DetailPage';
 import { SearchPage } from './pages/Search/SearchPage';
 import { IndexPage } from './pages/Index/IndexPage';
-import { AppLayout } from './pages/styles';
+import { AppLayout } from './styles';
 
 import { Actions } from './components/Actions/Actions';
 import { Aside } from './components/Aside/Aside';
