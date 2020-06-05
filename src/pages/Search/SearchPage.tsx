@@ -1,68 +1,54 @@
 import React from 'react';
 import { VerticalGroup, Pagination } from '@grafana/ui';
+import { connect } from 'react-redux';
 
 import { SearchResult } from '../../components/SearchResult/SearchResult';
-import { SearchOpt } from '../../components/SearchForm/SearchForm';
 import { SearchPageContainer, PaginationContainer } from './styles';
+import { RootState } from '../../reducers';
+import { addSearchHistory, querySearch } from '../../actions/search';
+
+const mapStateToProps = (state: RootState) => ({
+  search: state.search,
+});
+
+const dispatchProps = {
+  addSearchHistory,
+  querySearch,
+};
 
 interface SearchPageProps {
-  searchOpt: SearchOpt,
   detailClicked: (id: string) => void;
 };
 
-interface SearchPageState {
-  results: any[],
-  pagination: {
-    currentPage: number,
-    numberOfPages: number
-  },
-};
+type _SearchPageProps = ReturnType<typeof mapStateToProps> & typeof dispatchProps & SearchPageProps;
 
-class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
-  state: SearchPageState = this.initialState;
+class SearchPage extends React.Component<_SearchPageProps> {
 
-  get initialState() {
-    return {
-      // TODO: swap back after development
-      // results: [],
-      // pagination: {
-      //   currentPage: -1,
-      //   numberOfPages: 0,
-      // },
-      results: [,],
-      pagination: {
-        currentPage: 1,
-        numberOfPages: 5,
-      },
-    };
-  }
-
-  constructor(props: SearchPageProps) {
+  constructor(props: _SearchPageProps) {
     super(props);
     this.search = this.search.bind(this);
   }
 
   search(pageNum: number) {
-    console.log('search not implemented');
-    const { numberOfPages } = this.state.pagination; 
-    this.setState({ pagination: { currentPage: pageNum, numberOfPages }});
+    const { search } = this.props;
+    this.props.querySearch({ ...search.query, pageNum });
   } 
 
   render() {
-    const { detailClicked } = this.props;
-    const { results, pagination } = this.state;
-    const { search } = this;
+    const { props, search } = this;
+    const { detailClicked } = props;
+    const { items, pagination } = props.search.result;
 
     return (
       <div className={SearchPageContainer}>
         {(() => {
-          if (results.length > 0) {
+          if (items.length > 0) {
             return (
               <VerticalGroup spacing="lg">
                 <h4>Results:</h4>
                 <VerticalGroup spacing="lg">
-                  {[...Array(4)].map((x, i) =>
-                    <SearchResult openDetail={() => detailClicked(x) }/>
+                  {items.map((x, i) =>
+                    <SearchResult {...x} openDetail={(entityId) => detailClicked(entityId) } />
                   )}
                 </VerticalGroup>
                 <div className={PaginationContainer}>
@@ -86,4 +72,9 @@ class SearchPage extends React.Component<SearchPageProps, SearchPageState> {
   }
 }
 
-export { SearchPage, SearchPageProps };
+
+export default connect(
+  mapStateToProps,
+  { addSearchHistory, querySearch }
+)(SearchPage);
+export { SearchPageProps };

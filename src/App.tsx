@@ -2,23 +2,22 @@ import React from 'react';
 import { AppRootProps } from '@grafana/data';
 import 'react-placeholder/lib/reactPlaceholder.css';
 
-import { DetailPage } from './pages/Detail/DetailPage';
-import { SearchPage } from './pages/Search/SearchPage';
-import { IndexPage } from './pages/Index/IndexPage';
+import DetailPage from './pages/Detail/DetailPage';
+import SearchPage from './pages/Search/SearchPage';
+import IndexPage from './pages/Index/IndexPage';
 import { AppLayout } from './styles';
 
-import { Actions } from './components/Actions/Actions';
-import { Aside } from './components/Aside/Aside';
-import { SearchForm, SearchEntity, SearchOpt } from './components/SearchForm/SearchForm';
+import Actions from './components/Actions/Actions';
+import Aside from './components/Aside/Aside';
+import SearchForm from './components/SearchForm/SearchForm';
 
 enum AppPage {
   Detail, Search, Index
-}
+};
 
 interface AppState {
   page: AppPage,
   entityId: string,
-  searchOpt: SearchOpt,
 };
 
 class App extends React.Component<AppRootProps, AppState> {
@@ -29,10 +28,6 @@ class App extends React.Component<AppRootProps, AppState> {
     return {
       page: AppPage.Index,
       entityId: '',
-      searchOpt: {
-        pattern: '',
-        entityFlags: SearchEntity.All,
-      },
     };
   }
 
@@ -51,15 +46,14 @@ class App extends React.Component<AppRootProps, AppState> {
     this.setState({ ...newStateIncrement });
   }
 
-  searchChanged(searchOpt: SearchOpt) {
-    this.setState({ searchOpt });
+  searchChanged() {
     this.switchPage(AppPage.Search);
   }
 
   renderPageComponent() {
     const { state, switchPage } = this;
-    const { page, entityId, searchOpt } = state;
-    
+    const { page, entityId } = state;
+
     switch (page) {
       case AppPage.Detail:
         return (
@@ -67,23 +61,24 @@ class App extends React.Component<AppRootProps, AppState> {
         );
       case AppPage.Search:
         return (
-          <SearchPage searchOpt={searchOpt} detailClicked={(entityId) => switchPage(AppPage.Detail, entityId)}/>
+          <SearchPage detailClicked={(entityId) => switchPage(AppPage.Detail, entityId)}/>
         );
       case AppPage.Index:
         return (
-          <IndexPage/>
+          <IndexPage
+            searchClicked={() => switchPage(AppPage.Search)}
+            bookmarkClicked={(entityId) => switchPage(AppPage.Detail, entityId)}/>
         );
     };         
   }
 
   render() {
     const { state, searchChanged } = this;
-    const { page, searchOpt } = state;
+    const { page } = state;
     return (
       <div className={AppLayout}>
         <SearchForm onSubmit={searchChanged}/>
-        <Actions searchOpt={searchOpt}
-                page={page}
+        <Actions page={page}
                 goToIndex={() => this.switchPage(AppPage.Index)}
                 backToLatestSearch={() => this.switchPage(AppPage.Search)} />
         <Aside page={page} />

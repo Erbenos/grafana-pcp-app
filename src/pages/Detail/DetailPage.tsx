@@ -3,13 +3,19 @@ import { SelectableValue } from '@grafana/data';
 import React from 'react';
 import { css } from 'emotion';
 import ReactPlaceholder from 'react-placeholder/lib';
+import { connect } from 'react-redux';
+import { addBookmark } from '../../actions/bookmarks';
 
 import {
   DetailPageContainer, DetailPageItem, DetailPageHeader, DetailPageTitle,
   DetailPageDescription, DetailPageFooter, DetailPageBtn
 } from './styles';
 
-interface DetailPageProps {
+const dispatchProps = {
+  addBookmark,
+};
+
+type DetailPageProps = typeof dispatchProps & {
   entityId: string,
 };
 
@@ -41,16 +47,17 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
   constructor(props: DetailPageProps) {
     super(props);
     this.renderEntityInfoTab = this.renderEntityInfoTab.bind(this);
-    this.preview = this.preview.bind(this);
-    this.bookmark = this.bookmark.bind(this);
+    this.handlePreview = this.handlePreview.bind(this);
+    this.handleBookmark = this.handleBookmark.bind(this);
     this.setSelected = this.setSelected.bind(this);
   }
 
-  bookmark() {
-    console.log('bookmark not implemented.');
+  handleBookmark() {
+    const { props } = this;
+    props.addBookmark('test bookmark');
   }
 
-  preview() {
+  handlePreview() {
     console.log('previewEntity not implemented.');
   }
 
@@ -73,7 +80,13 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
   }
 
   render() {
-    const { state, bookmark, preview, setSelected, renderEntityInfoTab } = this;
+    const {
+      state,
+      handleBookmark,
+      handlePreview,
+      setSelected,
+      renderEntityInfoTab
+    } = this;
     return (
       <div className={DetailPageContainer}>
         <article className={DetailPageItem}>
@@ -94,7 +107,7 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
                   size="md"
                   icon="save"
                   className={DetailPageBtn}
-                  onClick={bookmark}>
+                  onClick={handleBookmark}>
                   Bookmark This Result
                 </Button>
                 <Button
@@ -102,7 +115,7 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
                   size="md"
                   icon="chart-line"
                   className={DetailPageBtn}
-                  onClick={preview}>
+                  onClick={handlePreview}>
                   Preview
                 </Button>
               </HorizontalGroup>
@@ -155,4 +168,9 @@ function OtherMetaTab() {
   );
 }
 
-export { DetailPage, DetailPageProps };
+export default connect(
+  null,
+  { addBookmark }
+)(DetailPage);
+
+export { DetailPageProps };

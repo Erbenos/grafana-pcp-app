@@ -1,7 +1,9 @@
 import React from 'react';
 import { AppRootProps } from '@grafana/data';
+import { Provider } from 'react-redux';
 
 import { App } from './App';
+import { store } from './store/store';
 
 class GrafanaAppPluginWrapper extends React.Component<AppRootProps> {
   constructor(props: AppRootProps) {
@@ -37,7 +39,11 @@ class GrafanaAppPluginWrapper extends React.Component<AppRootProps> {
 
   // Render main App component without above bloat
   render() {
-    return <App {...this.props}/>;
+    return (
+      <Provider store={store}>
+        <App {...this.props}/>
+      </Provider>
+    );
   }
 }
 

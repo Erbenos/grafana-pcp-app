@@ -54,4 +54,4 @@ class Aside extends React.Component<AsideProps, AsideState> {
   }
 }
 
-export { Aside, AsideProps };
+export default Aside;

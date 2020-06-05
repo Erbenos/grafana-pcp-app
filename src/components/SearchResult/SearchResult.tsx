@@ -3,32 +3,19 @@ import ReactPlaceholder from 'react-placeholder/lib';
 import _ from 'lodash';
 import { HorizontalGroup, Button } from '@grafana/ui';
 
+import { SearchItemResponse } from '../../actions/types';
 import {
   SearchResultItem, SearchResultHeader, SearchResultTitle, SearchResultDescription,
   SearchResultFooter, SearchResultBtnWithNoSpacing
 } from './styles';
 
-const randomMetricNames = [
-  'statsd.pmda.received',
-  'proc.psinfo.age',
-  'kernel.cpu.util.user',
-  'quota.project.files.time_left',
-  'disk.md.read_merge',
-  'disk.dm.read',
-  'disk.dev.total_bytes',
-  'mem.util.mapped',
-  'kernel.percpu.interrupts.PIW',
-  'hinv.map.dmname',
-  'kvm.nmi_injections',
-];
-
-interface SearchResultResponseItem {
-  openDetail: () => void;
+interface SearchResultProps extends SearchItemResponse {
+  openDetail: (entityId: string) => void;
 };
 
-class SearchResult extends React.PureComponent<SearchResultResponseItem> {
+class SearchResult extends React.PureComponent<SearchResultProps> {
 
-  constructor(props: SearchResultResponseItem) {
+  constructor(props: SearchResultProps) {
     super(props);
   }
   
@@ -37,7 +24,7 @@ class SearchResult extends React.PureComponent<SearchResultResponseItem> {
     return (
       <article className={SearchResultItem}>
         <header className={SearchResultHeader}>
-          <h4 className={SearchResultTitle}>{_.sample(randomMetricNames)}</h4>
+          <h4 className={SearchResultTitle}>{props.name}</h4>
         </header>
         <div className={SearchResultDescription}>
           <ReactPlaceholder type="text" rows={2} ready={false}>
@@ -50,7 +37,7 @@ class SearchResult extends React.PureComponent<SearchResultResponseItem> {
               size="md"
               icon="eye"
               className={SearchResultBtnWithNoSpacing}
-              onClick={props.openDetail}>
+              onClick={() => props.openDetail(this.props.entityId)}>
               Read More
             </Button>
             <HorizontalGroup spacing="md">
@@ -58,21 +45,21 @@ class SearchResult extends React.PureComponent<SearchResultResponseItem> {
                 variant="link"
                 size="md"
                 className={SearchResultBtnWithNoSpacing}
-                onClick={props.openDetail}>
+                onClick={() => props.openDetail(this.props.entityId)}>
                 Instance Domain
               </Button>
               <Button
                 variant="link"
                 size="md"
                 className={SearchResultBtnWithNoSpacing}
-                onClick={props.openDetail}>
+                onClick={() => props.openDetail(this.props.entityId)}>
                 Labels
               </Button>
               <Button
                 variant="link"
                 size="md"
                 className={SearchResultBtnWithNoSpacing}
-                onClick={props.openDetail}>
+                onClick={() => props.openDetail(this.props.entityId)}>
                 Other Meta
               </Button>
             </HorizontalGroup>
