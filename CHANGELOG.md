@@ -14,3 +14,7 @@ After spending some time trying to get `react-router-dom` to work, I wasn't able
 # 03.06.2020
 
 Today was spent separating UI into more elemental partials that each manage its own state. This reduced code complexity for each page. Also I feel much better about the code, even though it doesn't use any state management lib, there is some structure and is much more easily modifiable than it was yesterday.
+
+# 05.06.2020
+
+Since the state was all over the place I incorporated Redux into the app - while there is additional boilerplate, not all state not-local to component state is in Redux, it does feel like at least some mutations are better understandable at least. Will continue on improving this aspect.
