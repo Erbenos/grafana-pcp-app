@@ -2,40 +2,51 @@ import React from 'react';
 import { VerticalGroup, Button } from "@grafana/ui";
 import { connect } from 'react-redux';
 
-import { AppPage } from '../../App';
 import { ActionsBtnWithNoSpacing } from './styles';
 import { RootState } from '../../reducers';
+import { SearchView } from 'actions/types';
+import { clearResults, querySearch } from 'actions/search';
 
 const mapStateToProps = (state: RootState) => ({
   search: state.search,
 });
 
-interface ActionsProps {
-  page: AppPage,
-  goToIndex: () => void,
-  backToLatestSearch: () => void,
+const dispatchProps = {
+  clearResults,
+  querySearch,
 };
 
-type _ActionsProps = ReturnType<typeof mapStateToProps> & ActionsProps;
+type ActionsProps = ReturnType<typeof mapStateToProps> & typeof dispatchProps;
 
-class Actions extends React.Component<_ActionsProps> {
+class Actions extends React.Component<ActionsProps> {
 
-  constructor(props: _ActionsProps) {
+  constructor(props: ActionsProps) {
     super(props);
+    this.queryLatestSearch = this.queryLatestSearch.bind(this);
+    this.clearResults = this.clearResults.bind(this);
   }
 
   get showBackToPatternBtn() {
-    const { search, page } = this.props;
-    return search.query.pattern && page === AppPage.Detail;
+    const { search } = this.props;
+    return search.query.pattern && search.view === SearchView.Detail;
   }
 
   get showBackToIndexPageBtn() {
-    return this.props.page !== AppPage.Index; 
+    return this.props.search.view !== SearchView.Index; 
+  }
+
+  clearResults() {
+    this.props.clearResults();
+  }
+
+  queryLatestSearch() {
+    const searchQuery = this.props.search.query;
+    this.props.querySearch(searchQuery);
   }
 
   render() {
-    const { showBackToPatternBtn, showBackToIndexPageBtn, props } = this; 
-    const { goToIndex, backToLatestSearch, search } = props;
+    const { clearResults, queryLatestSearch, showBackToPatternBtn, showBackToIndexPageBtn, props } = this; 
+    const { search } = props;
     return (
       <VerticalGroup spacing="xs">
         {showBackToIndexPageBtn &&
@@ -44,7 +55,7 @@ class Actions extends React.Component<_ActionsProps> {
             size="md"
             icon="book"
             className={ActionsBtnWithNoSpacing}
-            onClick={goToIndex}>
+            onClick={clearResults}>
             Back To Latest Searches &amp; Suggestions
           </Button>}
         {showBackToPatternBtn &&
@@ -53,7 +64,7 @@ class Actions extends React.Component<_ActionsProps> {
             size="md"
             icon="list-ul"
             className={ActionsBtnWithNoSpacing}
-            onClick={backToLatestSearch}>
+            onClick={queryLatestSearch}>
             Back To Results for: <em>{search.query.pattern}</em>
           </Button>}            
       </VerticalGroup>
@@ -63,6 +74,6 @@ class Actions extends React.Component<_ActionsProps> {
 
 export default connect(
   mapStateToProps,
-  {},
+  { clearResults, querySearch },
 )(Actions);
 export { ActionsProps };

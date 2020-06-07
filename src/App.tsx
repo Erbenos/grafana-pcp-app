@@ -1,5 +1,6 @@
 import React from 'react';
 import { AppRootProps } from '@grafana/data';
+import { connect } from 'react-redux';
 import 'react-placeholder/lib/reactPlaceholder.css';
 
 import DetailPage from './pages/Detail/DetailPage';
@@ -10,82 +11,50 @@ import { AppLayout } from './styles';
 import Actions from './components/Actions/Actions';
 import Aside from './components/Aside/Aside';
 import SearchForm from './components/SearchForm/SearchForm';
+import { SearchView } from './actions/types';
+import { RootState } from './reducers';
 
-enum AppPage {
-  Detail, Search, Index
-};
+const mapStateToProps = (state: RootState) => ({
+  view: state.search.view,
+});
 
-interface AppState {
-  page: AppPage,
-  entityId: string,
-};
+type AppProps = ReturnType<typeof mapStateToProps> & AppRootProps;
 
-class App extends React.Component<AppRootProps, AppState> {
+class App extends React.Component<AppProps> {
 
-  state: AppState = this.initialState;
-
-  get initialState() {
-    return {
-      page: AppPage.Index,
-      entityId: '',
-    };
-  }
-
-  constructor(props: AppRootProps) {
+  constructor(props: AppProps) {
     super(props);
-    this.switchPage = this.switchPage.bind(this);
-    this.searchChanged = this.searchChanged.bind(this);
-  }
-
-  switchPage(page: AppPage, entityId?: string) {
-    const newStateIncrement: any = {};
-    newStateIncrement.page = page;
-    if (entityId) {
-      newStateIncrement.entityId = entityId;
-    }
-    this.setState({ ...newStateIncrement });
-  }
-
-  searchChanged() {
-    this.switchPage(AppPage.Search);
   }
 
   renderPageComponent() {
-    const { state, switchPage } = this;
-    const { page, entityId } = state;
+    const { view } = this.props;
 
-    switch (page) {
-      case AppPage.Detail:
-        return (
-          <DetailPage entityId={entityId}/>
-        );
-      case AppPage.Search:
-        return (
-          <SearchPage detailClicked={(entityId) => switchPage(AppPage.Detail, entityId)}/>
-        );
-      case AppPage.Index:
-        return (
-          <IndexPage
-            searchClicked={() => switchPage(AppPage.Search)}
-            bookmarkClicked={(entityId) => switchPage(AppPage.Detail, entityId)}/>
-        );
+    switch (view) {
+      case SearchView.Detail:
+        return <DetailPage/>;
+      case SearchView.Search:
+        return <SearchPage/>;
+      case SearchView.Index:
+        return <IndexPage/>;
+      default:
+        return;
     };         
   }
 
   render() {
-    const { state, searchChanged } = this;
-    const { page } = state;
     return (
       <div className={AppLayout}>
-        <SearchForm onSubmit={searchChanged}/>
-        <Actions page={page}
-                goToIndex={() => this.switchPage(AppPage.Index)}
-                backToLatestSearch={() => this.switchPage(AppPage.Search)} />
-        <Aside page={page} />
+        <SearchForm/>
+        <Actions/>
+        <Aside/>
         {this.renderPageComponent()}
       </div>
     );
   }
 }
 
-export { App, AppPage };
+
+export default connect(
+  mapStateToProps,
+  {},
+)(App);

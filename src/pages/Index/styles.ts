@@ -22,6 +22,13 @@ const IndexColumnsList = css`
   > *:nth-child(2n + 4) {
     margin-top: 8px;
   }
+
+  @media screen and (max-width: 1024px) {
+    > * {
+      flex: 1 1 100%;
+      margin-top: 8px;
+    }
+  }
 `;
 
 export { IndexPageContainer, IndexPageBtnWithNoSpacing, IndexColumnsList };

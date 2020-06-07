@@ -14,4 +14,8 @@ const SearchFormGroup = css`
   width: 100%;
 `;
 
-export { SearchContainer, SearchSubmitBtn, SearchFormGroup };
+const SearchBlock = css`
+  width: 100%;
+`;
+
+export { SearchContainer, SearchSubmitBtn, SearchFormGroup, SearchBlock };

@@ -2,7 +2,7 @@ import React from 'react';
 import { AppRootProps } from '@grafana/data';
 import { Provider } from 'react-redux';
 
-import { App } from './App';
+import App from './App';
 import { store } from './store/store';
 
 class GrafanaAppPluginWrapper extends React.Component<AppRootProps> {

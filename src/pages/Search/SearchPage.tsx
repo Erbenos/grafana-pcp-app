@@ -5,38 +5,39 @@ import { connect } from 'react-redux';
 import { SearchResult } from '../../components/SearchResult/SearchResult';
 import { SearchPageContainer, PaginationContainer } from './styles';
 import { RootState } from '../../reducers';
-import { addSearchHistory, querySearch } from '../../actions/search';
+import { querySearch, openDetail } from '../../actions/search';
+import { SearchItemResponse } from 'actions/types';
 
 const mapStateToProps = (state: RootState) => ({
   search: state.search,
 });
 
 const dispatchProps = {
-  addSearchHistory,
   querySearch,
+  openDetail,
 };
 
-interface SearchPageProps {
-  detailClicked: (id: string) => void;
-};
+type SearchPageProps = ReturnType<typeof mapStateToProps> & typeof dispatchProps;
 
-type _SearchPageProps = ReturnType<typeof mapStateToProps> & typeof dispatchProps & SearchPageProps;
+class SearchPage extends React.Component<SearchPageProps> {
 
-class SearchPage extends React.Component<_SearchPageProps> {
-
-  constructor(props: _SearchPageProps) {
+  constructor(props: SearchPageProps) {
     super(props);
-    this.search = this.search.bind(this);
+    this.handlePaginationClick = this.handlePaginationClick.bind(this);
+    this.handleDetailClick = this.handleDetailClick.bind(this);
   }
 
-  search(pageNum: number) {
+  handlePaginationClick(pageNum: number) {
     const { search } = this.props;
     this.props.querySearch({ ...search.query, pageNum });
-  } 
+  }
+
+  handleDetailClick(entity: SearchItemResponse) {
+    this.props.openDetail(entity.entityId);
+  }
 
   render() {
-    const { props, search } = this;
-    const { detailClicked } = props;
+    const { props, handlePaginationClick, handleDetailClick } = this;
     const { items, pagination } = props.search.result;
 
     return (
@@ -48,14 +49,14 @@ class SearchPage extends React.Component<_SearchPageProps> {
                 <h4>Results:</h4>
                 <VerticalGroup spacing="lg">
                   {items.map((x, i) =>
-                    <SearchResult {...x} openDetail={(entityId) => detailClicked(entityId) } />
+                    <SearchResult item={x} openDetail={(entity) => handleDetailClick(entity) } />
                   )}
                 </VerticalGroup>
                 <div className={PaginationContainer}>
                   <Pagination 
                     numberOfPages={pagination.numberOfPages}
                     currentPage={pagination.currentPage}
-                    onNavigate={search} />
+                    onNavigate={handlePaginationClick} />
                 </div>
               </VerticalGroup>        
             );
@@ -75,6 +76,6 @@ class SearchPage extends React.Component<_SearchPageProps> {
 
 export default connect(
   mapStateToProps,
-  { addSearchHistory, querySearch }
+  { querySearch, openDetail }
 )(SearchPage);
 export { SearchPageProps };

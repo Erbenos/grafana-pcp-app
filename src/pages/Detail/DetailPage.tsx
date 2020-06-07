@@ -4,20 +4,23 @@ import React from 'react';
 import { css } from 'emotion';
 import ReactPlaceholder from 'react-placeholder/lib';
 import { connect } from 'react-redux';
-import { addBookmark } from '../../actions/bookmarks';
 
 import {
   DetailPageContainer, DetailPageItem, DetailPageHeader, DetailPageTitle,
   DetailPageDescription, DetailPageFooter, DetailPageBtn
 } from './styles';
+import { addBookmark } from '../../actions/search';
+import { RootState } from '../../reducers';
+
+const mapStateToProps = (state: RootState) => ({
+  entity: state.search.detail,
+});
 
 const dispatchProps = {
   addBookmark,
 };
 
-type DetailPageProps = typeof dispatchProps & {
-  entityId: string,
-};
+type DetailPageProps = ReturnType<typeof mapStateToProps> & typeof dispatchProps;
 
 enum EntityTabOpt {
   InstanceDomains = 'instance-domains',
@@ -54,7 +57,11 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
 
   handleBookmark() {
     const { props } = this;
-    props.addBookmark('test bookmark');
+    const { entity } = props;
+    if (entity) {
+      const { name, entityId } = entity;
+      props.addBookmark({ name, entityId });
+    }
   }
 
   handlePreview() {
@@ -82,56 +89,82 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
   render() {
     const {
       state,
+      props,
       handleBookmark,
       handlePreview,
       setSelected,
       renderEntityInfoTab
     } = this;
+    const { entity } = props;
+    if (entity) {
+
+      return (
+        <div className={DetailPageContainer}>
+          <article className={DetailPageItem}>
+            <header className={DetailPageHeader}>
+              <h4 className={DetailPageTitle}>
+                {entity.name}
+              </h4>
+            </header>
+            <div className={DetailPageDescription}>
+              <h6>Entity Id</h6>
+              <p>
+                {entity.entityId}
+              </p>
+              <h6>Oneline</h6>
+              <p>
+                {entity.oneline}
+              </p>
+              <h6>Multiline</h6>
+              <p>
+                {entity.helptext}
+              </p>
+              <h6>Entity Type</h6>
+              <p>
+                {entity.type}
+              </p>
+            </div>
+            <footer className={DetailPageFooter}>
+              <VerticalGroup spacing="lg">
+                <HorizontalGroup spacing="lg">
+                  <Button
+                    variant="link"
+                    size="md"
+                    icon="save"
+                    className={DetailPageBtn}
+                    onClick={handleBookmark}>
+                    Bookmark This Result
+                  </Button>
+                  <Button
+                    variant="link"
+                    size="md"
+                    icon="chart-line"
+                    className={DetailPageBtn}
+                    onClick={handlePreview}>
+                    Preview
+                  </Button>
+                </HorizontalGroup>
+                <div className={css`width: 100%`}>
+                  <RadioButtonGroup
+                    options={state.options}
+                    disabled={false}
+                    value={state.selectedOption}
+                    onChange={setSelected}
+                    size="md"
+                    fullWidth
+                  />
+                </div>
+                {renderEntityInfoTab()}
+              </VerticalGroup>
+            </footer>
+          </article>
+        </div>
+      );
+    }
     return (
       <div className={DetailPageContainer}>
         <article className={DetailPageItem}>
-          <header className={DetailPageHeader}>
-            <h4 className={DetailPageTitle}>
-              statsd.pmda.received
-            </h4>
-          </header>
-          <div className={DetailPageDescription}>
-            <ReactPlaceholder type="text" rows={3} ready={false}>
-            </ReactPlaceholder>
-          </div>
-          <footer className={DetailPageFooter}>
-            <VerticalGroup spacing="lg">
-              <HorizontalGroup spacing="lg">
-                <Button
-                  variant="link"
-                  size="md"
-                  icon="save"
-                  className={DetailPageBtn}
-                  onClick={handleBookmark}>
-                  Bookmark This Result
-                </Button>
-                <Button
-                  variant="link"
-                  size="md"
-                  icon="chart-line"
-                  className={DetailPageBtn}
-                  onClick={handlePreview}>
-                  Preview
-                </Button>
-              </HorizontalGroup>
-              <div className={css`width: 100%`}>
-                <RadioButtonGroup
-                  options={state.options}
-                  disabled={false}
-                  value={state.selectedOption}
-                  onChange={setSelected}
-                  size="md"
-                  fullWidth
-                />
-              </div>
-              {renderEntityInfoTab()}
-            </VerticalGroup>
-          </footer>
+          <p>Entity was not found.</p>
         </article>
       </div>
     );
@@ -169,7 +202,7 @@ function OtherMetaTab() {
 }
 
 export default connect(
-  null,
+  mapStateToProps,
   { addBookmark }
 )(DetailPage);
 

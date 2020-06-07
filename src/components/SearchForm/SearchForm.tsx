@@ -2,27 +2,21 @@ import React from 'react';
 import { VerticalGroup, Input, Icon, Button, HorizontalGroup, Checkbox, Field } from '@grafana/ui';
 import { connect } from 'react-redux';
 
-import { SearchContainer, SearchSubmitBtn, SearchFormGroup } from './styles';
-import { setSearch, querySearch, addSearchHistory } from '../../actions/search';
+import { SearchContainer, SearchSubmitBtn, SearchFormGroup, SearchBlock } from './styles';
+import { querySearch } from '../../actions/search';
 import { RootState } from '../../reducers';
-import { css } from 'emotion';
-import { SearchQuery, SearchEntity } from '../../actions/types';
+import { SearchEntity } from '../../actions/types';
 
 const mapStateToProps = (state: RootState) => ({
   query: state.search.query,
+  bookmarks: state.search.bookmarks,
 });
 
 const dispatchProps = {
-  setSearch,
   querySearch,
-  addSearchHistory,
 };
 
-type _SearchFormProps = ReturnType<typeof mapStateToProps> & typeof dispatchProps & SearchFormProps;
-
-interface SearchFormProps {
-  onSubmit: (opt: SearchQuery) => void,
-};
+type SearchFormProps = ReturnType<typeof mapStateToProps> & typeof dispatchProps;
 
 interface SearchFormState {
   inputTouched: boolean,
@@ -32,7 +26,7 @@ interface SearchFormState {
   },
 };
 
-class SearchForm extends React.Component<_SearchFormProps, SearchFormState> {
+class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
   state: SearchFormState = this.initialState;
 
   get initialState() {
@@ -45,7 +39,7 @@ class SearchForm extends React.Component<_SearchFormProps, SearchFormState> {
     };
   }
 
-  constructor(props: _SearchFormProps) {
+  constructor(props: SearchFormProps) {
     super(props);
     if (props.query) {
       this.setState({ query: props.query });
@@ -55,8 +49,8 @@ class SearchForm extends React.Component<_SearchFormProps, SearchFormState> {
     this.setEntityFlag = this.setEntityFlag.bind(this);
   }
 
-  componentWillReceiveProps(props: _SearchFormProps) {
-    this.setState({ query: props.query });
+  componentWillReceiveProps(props: SearchFormProps) {
+    this.setState({ query: props.query, inputTouched: false });
   }
 
   handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -66,14 +60,7 @@ class SearchForm extends React.Component<_SearchFormProps, SearchFormState> {
       if (!(this.state.inputTouched && this.isValidInput)) {
         return;
       }
-      const { props, state } = this;
-      const { query } = state;
-      props.setSearch(query);
-      props.querySearch(query);
-      if (query.pattern !== this.props.query.pattern) {
-        props.addSearchHistory(query);
-      }
-      props.onSubmit(query);
+      this.props.querySearch({ ...this.state.query, pageNum: 1 });
     });
     if (this.state.inputTouched) {
       submitForm();
@@ -135,7 +122,7 @@ class SearchForm extends React.Component<_SearchFormProps, SearchFormState> {
         <VerticalGroup spacing="sm">
           <div className={SearchFormGroup}>
             <Field
-              className={css`width: 100%`}
+              className={SearchBlock}
               invalid={!isValidInput && isTouchedInput}
               error={!isValidInput && isTouchedInput ? 'This input is required' : ''}>
               <Input
@@ -179,6 +166,6 @@ class SearchForm extends React.Component<_SearchFormProps, SearchFormState> {
 
 export default connect(
   mapStateToProps,
-  { setSearch, querySearch, addSearchHistory }
+  { querySearch }
 )(SearchForm);
 export { SearchEntity, SearchFormProps };

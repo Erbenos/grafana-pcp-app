@@ -2,16 +2,18 @@ import React from 'react';
 import { VerticalGroup } from '@grafana/ui';
 import ReactPlaceholder from 'react-placeholder/lib';
 
-import { AppPage } from '../../App';
 import { AsideContainer } from './styles';
+import { SearchView } from 'actions/types';
+import { connect } from 'react-redux';
+import { RootState } from 'reducers';
 
-interface AsideProps {
-  page: AppPage,
-};
+const mapStateToProps = (state: RootState) => ({
+  view: state.search.view,
+});
 
-interface AsideState {};
+type AsideProps = ReturnType<typeof mapStateToProps>;
 
-class Aside extends React.Component<AsideProps, AsideState> {
+class Aside extends React.Component<AsideProps> {
   
   constructor(props: AsideProps) {
     super(props);
@@ -19,9 +21,9 @@ class Aside extends React.Component<AsideProps, AsideState> {
   }
 
   renderContents() {
-    const { page } = this.props;
-    switch (page) {
-      case AppPage.Detail:
+    const { view } = this.props;
+    switch (view) {
+      case SearchView.Detail:
         return (
           <>
             <VerticalGroup spacing="lg">
@@ -54,4 +56,8 @@ class Aside extends React.Component<AsideProps, AsideState> {
   }
 }
 
-export default Aside;
+
+export default connect(
+  mapStateToProps,
+  {},
+)(Aside);
