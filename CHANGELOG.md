@@ -18,3 +18,7 @@ Today was spent separating UI into more elemental partials that each manage its 
 # 05.06.2020
 
 Since the state was all over the place I incorporated Redux into the app - while there is additional boilerplate, not all state not-local to component state is in Redux, it does feel like at least some mutations are better understandable at least. Will continue on improving this aspect.
+
+# 07.06.2020
+
+Moved all shared state into Redux, culling many actions which were needless. Next will do some thinking/tinkering about how async data (all request related logic) will be managed.
