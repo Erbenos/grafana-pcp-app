@@ -1,22 +1,22 @@
 import React from 'react';
 import { VerticalGroup, Button } from "@grafana/ui";
 import { connect } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
 
 import { ActionsBtnWithNoSpacing } from './styles';
 import { RootState } from '../../reducers';
-import { SearchView } from 'actions/types';
-import { clearResults, querySearch } from 'actions/search';
+import { SearchView } from '../../actions/types';
+import { clearResults, querySearch } from '../../actions/search';
+import { bindActionCreators, AnyAction } from 'redux';
 
 const mapStateToProps = (state: RootState) => ({
   search: state.search,
 });
 
-const dispatchProps = {
-  clearResults,
-  querySearch,
-};
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, null, AnyAction>) =>
+  bindActionCreators({ querySearch, clearResults }, dispatch);
 
-type ActionsProps = ReturnType<typeof mapStateToProps> & typeof dispatchProps;
+type ActionsProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
 class Actions extends React.Component<ActionsProps> {
 
@@ -74,6 +74,6 @@ class Actions extends React.Component<ActionsProps> {
 
 export default connect(
   mapStateToProps,
-  { clearResults, querySearch },
+  mapDispatchToProps,
 )(Actions);
 export { ActionsProps };

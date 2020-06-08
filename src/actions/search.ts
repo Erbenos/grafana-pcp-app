@@ -1,44 +1,89 @@
+import { ThunkAction, ThunkDispatch } from 'redux-thunk';
+
 import {
-  ClearSeachHistoryAction, CLEAR_SEARCH_HISTORY, QUERY_SEARCH, QuerySearchAction,
-  SearchQuery,
-  EntityType,
+  ClearSeachHistoryAction,
+  CLEAR_SEARCH_HISTORY,
+  QUERY_SEARCH_INIT,
   AddBookmarkAction,
   ADD_BOOKMARK,
   ClearBookmarksAction,
   CLEAR_BOOKMARKS,
   ClearResultsAction,
   CLEAR_RESULTS,
-  OPEN_DETAIL,
-  BookmarkItem
+  OPEN_DETAIL_INIT,
+  BookmarkItem,
+  SearchQuery,
+  QuerySearchAction,
+  OpenDetailAction,
+  QUERY_SEARCH_PENDING,
+  OPEN_DETAIL_PENDING,
+  QUERY_SEARCH_ERROR,
+  QUERY_SEARCH_SUCCESS,
+  SearchResult,
+  OPEN_DETAIL_SUCCESS,
+  OPEN_DETAIL_ERROR,
 } from './types';
-import _ from 'lodash';
-import { _genMatchingName } from 'utils/utils';
+import { querySearchEndpoint, detailFetchEndpoint } from '../mocks/endpoints';
 
-// TODO: this will be async fetch
-const querySearch = (query: SearchQuery): QuerySearchAction => {
-  // TODO: fetch data from Redis
-  const testData = [...Array(4)].map((x, i) => ({
-      entityId: `id-${i}`,
-      name: `${_genMatchingName(query.pattern)}`,
-      type: EntityType.Metric,
-      indom: '0',
-      oneline: 'helptext oneline',
-      helptext: 'helptext multiline',
-    })
-  );
-  return {
-    type: QUERY_SEARCH,
-    payload: {
-      query,
-      result: {
-        items: testData,
-        pagination: {
-          currentPage: query.pageNum ?? 1,
-          numberOfPages: 5,
-        },
+const querySearch = 
+  (query: SearchQuery): ThunkAction<Promise<void>, {}, {}, QuerySearchAction> =>
+  async (dispatch: ThunkDispatch<{}, {}, QuerySearchAction>): Promise<void> => {
+
+  dispatch({
+    type: QUERY_SEARCH_INIT,
+    payload: query,
+  });
+
+  const limit = 5;
+  const offset = (query.pageNum - 1) * limit;
+
+  try {
+    dispatch({
+      type: QUERY_SEARCH_PENDING
+    });
+    const { pattern, entityFlags } = query;
+    const response = await querySearchEndpoint(pattern, entityFlags, limit, offset);
+    const result: SearchResult = {
+      items: response,
+      // TODO: probably should be a part of response
+      pagination: {
+        currentPage: query.pageNum,
+        numberOfPages: 5,
       },
-    },
-  };
+    };
+    dispatch({
+      type: QUERY_SEARCH_SUCCESS,
+      payload: result,
+    });
+  } catch {
+    dispatch({
+      type: QUERY_SEARCH_ERROR,
+    });
+  }
+};
+
+const openDetail =
+  (entityId: string): ThunkAction<Promise<void>, {}, {}, OpenDetailAction> =>
+  async (dispatch: ThunkDispatch<{}, {}, OpenDetailAction>): Promise<void> => {
+
+  dispatch({
+    type: OPEN_DETAIL_INIT,
+  });
+
+  try {
+    dispatch({
+      type: OPEN_DETAIL_PENDING,
+    });
+    const response = await detailFetchEndpoint(entityId);
+    dispatch({
+      type: OPEN_DETAIL_SUCCESS,
+      payload: response,
+    });
+  } catch {
+    dispatch({
+      type: OPEN_DETAIL_ERROR,
+    });
+  }
 };
 
 const clearSearchHistory = (): ClearSeachHistoryAction => {
@@ -63,22 +108,6 @@ const clearBookmarks = (): ClearBookmarksAction => {
 const clearResults = (): ClearResultsAction => {
   return {
     type: CLEAR_RESULTS,
-  };
-};
-
-const openDetail = (entityId: string) => {
-  // TODO: this will be async fetch
-  const testData = {
-    entityId: `entityId`,
-    name: `${_genMatchingName('')}`,
-    type: EntityType.Metric,
-    indom: '0',
-    oneline: 'helptext oneline',
-    helptext: 'helptext multiline',
-  };
-  return {
-    type: OPEN_DETAIL,
-    payload: testData,
   };
 };
 

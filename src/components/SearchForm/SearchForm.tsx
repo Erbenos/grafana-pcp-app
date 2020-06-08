@@ -6,17 +6,18 @@ import { SearchContainer, SearchSubmitBtn, SearchFormGroup, SearchBlock } from '
 import { querySearch } from '../../actions/search';
 import { RootState } from '../../reducers';
 import { SearchEntity } from '../../actions/types';
+import { ThunkDispatch } from 'redux-thunk';
+import { bindActionCreators, AnyAction } from 'redux';
 
 const mapStateToProps = (state: RootState) => ({
   query: state.search.query,
   bookmarks: state.search.bookmarks,
 });
 
-const dispatchProps = {
-  querySearch,
-};
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, null, AnyAction>) =>
+  bindActionCreators({ querySearch }, dispatch);
 
-type SearchFormProps = ReturnType<typeof mapStateToProps> & typeof dispatchProps;
+type SearchFormProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
 interface SearchFormState {
   inputTouched: boolean,
@@ -166,6 +167,6 @@ class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
 
 export default connect(
   mapStateToProps,
-  { querySearch }
+  mapDispatchToProps,
 )(SearchForm);
 export { SearchEntity, SearchFormProps };

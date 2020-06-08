@@ -10,12 +10,17 @@ const SearchResultHeader = css`
 `;
 
 const SearchResultTitle = css`
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 `;
 
 const SearchResultDescription = css`
   font-size: 0.85rem;
   margin-bottom: 8px;
+  white-space: pre-line;
+
+  > p:last-child {
+    margin-bottom: 0;
+  }
 `;
 
 const SearchResultFooter = css`

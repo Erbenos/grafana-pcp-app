@@ -1,25 +1,23 @@
 import React from 'react';
 import { Button, VerticalGroup } from '@grafana/ui';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import { IndexPageContainer, IndexPageBtnWithNoSpacing, IndexColumnsList } from './styles';
 import { clearBookmarks, clearSearchHistory, querySearch, openDetail } from '../../actions/search';
 import { RootState } from '../../reducers';
-import { SearchQuery, BookmarkItem } from '../../actions/types';
+import { SearchQuery, BookmarkItem, OpenDetailAction, QuerySearchAction } from '../../actions/types';
+import { ThunkDispatch } from 'redux-thunk';
 
 const mapStateToProps = (state: RootState) => ({
   bookmarks: state.search.bookmarks,
   searchHistory: state.search.history,
 });
 
-const dispatchProps = {
-  clearBookmarks,
-  clearSearchHistory,
-  querySearch,
-  openDetail,
-};
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, null, QuerySearchAction | OpenDetailAction>) =>
+  bindActionCreators({ querySearch, openDetail, clearBookmarks, clearSearchHistory }, dispatch);
 
-type IndexPageProps = ReturnType<typeof mapStateToProps> & typeof dispatchProps;
+type IndexPageProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
 class IndexPage extends React.Component<IndexPageProps> {
 
@@ -142,6 +140,6 @@ class IndexPage extends React.Component<IndexPageProps> {
 
 export default connect(
   mapStateToProps,
-  { clearBookmarks, clearSearchHistory, querySearch, openDetail }
+  mapDispatchToProps,
 )(IndexPage);
 export { IndexPageProps };

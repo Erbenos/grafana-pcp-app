@@ -1,10 +1,11 @@
 import { SearchEntity } from '../components/SearchForm/SearchForm';
 import {
-  SearchState, SearchAction, CLEAR_SEARCH_HISTORY, QUERY_SEARCH,
-  ADD_BOOKMARK, CLEAR_BOOKMARKS, SearchView, OPEN_DETAIL, CLEAR_RESULTS, SearchQuery, SearchResult
+  SearchState, SearchAction, CLEAR_SEARCH_HISTORY,
+  ADD_BOOKMARK, CLEAR_BOOKMARKS, SearchView, CLEAR_RESULTS, SearchQuery, FetchStatus, QUERY_SEARCH_PENDING, QUERY_SEARCH_SUCCESS, OPEN_DETAIL_PENDING, OPEN_DETAIL_SUCCESS, OPEN_DETAIL_ERROR, QUERY_SEARCH_INIT, OPEN_DETAIL_INIT, SearchResultState, SearchDetailState, QUERY_SEARCH_ERROR
 } from '../actions/types';
 
-const initialResult = (): SearchResult => ({
+const initialResult = (): SearchResultState => ({
+  status: FetchStatus.INIT,
   items: [],
   pagination: {
     currentPage: 1,
@@ -18,19 +19,24 @@ const initialQuery = (): SearchQuery => ({
   pageNum: 1,
 });
 
+const initialDetail = (): SearchDetailState => ({
+  status: FetchStatus.INIT,
+  item: null,
+});
+
 const initialState: SearchState = {
   view: SearchView.Index,
   history: [],
   bookmarks: [],
   result: initialResult(),
   query: initialQuery(),
-  detail: null,
+  detail: initialDetail(),
 };
 
 const searchReducer = (state = initialState, action: SearchAction): SearchState => {
   switch (action.type) {
-    case QUERY_SEARCH: {
-      const { query, result } = action.payload;
+    case QUERY_SEARCH_INIT: {
+      const query = action.payload;
       const updateSearchHistory = (query: SearchQuery) => {
         return !state.history.some(x => x.pattern === query.pattern &&
                                         x.entityFlags === query.entityFlags) &&
@@ -38,16 +44,40 @@ const searchReducer = (state = initialState, action: SearchAction): SearchState 
       };
       return {
         ...state,
-        // Set latest query to one just queried
         query,
-        // Set results
-        result,
-        // Set view to display results
         view: SearchView.Search,
-        // Update search history if query wasn't queried yet
         history: updateSearchHistory(query) ? [query, ...state.history] : state.history,
+        // TODO: do we really want to reset detail?
+        detail: initialDetail(),
       };
-    }
+    };
+    case QUERY_SEARCH_PENDING:
+      return {
+        ...state,
+        result: {
+          ...state.result,
+          status: FetchStatus.PENDING,
+        },
+      };
+    case QUERY_SEARCH_SUCCESS: {
+      const result = action.payload;
+      return {
+        ...state,
+        result: {
+          ...result,
+          status: FetchStatus.SUCCESS,
+        },
+      };
+    };
+    case QUERY_SEARCH_ERROR: {
+      return {
+        ...state,
+        result: {
+          ...initialResult(),
+          status: FetchStatus.ERROR,
+        },
+      };
+    };
     case CLEAR_SEARCH_HISTORY:
       return {
         ...state,
@@ -63,13 +93,36 @@ const searchReducer = (state = initialState, action: SearchAction): SearchState 
         ...state,
         bookmarks: [],
       };
-    case OPEN_DETAIL:
+    case OPEN_DETAIL_INIT:
       return {
         ...state,
         view: SearchView.Detail,
-        // TODO: since we are not saving anything persistently, for now, just plug in first (which may not be present),
-        // this also causes bookmarks to work only for last navigated item
-        detail: action.payload,
+      };
+    case OPEN_DETAIL_PENDING:
+      return {
+        ...state,
+        detail: {
+          ...state.detail,
+          status: FetchStatus.PENDING,
+        },
+      };
+    case OPEN_DETAIL_SUCCESS: {
+      const item = action.payload;
+      return {
+        ...state,
+        detail: {
+          item,
+          status: FetchStatus.SUCCESS,
+        },
+      };
+    };
+    case OPEN_DETAIL_ERROR:
+      return {
+        ...state,
+        detail: {
+          ...state.detail,
+          status: FetchStatus.ERROR,
+        },
       };
     case CLEAR_RESULTS:
       return {

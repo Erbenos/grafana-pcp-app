@@ -2,23 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
-# 01.06.2020
+### 01.06.2020
 
 Did mostly troubleshooting various Grafana issues (inability to use symlink for plugin path on Fedora 32, SELinux issues with Docker, inability to use @emotion/styled-components). Wrote some starting boilerplate that will be improved upon.
 
-# 02.06.2020
+### 02.06.2020
 
 After spending some time trying to get `react-router-dom` to work, I wasn't able to convince it to give me correct props upon &lt;Link&gt; navigation, after small discussion with Andreas we decided that for now, the best course of action would be to give up on permalinks and do some simple component toggling instead of implementing some kind of router. So I did just that, even though passing around state without some sort of state-management was a little painful, additionally each page is also responsible for rendering full layout without any partials. I do expect this to change in upcoming days. Right now, we are at the point where the app-plugin is as clickable/walkable as images/wireframes I made up for project proposal. See: https://i.imgur.com/a78Risn.png, https://i.imgur.com/m3S86LL.png, https://i.imgur.com/FT9BK2B.png .
 
 
-# 03.06.2020
+### 03.06.2020
 
 Today was spent separating UI into more elemental partials that each manage its own state. This reduced code complexity for each page. Also I feel much better about the code, even though it doesn't use any state management lib, there is some structure and is much more easily modifiable than it was yesterday.
 
-# 05.06.2020
+### 05.06.2020
 
 Since the state was all over the place I incorporated Redux into the app - while there is additional boilerplate, not all state not-local to component state is in Redux, it does feel like at least some mutations are better understandable at least. Will continue on improving this aspect.
 
-# 07.06.2020
+### 07.06.2020
 
 Moved all shared state into Redux, culling many actions which were needless. Next will do some thinking/tinkering about how async data (all request related logic) will be managed.
+
+### 08.06.2020
+
+Created some sample mocks for query search and fetch detail endpoints which return sample of something thats closer to real life data than React placehodler were. These mocks are implemented into relevant methods, therefore its now possible to 'search' and 'fetch' these samples. Added loading indicators for simulated delays. Will do more output formatting with more end-result-like data soon.

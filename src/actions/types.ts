@@ -4,9 +4,21 @@ export const CLEAR_BOOKMARKS = 'CLEAR_BOOKMARKS';
 
 export const CLEAR_SEARCH_HISTORY = 'CLEAR_SEARCH_HISTORY';
 
-export const OPEN_DETAIL = 'OPEN_DETAIL';
+export const OPEN_DETAIL_INIT = 'OPEN_DETAIL_INIT';
 
-export const QUERY_SEARCH = 'QUERY_SEARCH';
+export const OPEN_DETAIL_PENDING = 'OPEN_DETAIL_PENDING';
+
+export const OPEN_DETAIL_SUCCESS = 'OPEN_DETAIL_SUCCESS';
+
+export const OPEN_DETAIL_ERROR = 'OPEN_DETAIl_ERROR';
+
+export const QUERY_SEARCH_INIT = 'QUERY_SEARCH_INIT';
+
+export const QUERY_SEARCH_PENDING = 'QUERY_SEARCH_PENDING';
+
+export const QUERY_SEARCH_SUCCESS = 'QUERY_SEARCH_SUCCESS';
+
+export const QUERY_SEARCH_ERROR = 'QUERY_SEARCH_ERROR';
 
 export const CLEAR_RESULTS = 'CLEAR_RESULTS';
 
@@ -31,34 +43,62 @@ export interface ClearSeachHistoryAction {
   type: typeof CLEAR_SEARCH_HISTORY,
 };
 
-export interface SearchQueryResult {
-  result: SearchResult,
-  query: SearchQuery,
+export interface QuerySearchInitAction {
+  type: typeof QUERY_SEARCH_INIT,
+  payload: SearchQuery,
 };
 
-export interface QuerySearchAction {
-  type: typeof QUERY_SEARCH,
-  payload: SearchQueryResult,
+export interface QuerySearchPendingAction {
+  type: typeof QUERY_SEARCH_PENDING,
 };
 
-export interface OpenDetailAction {
-  type: typeof OPEN_DETAIL,
+export interface QuerySearchSuccessAction {
+  type: typeof QUERY_SEARCH_SUCCESS,
+  payload: SearchResult,
+};
+
+export interface QuerySearchErrorAction {
+  type: typeof QUERY_SEARCH_ERROR,
+};
+
+export type QuerySearchAction = 
+  QuerySearchInitAction | QuerySearchPendingAction |
+  QuerySearchSuccessAction | QuerySearchErrorAction;
+
+export interface OpenDetailInitAction {
+  type: typeof OPEN_DETAIL_INIT,
+};
+
+export interface OpenDetailPendingAction {
+  type: typeof OPEN_DETAIL_PENDING,
+};
+
+export interface OpenDetailSuccessAction {
+  type: typeof OPEN_DETAIL_SUCCESS,
   payload: SearchItemResponse,
+};
+
+export interface OpenDetailErrorAction {
+  type: typeof OPEN_DETAIL_ERROR,
 };
 
 export interface ClearResultsAction {
   type: typeof CLEAR_RESULTS,
 };
 
+export type OpenDetailAction = 
+  OpenDetailInitAction | OpenDetailPendingAction |
+  OpenDetailSuccessAction | OpenDetailErrorAction;
+
 export type SearchAction =
-  ClearSeachHistoryAction | QuerySearchAction |
-  ClearBookmarksAction | AddBookmarkAction |
-  OpenDetailAction | ClearResultsAction;
+  ClearBookmarksAction | ClearSeachHistoryAction |
+  QuerySearchAction | OpenDetailAction | 
+  AddBookmarkAction | ClearResultsAction;
 
 export enum EntityType {
-  Metric = 0,
-  Instance = 1,
-  InstanceDomain = 2,
+  Metric,
+  Instance,
+  InstanceDomain,
 };
 
 export interface SearchItemResponse {
@@ -66,8 +106,9 @@ export interface SearchItemResponse {
   name: string,
   type: EntityType,
   indom: string,
-  oneline: string,
+  oneline: string | null,
   helptext: string,
+  value: string | null,
 };
 
 export interface BookmarkItem {
@@ -76,21 +117,37 @@ export interface BookmarkItem {
   // TODO: type?
 };
 
+export enum FetchStatus {
+  INIT,
+  PENDING,
+  SUCCESS,
+  ERROR,
+};
+
 export interface SearchResult {
   items: SearchItemResponse[],
   pagination: {
     currentPage: number,
     numberOfPages: number,
   },
+}
+
+export interface SearchResultState extends SearchResult {
+  status: FetchStatus,
+};
+
+export interface SearchDetailState {
+  status: FetchStatus,
+  item: SearchItemResponse | null,
 };
 
 export interface SearchState {
   view: SearchView,
   query: SearchQuery,
-  result: SearchResult,
   history: SearchQuery[],
+  result: SearchResultState,
   bookmarks: BookmarkItem[],
-  detail: SearchItemResponse | null,
+  detail: SearchDetailState,
 };
 
 export enum SearchEntity {
