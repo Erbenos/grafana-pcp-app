@@ -38,7 +38,7 @@ const initialQuery = (): SearchQuery => ({
 
 const initialDetail = (): SearchDetailState => ({
   status: FetchStatus.INIT,
-  item: null,
+  detail: null,
 });
 
 const initialState: SearchState = {
@@ -125,11 +125,11 @@ const searchReducer = (state = initialState, action: SearchAction): SearchState 
         },
       };
     case OPEN_DETAIL_SUCCESS: {
-      const item = action.payload;
+      const detail = action.payload;
       return {
         ...state,
         detail: {
-          item,
+          detail,
           status: FetchStatus.SUCCESS,
         },
       };

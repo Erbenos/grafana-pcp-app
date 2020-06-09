@@ -22,6 +22,7 @@ import {
   SearchResult,
   OPEN_DETAIL_SUCCESS,
   OPEN_DETAIL_ERROR,
+  EntityType,
 } from './types';
 import { querySearchEndpoint, detailFetchEndpoint } from '../mocks/endpoints';
 
@@ -59,7 +60,11 @@ const querySearch = (query: SearchQuery): ThunkAction<Promise<void>, {}, {}, Que
   }
 };
 
-const openDetail = (id: string): ThunkAction<Promise<void>, {}, {}, OpenDetailAction> => async (
+// TODO: wont always assume entity type
+const openDetail = (
+  id: string,
+  type: EntityType = EntityType.Metric
+): ThunkAction<Promise<void>, {}, {}, OpenDetailAction> => async (
   dispatch: ThunkDispatch<{}, {}, OpenDetailAction>
 ): Promise<void> => {
   dispatch({ type: OPEN_DETAIL_INIT });
@@ -69,7 +74,10 @@ const openDetail = (id: string): ThunkAction<Promise<void>, {}, {}, OpenDetailAc
     const response = await detailFetchEndpoint(id);
     dispatch({
       type: OPEN_DETAIL_SUCCESS,
-      payload: response,
+      payload: {
+        type: EntityType.Metric,
+        item: response,
+      },
     });
   } catch {
     dispatch({ type: OPEN_DETAIL_ERROR });

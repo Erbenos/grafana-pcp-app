@@ -1,7 +1,7 @@
 import React from 'react';
 import { HorizontalGroup, Button } from '@grafana/ui';
 
-import { SearchItemResponse } from '../../actions/types';
+import { RedisFulltextItemResponse } from '../../actions/types';
 import {
   searchResultDescription,
   searchResultFooter,
@@ -12,8 +12,8 @@ import {
 } from './styles';
 
 interface SearchResultProps {
-  item: SearchItemResponse;
-  openDetail: (entity: SearchItemResponse) => void;
+  item: RedisFulltextItemResponse;
+  openDetail: (entity: RedisFulltextItemResponse) => void;
 }
 
 class SearchResult extends React.PureComponent<SearchResultProps, {}> {

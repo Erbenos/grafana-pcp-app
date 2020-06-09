@@ -7,7 +7,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import { SearchResult } from '../../components/SearchResult/SearchResult';
 import { RootState } from '../../reducers/reducers';
 import { querySearch, openDetail } from '../../actions/search';
-import { SearchItemResponse, FetchStatus } from '../../actions/types';
+import { RedisFulltextItemResponse, FetchStatus } from '../../actions/types';
 import { cx, css } from 'emotion';
 import { searchPageSpinnerContainer, paginationContainer, searchPageContainer } from './styles';
 
@@ -34,7 +34,7 @@ class SearchPage extends React.Component<SearchPageProps, {}> {
     this.props.querySearch({ ...search.query, pageNum });
   }
 
-  onDetailClick(entity: SearchItemResponse) {
+  onDetailClick(entity: RedisFulltextItemResponse) {
     this.props.openDetail(entity.name);
   }
 

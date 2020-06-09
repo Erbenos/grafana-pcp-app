@@ -40,7 +40,7 @@ export interface ClearBookmarksAction {
 }
 
 export interface BookmarksState {
-  items: SearchItemResponse[];
+  items: RedisFulltextItemResponse[];
 }
 
 export interface ClearSeachHistoryAction {
@@ -81,7 +81,7 @@ export interface OpenDetailPendingAction {
 
 export interface OpenDetailSuccessAction {
   type: typeof OPEN_DETAIL_SUCCESS;
-  payload: PmApiMetricEndpointMetricResponse;
+  payload: EntityDetail;
 }
 
 export interface OpenDetailErrorAction {
@@ -112,14 +112,13 @@ export enum EntityType {
   InstanceDomain,
 }
 
-export interface SearchItemResponse {
+export interface RedisFulltextItemResponse {
   entityId: string;
   name: string;
   type: EntityType;
   indom: string;
   oneline: string | null;
   helptext: string;
-  value: string | null;
 }
 
 export interface BookmarkItem {
@@ -136,7 +135,7 @@ export enum FetchStatus {
 }
 
 export interface SearchResult {
-  items: SearchItemResponse[];
+  items: RedisFulltextItemResponse[];
   pagination: {
     currentPage: number;
     numberOfPages: number;
@@ -147,9 +146,28 @@ export interface SearchResultState extends SearchResult {
   status: FetchStatus;
 }
 
+export interface MetricDetail {
+  type: EntityType.Metric;
+  item: PmApiMetricEndpointMetricResponse;
+}
+
+export interface InstanceDetail {
+  type: EntityType.Instance;
+  // TODO: type for instance
+  item: any;
+}
+
+export interface InstanceDomainDetail {
+  type: EntityType.InstanceDomain;
+  // TODO: type for instance domain
+  item: any;
+}
+
+export type EntityDetail = MetricDetail | InstanceDetail | InstanceDomainDetail;
+
 export interface SearchDetailState {
   status: FetchStatus;
-  item: PmApiMetricEndpointMetricResponse | null;
+  detail: EntityDetail | null;
 }
 
 export interface SearchState {

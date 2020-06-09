@@ -1,4 +1,4 @@
-import { SearchItemResponse, SearchEntity } from 'actions/types';
+import { RedisFulltextItemResponse, SearchEntity } from 'actions/types';
 import { searchEntities, detailEntities, PmApiMetricEndpointMetricResponse } from './responses';
 
 export const querySearchEndpoint = (
@@ -6,8 +6,8 @@ export const querySearchEndpoint = (
   entityFlags: SearchEntity,
   limit: number,
   offset: number
-): Promise<SearchItemResponse[]> => {
-  return new Promise<SearchItemResponse[]>((resolve, reject) => {
+): Promise<RedisFulltextItemResponse[]> => {
+  return new Promise<RedisFulltextItemResponse[]>((resolve, reject) => {
     setTimeout(() => {
       resolve(searchEntities.slice(0, 5));
     }, 2000);
