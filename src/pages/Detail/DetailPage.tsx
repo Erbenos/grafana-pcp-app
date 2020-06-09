@@ -5,13 +5,11 @@ import { css, cx } from 'emotion';
 import ReactPlaceholder from 'react-placeholder/lib';
 import { connect } from 'react-redux';
 
-import {
-  DetailPageContainer, DetailPageItem, DetailPageHeader, DetailPageTitle,
-  DetailPageDescription, DetailPageFooter, DetailPageBtn, DetailPageSpinnerContainer, OtherMetaItemList, OtherMetaItem, OtherMetaItemTitle, OtherMetaItemValue
-} from './styles';
+
 import { addBookmark } from '../../actions/search';
-import { RootState } from '../../reducers';
+import { RootState } from '../../reducers/reducers';
 import { FetchStatus, EntityType } from 'actions/types';
+import { otherMetaItem, otherMetaItemTitle, detailPageSpinnerContainer, detailPageDescription, detailPageItem, detailPageHeader, detailPageTitle, detailPageFooter, detailPageBtn, detailPageContainer, otherMetaItemList, otherMetaItemValue } from './styles';
 
 const mapStateToProps = (state: RootState) => ({
   entity: state.search.detail,
@@ -56,8 +54,8 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
     this.renderSpinner = this.renderSpinner.bind(this);
     this.renderDetail = this.renderDetail.bind(this);
     this.renderDesc = this.renderDesc.bind(this);
-    this.handlePreview = this.handlePreview.bind(this);
-    this.handleBookmark = this.handleBookmark.bind(this);
+    this.onPreview = this.onPreview.bind(this);
+    this.onBookmark = this.onBookmark.bind(this);
     this.setSelected = this.setSelected.bind(this);
   }
 
@@ -69,7 +67,7 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
     return false;
   }
 
-  handleBookmark() {
+  onBookmark() {
     const { props } = this;
     const { item } = props.entity;
     if (item) {
@@ -78,7 +76,7 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
     }
   }
 
-  handlePreview() {
+  onPreview() {
     console.log('previewEntity not implemented.');
   }
 
@@ -87,7 +85,7 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
       console.log(this.props.theme.palette.black);
       return (
         <div className={cx(
-          DetailPageSpinnerContainer,
+          detailPageSpinnerContainer,
           css`background-color: ${this.props.theme.colors.bg1}8f`
         )}>
           <Spinner size={40}/>
@@ -109,7 +107,7 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
       description = item["text-oneline"];
     }
     return (
-      <div className={DetailPageDescription}>
+      <div className={detailPageDescription}>
         {description && <p>{description}</p>}
       </div>
     );
@@ -118,7 +116,7 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
   renderDetail() {
     const {
       props, state, renderEntityInfoTab,
-      handleBookmark, handlePreview, setSelected,
+      onBookmark, onPreview, setSelected,
       hasInstanceDomains, renderDesc
     } = this;
     const { isBookmarked, entity } = props;
@@ -129,14 +127,14 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
       case FetchStatus.SUCCESS: {
         if (item !== null) {
           return (
-            <article className={DetailPageItem}>
-              <header className={DetailPageHeader}>
-                <h2 className={DetailPageTitle}>
+            <article className={detailPageItem}>
+              <header className={detailPageHeader}>
+                <h2 className={detailPageTitle}>
                   {item.name}
                 </h2>
               </header>
               {renderDesc()}
-              <footer className={DetailPageFooter}>
+              <footer className={detailPageFooter}>
                 <VerticalGroup spacing="lg">
                   <HorizontalGroup spacing="lg">
                     {!isBookmarked &&
@@ -144,8 +142,8 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
                         variant="link"
                         size="md"
                         icon="save"
-                        className={DetailPageBtn}
-                        onClick={handleBookmark}>
+                        className={detailPageBtn}
+                        onClick={onBookmark}>
                         Bookmark This Result
                       </Button>
                     }
@@ -153,8 +151,8 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
                       variant="link"
                       size="md"
                       icon="chart-line"
-                      className={DetailPageBtn}
-                      onClick={handlePreview}>
+                      className={detailPageBtn}
+                      onClick={onPreview}>
                       Preview
                     </Button>
                   </HorizontalGroup>
@@ -230,7 +228,7 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
       renderDetail,
     } = this;
     return (
-      <div className={DetailPageContainer}>
+      <div className={detailPageContainer}>
         {renderSpinner()}
         {renderDetail()}
       </div>
@@ -278,36 +276,36 @@ class OtherMetaTab extends React.Component<OtherMetaTabProps, {}> {
     return (
       <VerticalGroup spacing="lg">
         <h4>Other Meta</h4>
-        <div className={OtherMetaItemList}>
-          <div className={OtherMetaItem}>
-            <span className={OtherMetaItemTitle}>
+        <div className={otherMetaItemList}>
+          <div className={otherMetaItem}>
+            <span className={otherMetaItemTitle}>
               PMID:
             </span>
-            <span className={OtherMetaItemValue}>
+            <span className={otherMetaItemValue}>
               {pmid}
             </span>
           </div>
-          <div className={OtherMetaItem}>
-            <span className={OtherMetaItemTitle}>
+          <div className={otherMetaItem}>
+            <span className={otherMetaItemTitle}>
               Type:
             </span>
-            <span className={OtherMetaItemValue}>
+            <span className={otherMetaItemValue}>
               {type}
             </span>
           </div>
-          <div className={OtherMetaItem}>
-            <span className={OtherMetaItemTitle}>
+          <div className={otherMetaItem}>
+            <span className={otherMetaItemTitle}>
               Semantics:
             </span>
-            <span className={OtherMetaItemValue}>
+            <span className={otherMetaItemValue}>
               {sem}
             </span>
           </div>
-          <div className={OtherMetaItem}>
-            <span className={OtherMetaItemTitle}>
+          <div className={otherMetaItem}>
+            <span className={otherMetaItemTitle}>
               Units:
             </span>
-            <span className={OtherMetaItemValue}>
+            <span className={otherMetaItemValue}>
               {units}
             </span>
           </div>

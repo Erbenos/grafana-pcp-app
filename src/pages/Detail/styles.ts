@@ -1,11 +1,11 @@
 import { css } from 'emotion';
 
-const DetailPageContainer = css`
+const detailPageContainer = css`
   grid-area: content;
   position: relative;
 `;
 
-const DetailPageSpinnerContainer = css`
+const detailPageSpinnerContainer = css`
   position: absolute;
   top: 0;
   left: 0;
@@ -18,20 +18,20 @@ const DetailPageSpinnerContainer = css`
   align-items: center;
 `;
 
-const DetailPageItem = css`
+const detailPageItem = css`
   width: 100%;
   display: flex;
   flex-direction: column;
 `;
 
-const DetailPageHeader = css`
+const detailPageHeader = css`
 `;
 
-const DetailPageTitle = css`
+const detailPageTitle = css`
   margin-bottom: 24px;
 `;
 
-const DetailPageDescription = css`
+const detailPageDescription = css`
   margin-bottom: 8px;
   white-space: pre-line;
 
@@ -40,14 +40,14 @@ const DetailPageDescription = css`
   }
 `;
 
-const DetailPageFooter = css`
+const detailPageFooter = css`
 `;
 
-const DetailPageBtn = css`
+const detailPageBtn = css`
   padding: 0;
 `;
 
-const OtherMetaItemList = css`
+const otherMetaItemList = css`
   display: flex;
   width: 100%;
   flex-wrap: wrap;
@@ -70,22 +70,22 @@ const OtherMetaItemList = css`
   }
 `;
 
-const OtherMetaItem = css`
+const otherMetaItem = css`
 
 `;
 
-const OtherMetaItemTitle = css`
+const otherMetaItemTitle = css`
   display: block;
   font-weight: bold;
 `;
 
-const OtherMetaItemValue = css`
+const otherMetaItemValue = css`
   display: block;
 `;
 
 export {
-  DetailPageContainer, DetailPageSpinnerContainer, DetailPageItem,
-  DetailPageHeader, DetailPageTitle, DetailPageDescription,
-  DetailPageFooter, DetailPageBtn,
-  OtherMetaItemList, OtherMetaItem, OtherMetaItemTitle, OtherMetaItemValue
+  detailPageContainer, detailPageSpinnerContainer, detailPageItem,
+  detailPageHeader, detailPageTitle, detailPageDescription,
+  detailPageFooter, detailPageBtn,
+  otherMetaItemList, otherMetaItem, otherMetaItemTitle, otherMetaItemValue
 };

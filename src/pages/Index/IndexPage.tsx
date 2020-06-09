@@ -3,11 +3,11 @@ import { Button, VerticalGroup } from '@grafana/ui';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { IndexPageContainer, IndexPageBtnWithNoSpacing, IndexColumnsList } from './styles';
 import { clearBookmarks, clearSearchHistory, querySearch, openDetail } from '../../actions/search';
-import { RootState } from '../../reducers';
+import { RootState } from '../../reducers/reducers';
 import { SearchQuery, BookmarkItem, OpenDetailAction, QuerySearchAction } from '../../actions/types';
 import { ThunkDispatch } from 'redux-thunk';
+import { indexColumnsList, indexPageBtnWithNoSpacing, indexPageContainer } from './styles';
 
 const mapStateToProps = (state: RootState) => ({
   bookmarks: state.search.bookmarks,
@@ -19,37 +19,37 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, null, QuerySearch
 
 type IndexPageProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
-class IndexPage extends React.Component<IndexPageProps> {
+class IndexPage extends React.Component<IndexPageProps, {}> {
 
   constructor(props: IndexPageProps) {
     super(props);
-    this.handleClearSearchHistoryClick = this.handleClearSearchHistoryClick.bind(this);
-    this.handleClearBookmarksClick = this.handleClearBookmarksClick.bind(this);
-    this.handleSearchHistoryClick = this.handleSearchHistoryClick.bind(this);
-    this.handleBookmarksClick = this.handleBookmarksClick.bind(this);
+    this.onClearSearchHistoryClick = this.onClearSearchHistoryClick.bind(this);
+    this.onClearBookmarksClick = this.onClearBookmarksClick.bind(this);
+    this.onSearchHistoryClick = this.onSearchHistoryClick.bind(this);
+    this.onBookmarksClick = this.onBookmarksClick.bind(this);
     this.renderSearchHistory = this.renderSearchHistory.bind(this);
     this.renderBookmarks = this.renderBookmarks.bind(this);
   }
 
-  handleBookmarksClick(item: BookmarkItem) {
+  onBookmarksClick(item: BookmarkItem) {
     // TODO: will need to pass type as well eventually
     this.props.openDetail(item.id);
   }
 
-  handleClearBookmarksClick() {
+  onClearBookmarksClick() {
     this.props.clearBookmarks();
   }
 
-  handleSearchHistoryClick(query: SearchQuery) {
+  onSearchHistoryClick(query: SearchQuery) {
     this.props.querySearch(query);
   }
 
-  handleClearSearchHistoryClick() {
+  onClearSearchHistoryClick() {
     this.props.clearSearchHistory();
   }
 
   renderSearchHistory() {
-    const { props, handleSearchHistoryClick, handleClearSearchHistoryClick } = this;
+    const { props, onSearchHistoryClick, onClearSearchHistoryClick } = this;
     const { searchHistory } = props;
     
     if (searchHistory.length === 0) {
@@ -60,15 +60,15 @@ class IndexPage extends React.Component<IndexPageProps> {
 
     return (
       <VerticalGroup spacing="md">
-        <div className={IndexColumnsList}>
+        <div className={indexColumnsList}>
           {searchHistory.map((item, index) => 
             <Button
               key={index}
               variant="link"
               size="md"
               icon="search"
-              className={IndexPageBtnWithNoSpacing}
-              onClick={() => handleSearchHistoryClick(item)}>
+              className={indexPageBtnWithNoSpacing}
+              onClick={() => onSearchHistoryClick(item)}>
               {item.pattern}
             </Button>
           )}
@@ -77,7 +77,7 @@ class IndexPage extends React.Component<IndexPageProps> {
           variant="destructive"
           size="md"
           icon="trash-alt"
-          onClick={handleClearSearchHistoryClick}>
+          onClick={onClearSearchHistoryClick}>
           Clear History
         </Button>
       </VerticalGroup>
@@ -85,7 +85,7 @@ class IndexPage extends React.Component<IndexPageProps> {
   }
 
   renderBookmarks() {
-    const { props, handleBookmarksClick, handleClearBookmarksClick } = this;
+    const { props, onBookmarksClick, onClearBookmarksClick } = this;
     const { bookmarks } = props;
 
     if (bookmarks.length === 0) {
@@ -96,15 +96,15 @@ class IndexPage extends React.Component<IndexPageProps> {
 
     return (
       <VerticalGroup spacing="md">
-        <div className={IndexColumnsList}>
+        <div className={indexColumnsList}>
           {bookmarks.map((item, index) => 
             <Button
               key={index}
               variant="link"
               size="md"
               icon="star"
-              className={IndexPageBtnWithNoSpacing}
-              onClick={() => handleBookmarksClick(item)}>
+              className={indexPageBtnWithNoSpacing}
+              onClick={() => onBookmarksClick(item)}>
               {item.id}
             </Button>
           )}
@@ -113,7 +113,7 @@ class IndexPage extends React.Component<IndexPageProps> {
           variant="destructive"
           size="md"
           icon="trash-alt"
-          onClick={handleClearBookmarksClick}>
+          onClick={onClearBookmarksClick}>
           Clear Bookmarks
         </Button>
       </VerticalGroup>
@@ -123,7 +123,7 @@ class IndexPage extends React.Component<IndexPageProps> {
   render() {
     const { renderSearchHistory, renderBookmarks } = this;
     return (
-      <div className={IndexPageContainer}>
+      <div className={indexPageContainer}>
         <VerticalGroup spacing="lg">
           <VerticalGroup spacing="md">
             <h4>Bookmarked Results:</h4>

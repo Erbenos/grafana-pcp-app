@@ -1,14 +1,14 @@
 import { css } from 'emotion';
 
-const IndexPageContainer = css`
+const indexPageContainer = css`
   grid-area: content;
 `;
 
-const IndexPageBtnWithNoSpacing = css`
+const indexPageBtnWithNoSpacing = css`
   padding: 0;
 `;
 
-const IndexColumnsList = css`
+const indexColumnsList = css`
   display: flex;
   width: 100%;
   flex-wrap: wrap;
@@ -31,4 +31,4 @@ const IndexColumnsList = css`
   }
 `;
 
-export { IndexPageContainer, IndexPageBtnWithNoSpacing, IndexColumnsList };
+export { indexPageContainer, indexPageBtnWithNoSpacing, indexColumnsList };

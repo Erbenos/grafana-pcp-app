@@ -3,8 +3,8 @@ import { VerticalGroup, Button } from "@grafana/ui";
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
-import { ActionsBtnWithNoSpacing } from './styles';
-import { RootState } from '../../reducers';
+import { actionsBtnWithNoSpacing } from './styles';
+import { RootState } from '../../reducers/reducers';
 import { SearchView } from '../../actions/types';
 import { clearResults, querySearch } from '../../actions/search';
 import { bindActionCreators, AnyAction } from 'redux';
@@ -18,7 +18,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, null, AnyAction>)
 
 type ActionsProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
-class Actions extends React.Component<ActionsProps> {
+class Actions extends React.Component<ActionsProps, {}> {
 
   constructor(props: ActionsProps) {
     super(props);
@@ -54,7 +54,7 @@ class Actions extends React.Component<ActionsProps> {
             variant="link"
             size="md"
             icon="book"
-            className={ActionsBtnWithNoSpacing}
+            className={actionsBtnWithNoSpacing}
             onClick={clearResults}>
             Back To Latest Searches &amp; Suggestions
           </Button>}
@@ -63,7 +63,7 @@ class Actions extends React.Component<ActionsProps> {
             variant="link"
             size="md"
             icon="list-ul"
-            className={ActionsBtnWithNoSpacing}
+            className={actionsBtnWithNoSpacing}
             onClick={queryLatestSearch}>
             Back To Results for: <em>{search.query.pattern}</em>
           </Button>}            

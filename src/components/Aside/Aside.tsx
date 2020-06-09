@@ -2,7 +2,7 @@ import React from 'react';
 import { VerticalGroup } from '@grafana/ui';
 import ReactPlaceholder from 'react-placeholder/lib';
 
-import { AsideContainer } from './styles';
+import { asideContainer } from './styles';
 import { SearchView } from 'actions/types';
 import { connect } from 'react-redux';
 import { RootState } from 'reducers';
@@ -13,7 +13,7 @@ const mapStateToProps = (state: RootState) => ({
 
 type AsideProps = ReturnType<typeof mapStateToProps>;
 
-class Aside extends React.Component<AsideProps> {
+class Aside extends React.Component<AsideProps, {}> {
   
   constructor(props: AsideProps) {
     super(props);
@@ -49,7 +49,7 @@ class Aside extends React.Component<AsideProps> {
   render() {
     const { renderContents } = this;
     return (
-      <div className={AsideContainer}>
+      <div className={asideContainer}>
         {renderContents()}
       </div>
     );

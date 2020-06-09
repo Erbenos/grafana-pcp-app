@@ -1,11 +1,11 @@
 import { css } from "emotion";
 
-const ActionsContainer = css`
+const actionsContainer = css`
   grid-area: actions;
 `;
 
-const ActionsBtnWithNoSpacing = css`
+const actionsBtnWithNoSpacing = css`
   padding: 0;
 `;
 
-export { ActionsContainer, ActionsBtnWithNoSpacing };
+export { actionsContainer, actionsBtnWithNoSpacing };

@@ -1,21 +1,21 @@
 import { css } from 'emotion';
 
-const SearchContainer = css`
+const searchContainer = css`
   display: flex;
   grid-area: header;
 `;
 
-const SearchSubmitBtn = css`
+const searchSubmitBtn = css`
   margin-left: 16px;
 `;
 
-const SearchFormGroup = css`
+const searchFormGroup = css`
   display: flex;
   width: 100%;
 `;
 
-const SearchBlock = css`
+const searchBlock = css`
   width: 100%;
 `;
 
-export { SearchContainer, SearchSubmitBtn, SearchFormGroup, SearchBlock };
+export { searchContainer, searchSubmitBtn, searchFormGroup, searchBlock };

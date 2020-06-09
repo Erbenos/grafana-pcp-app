@@ -2,12 +2,12 @@ import React from 'react';
 import { VerticalGroup, Input, Icon, Button, HorizontalGroup, Checkbox, Field } from '@grafana/ui';
 import { connect } from 'react-redux';
 
-import { SearchContainer, SearchSubmitBtn, SearchFormGroup, SearchBlock } from './styles';
 import { querySearch } from '../../actions/search';
-import { RootState } from '../../reducers';
+import { RootState } from '../../reducers/reducers';
 import { SearchEntity } from '../../actions/types';
 import { ThunkDispatch } from 'redux-thunk';
 import { bindActionCreators, AnyAction } from 'redux';
+import { searchContainer, searchFormGroup, searchBlock, searchSubmitBtn } from './styles';
 
 const mapStateToProps = (state: RootState) => ({
   query: state.search.query,
@@ -45,8 +45,8 @@ class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
     if (props.query) {
       this.setState({ query: props.query });
     }
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.onInputChange = this.onInputChange.bind(this);
     this.setEntityFlag = this.setEntityFlag.bind(this);
   }
 
@@ -54,7 +54,7 @@ class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
     this.setState({ query: props.query, inputTouched: false });
   }
 
-  handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const submitForm = (() => {
@@ -72,7 +72,7 @@ class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
     }
   }
 
-  handleInputChange(e: React.FormEvent<HTMLInputElement>) {
+  onInputChange(e: React.FormEvent<HTMLInputElement>) {
     this.setState({ inputTouched: true });
     this.setState({
       query: {
@@ -113,34 +113,34 @@ class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
 
   render() {
     const { 
-      handleSubmit, handleInputChange, state,
+      onSubmit, onInputChange, state,
       metricFlag, instancesFlag, instanceDomainsFlag,
       setEntityFlag, isValidInput, isTouchedInput
     } = this;
     const { pattern } = state.query;
     return (
-      <form className={SearchContainer} onSubmit={handleSubmit}>
+      <form className={searchContainer} onSubmit={onSubmit}>
         <VerticalGroup spacing="sm">
-          <div className={SearchFormGroup}>
+          <div className={searchFormGroup}>
             <Field
-              className={SearchBlock}
+              className={searchBlock}
               invalid={!isValidInput && isTouchedInput}
               error={!isValidInput && isTouchedInput ? 'This input is required' : ''}>
               <Input
                 prefix={<Icon name="search" />}
                 value={pattern}
-                onChange={handleInputChange}
+                onChange={onInputChange}
                 placeholder="Search Phrase"/>
             </Field>
             <Button
-              className={SearchSubmitBtn}
+              className={searchSubmitBtn}
               variant="primary"
               size="md"
               type="submit">
               Search
             </Button>
           </div>
-          <div className={SearchFormGroup}>
+          <div className={searchFormGroup}>
             <HorizontalGroup spacing="lg">
               <Checkbox
                 value={metricFlag}

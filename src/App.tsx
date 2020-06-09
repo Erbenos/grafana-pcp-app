@@ -6,13 +6,13 @@ import 'react-placeholder/lib/reactPlaceholder.css';
 import DetailPage from './pages/Detail/DetailPage';
 import SearchPage from './pages/Search/SearchPage';
 import IndexPage from './pages/Index/IndexPage';
-import { AppLayout } from './styles';
+import { appLayout } from './styles';
 
 import Actions from './components/Actions/Actions';
 import Aside from './components/Aside/Aside';
 import SearchForm from './components/SearchForm/SearchForm';
 import { SearchView } from './actions/types';
-import { RootState } from './reducers';
+import { RootState } from './reducers/reducers';
 
 const mapStateToProps = (state: RootState) => ({
   view: state.search.view,
@@ -20,7 +20,7 @@ const mapStateToProps = (state: RootState) => ({
 
 type AppProps = ReturnType<typeof mapStateToProps> & AppRootProps;
 
-class App extends React.Component<AppProps> {
+class App extends React.Component<AppProps, {}> {
 
   constructor(props: AppProps) {
     super(props);
@@ -43,7 +43,7 @@ class App extends React.Component<AppProps> {
 
   render() {
     return (
-      <div className={AppLayout}>
+      <div className={appLayout}>
         <SearchForm/>
         <Actions/>
         <Aside/>

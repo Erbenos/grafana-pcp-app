@@ -1,11 +1,11 @@
 import { css } from 'emotion';
 
-const SearchPageContainer = css`
+const searchPageContainer = css`
   grid-area: content;
   position: relative;
 `;
 
-const SearchPageSpinnerContainer = css`
+const searchPageSpinnerContainer = css`
   position: absolute;
   top: 0;
   left: 0;
@@ -18,8 +18,8 @@ const SearchPageSpinnerContainer = css`
   align-items: center;
 `;
 
-const PaginationContainer = css`
+const paginationContainer = css`
   margin: 0 auto;
 `;
 
-export { SearchPageContainer, SearchPageSpinnerContainer, PaginationContainer };
+export { searchPageContainer, searchPageSpinnerContainer, paginationContainer };

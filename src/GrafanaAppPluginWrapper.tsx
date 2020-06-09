@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import App from './App';
 import { store } from './store/store';
 
-class GrafanaAppPluginWrapper extends React.Component<AppRootProps> {
+class GrafanaAppPluginWrapper extends React.Component<AppRootProps, {}> {
   constructor(props: AppRootProps) {
     super(props);
   }

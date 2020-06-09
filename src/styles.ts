@@ -1,6 +1,6 @@
 import { css } from 'emotion';
 
-const AppLayout = css`
+const appLayout = css`
   display: grid;
   grid-template-areas: "header actions"
                        "content aside";
@@ -16,5 +16,5 @@ const AppLayout = css`
 `;
 
 export { 
-  AppLayout
+  appLayout
 };

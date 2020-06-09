@@ -1,19 +1,19 @@
 import { css } from 'emotion';
 
-const SearchResultItem = css`
+const searchResultItem = css`
   width: 100%;
   display: flex;
   flex-direction: column;
 `;
 
-const SearchResultHeader = css`
+const searchResultHeader = css`
 `;
 
-const SearchResultTitle = css`
+const searchResultTitle = css`
   margin-bottom: 16px;
 `;
 
-const SearchResultDescription = css`
+const searchResultDescription = css`
   font-size: 0.85rem;
   margin-bottom: 8px;
   white-space: pre-line;
@@ -23,11 +23,14 @@ const SearchResultDescription = css`
   }
 `;
 
-const SearchResultFooter = css`
+const searchResultFooter = css`
 `;
 
-const SearchResultBtnWithNoSpacing = css`
+const searchResultBtnWithNoSpacing = css`
   padding: 0;
 `;
 
-export { SearchResultItem, SearchResultHeader, SearchResultTitle, SearchResultDescription, SearchResultFooter, SearchResultBtnWithNoSpacing };
+export {
+  searchResultItem, searchResultHeader, searchResultTitle,
+  searchResultDescription, searchResultFooter, searchResultBtnWithNoSpacing
+};
