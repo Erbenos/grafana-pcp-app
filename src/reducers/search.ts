@@ -1,7 +1,24 @@
 import { SearchEntity } from '../components/SearchForm/SearchForm';
 import {
-  SearchState, SearchAction, CLEAR_SEARCH_HISTORY,
-  ADD_BOOKMARK, CLEAR_BOOKMARKS, SearchView, CLEAR_RESULTS, SearchQuery, FetchStatus, QUERY_SEARCH_PENDING, QUERY_SEARCH_SUCCESS, OPEN_DETAIL_PENDING, OPEN_DETAIL_SUCCESS, OPEN_DETAIL_ERROR, QUERY_SEARCH_INIT, OPEN_DETAIL_INIT, SearchResultState, SearchDetailState, QUERY_SEARCH_ERROR
+  SearchState,
+  SearchAction,
+  CLEAR_SEARCH_HISTORY,
+  ADD_BOOKMARK,
+  CLEAR_BOOKMARKS,
+  SearchView,
+  CLEAR_RESULTS,
+  SearchQuery,
+  FetchStatus,
+  QUERY_SEARCH_PENDING,
+  QUERY_SEARCH_SUCCESS,
+  OPEN_DETAIL_PENDING,
+  OPEN_DETAIL_SUCCESS,
+  OPEN_DETAIL_ERROR,
+  QUERY_SEARCH_INIT,
+  OPEN_DETAIL_INIT,
+  SearchResultState,
+  SearchDetailState,
+  QUERY_SEARCH_ERROR,
 } from '../actions/types';
 
 const initialResult = (): SearchResultState => ({
@@ -10,7 +27,7 @@ const initialResult = (): SearchResultState => ({
   pagination: {
     currentPage: 1,
     numberOfPages: 5,
-  }
+  },
 });
 
 const initialQuery = (): SearchQuery => ({
@@ -38,9 +55,10 @@ const searchReducer = (state = initialState, action: SearchAction): SearchState 
     case QUERY_SEARCH_INIT: {
       const query = action.payload;
       const updateSearchHistory = (query: SearchQuery) => {
-        return !state.history.some(x => x.pattern === query.pattern &&
-                                        x.entityFlags === query.entityFlags) &&
-                query.pageNum === 1;
+        return (
+          !state.history.some(x => x.pattern === query.pattern && x.entityFlags === query.entityFlags) &&
+          query.pageNum === 1
+        );
       };
       return {
         ...state,
@@ -50,7 +68,7 @@ const searchReducer = (state = initialState, action: SearchAction): SearchState 
         // TODO: do we really want to reset detail?
         detail: initialDetail(),
       };
-    };
+    }
     case QUERY_SEARCH_PENDING:
       return {
         ...state,
@@ -68,7 +86,7 @@ const searchReducer = (state = initialState, action: SearchAction): SearchState 
           status: FetchStatus.SUCCESS,
         },
       };
-    };
+    }
     case QUERY_SEARCH_ERROR: {
       return {
         ...state,
@@ -77,11 +95,11 @@ const searchReducer = (state = initialState, action: SearchAction): SearchState 
           status: FetchStatus.ERROR,
         },
       };
-    };
+    }
     case CLEAR_SEARCH_HISTORY:
       return {
         ...state,
-        history: []
+        history: [],
       };
     case ADD_BOOKMARK:
       return {
@@ -115,7 +133,7 @@ const searchReducer = (state = initialState, action: SearchAction): SearchState 
           status: FetchStatus.SUCCESS,
         },
       };
-    };
+    }
     case OPEN_DETAIL_ERROR:
       return {
         ...state,

@@ -25,132 +25,141 @@ export const QUERY_SEARCH_ERROR = 'QUERY_SEARCH_ERROR';
 export const CLEAR_RESULTS = 'CLEAR_RESULTS';
 
 export enum SearchView {
-  Detail, Search, Index
-};
+  Detail,
+  Search,
+  Index,
+}
 
 export interface AddBookmarkAction {
-  type: typeof ADD_BOOKMARK,
-  payload: BookmarkItem,
-};
+  type: typeof ADD_BOOKMARK;
+  payload: BookmarkItem;
+}
 
 export interface ClearBookmarksAction {
-  type: typeof CLEAR_BOOKMARKS,
-};
+  type: typeof CLEAR_BOOKMARKS;
+}
 
 export interface BookmarksState {
-  items: SearchItemResponse[],
-};
+  items: SearchItemResponse[];
+}
 
 export interface ClearSeachHistoryAction {
-  type: typeof CLEAR_SEARCH_HISTORY,
-};
+  type: typeof CLEAR_SEARCH_HISTORY;
+}
 
 export interface QuerySearchInitAction {
-  type: typeof QUERY_SEARCH_INIT,
-  payload: SearchQuery,
-};
+  type: typeof QUERY_SEARCH_INIT;
+  payload: SearchQuery;
+}
 
 export interface QuerySearchPendingAction {
-  type: typeof QUERY_SEARCH_PENDING,
-};
+  type: typeof QUERY_SEARCH_PENDING;
+}
 
 export interface QuerySearchSuccessAction {
-  type: typeof QUERY_SEARCH_SUCCESS,
-  payload: SearchResult,
-};
+  type: typeof QUERY_SEARCH_SUCCESS;
+  payload: SearchResult;
+}
 
 export interface QuerySearchErrorAction {
-  type: typeof QUERY_SEARCH_ERROR,
-};
+  type: typeof QUERY_SEARCH_ERROR;
+}
 
-export type QuerySearchAction = 
-  QuerySearchInitAction | QuerySearchPendingAction |
-  QuerySearchSuccessAction | QuerySearchErrorAction;
+export type QuerySearchAction =
+  | QuerySearchInitAction
+  | QuerySearchPendingAction
+  | QuerySearchSuccessAction
+  | QuerySearchErrorAction;
 
 export interface OpenDetailInitAction {
-  type: typeof OPEN_DETAIL_INIT,
-};
+  type: typeof OPEN_DETAIL_INIT;
+}
 
 export interface OpenDetailPendingAction {
-  type: typeof OPEN_DETAIL_PENDING,
-};
+  type: typeof OPEN_DETAIL_PENDING;
+}
 
 export interface OpenDetailSuccessAction {
-  type: typeof OPEN_DETAIL_SUCCESS,
-  payload: PmApiMetricEndpointMetricResponse,
-};
+  type: typeof OPEN_DETAIL_SUCCESS;
+  payload: PmApiMetricEndpointMetricResponse;
+}
 
 export interface OpenDetailErrorAction {
-  type: typeof OPEN_DETAIL_ERROR,
-};
+  type: typeof OPEN_DETAIL_ERROR;
+}
 
 export interface ClearResultsAction {
-  type: typeof CLEAR_RESULTS,
-};
+  type: typeof CLEAR_RESULTS;
+}
 
-export type OpenDetailAction = 
-  OpenDetailInitAction | OpenDetailPendingAction |
-  OpenDetailSuccessAction | OpenDetailErrorAction;
+export type OpenDetailAction =
+  | OpenDetailInitAction
+  | OpenDetailPendingAction
+  | OpenDetailSuccessAction
+  | OpenDetailErrorAction;
 
 export type SearchAction =
-  ClearBookmarksAction | ClearSeachHistoryAction |
-  QuerySearchAction | OpenDetailAction | 
-  AddBookmarkAction | ClearResultsAction;
+  | ClearBookmarksAction
+  | ClearSeachHistoryAction
+  | QuerySearchAction
+  | OpenDetailAction
+  | AddBookmarkAction
+  | ClearResultsAction;
 
 export enum EntityType {
   Metric,
   Instance,
   InstanceDomain,
-};
+}
 
 export interface SearchItemResponse {
-  entityId: string,
-  name: string,
-  type: EntityType,
-  indom: string,
-  oneline: string | null,
-  helptext: string,
-  value: string | null,
-};
+  entityId: string;
+  name: string;
+  type: EntityType;
+  indom: string;
+  oneline: string | null;
+  helptext: string;
+  value: string | null;
+}
 
 export interface BookmarkItem {
   // Is also human readable name
-  id: string,
-  type: EntityType,
-};
+  id: string;
+  type: EntityType;
+}
 
 export enum FetchStatus {
   INIT,
   PENDING,
   SUCCESS,
   ERROR,
-};
+}
 
 export interface SearchResult {
-  items: SearchItemResponse[],
+  items: SearchItemResponse[];
   pagination: {
-    currentPage: number,
-    numberOfPages: number,
-  },
+    currentPage: number;
+    numberOfPages: number;
+  };
 }
 
 export interface SearchResultState extends SearchResult {
-  status: FetchStatus,
-};
+  status: FetchStatus;
+}
 
 export interface SearchDetailState {
-  status: FetchStatus,
-  item: PmApiMetricEndpointMetricResponse | null,
-};
+  status: FetchStatus;
+  item: PmApiMetricEndpointMetricResponse | null;
+}
 
 export interface SearchState {
-  view: SearchView,
-  query: SearchQuery,
-  history: SearchQuery[],
-  result: SearchResultState,
-  bookmarks: BookmarkItem[],
-  detail: SearchDetailState,
-};
+  view: SearchView;
+  query: SearchQuery;
+  history: SearchQuery[];
+  result: SearchResultState;
+  bookmarks: BookmarkItem[];
+  detail: SearchDetailState;
+}
 
 export enum SearchEntity {
   None = 0,
@@ -158,10 +167,10 @@ export enum SearchEntity {
   InstanceDomains = 1 << 1,
   Instances = 1 << 2,
   All = Metrics | InstanceDomains | Instances,
-};
+}
 
 export interface SearchQuery {
-  pattern: string,
-  entityFlags: SearchEntity,
-  pageNum: number,
-};
+  pattern: string;
+  entityFlags: SearchEntity;
+  pageNum: number;
+}

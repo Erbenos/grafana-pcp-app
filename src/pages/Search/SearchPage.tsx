@@ -21,7 +21,6 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, null, AnyAction>)
 type SearchPageProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & Themeable;
 
 class SearchPage extends React.Component<SearchPageProps, {}> {
-
   constructor(props: SearchPageProps) {
     super(props);
     this.onPaginationClick = this.onPaginationClick.bind(this);
@@ -43,11 +42,15 @@ class SearchPage extends React.Component<SearchPageProps, {}> {
     if (this.props.search.result.status === FetchStatus.PENDING) {
       console.log(this.props.theme.palette.black);
       return (
-        <div className={cx(
-          searchPageSpinnerContainer,
-          css`background-color: ${this.props.theme.colors.bg1}8f`
-        )}>
-          <Spinner size={40}/>
+        <div
+          className={cx(
+            searchPageSpinnerContainer,
+            css`
+              background-color: ${this.props.theme.colors.bg1}8f;
+            `
+          )}
+        >
+          <Spinner size={40} />
         </div>
       );
     }
@@ -66,23 +69,22 @@ class SearchPage extends React.Component<SearchPageProps, {}> {
             <VerticalGroup spacing="lg">
               <h4>Results:</h4>
               <VerticalGroup spacing="lg">
-                {items.map((x, i) =>
-                  <SearchResult item={x} openDetail={(entity) => onDetailClick(entity) } />
-                )}
+                {items.map((x, i) => (
+                  <SearchResult item={x} openDetail={entity => onDetailClick(entity)} />
+                ))}
               </VerticalGroup>
               <div className={paginationContainer}>
-                <Pagination 
+                <Pagination
                   numberOfPages={pagination.numberOfPages}
                   currentPage={pagination.currentPage}
-                  onNavigate={onPaginationClick} />
+                  onNavigate={onPaginationClick}
+                />
               </div>
-            </VerticalGroup>        
+            </VerticalGroup>
           );
         }
         if (status === FetchStatus.PENDING) {
-          return (
-            <p>Searching&hellip;</p>
-          );
+          return <p>Searching&hellip;</p>;
         }
         return (
           <VerticalGroup spacing="lg">
@@ -90,11 +92,9 @@ class SearchPage extends React.Component<SearchPageProps, {}> {
             <p>There are no results.</p>
           </VerticalGroup>
         );
-      };
+      }
       case FetchStatus.ERROR: {
-        return (
-          <p>Error fetching values.</p>
-        );
+        return <p>Error fetching values.</p>;
       }
     }
     return;
@@ -111,9 +111,5 @@ class SearchPage extends React.Component<SearchPageProps, {}> {
   }
 }
 
-
-export default withTheme(connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(SearchPage));
+export default withTheme(connect(mapStateToProps, mapDispatchToProps)(SearchPage));
 export { SearchPageProps };

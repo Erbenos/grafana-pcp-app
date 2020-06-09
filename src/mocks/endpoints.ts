@@ -6,8 +6,8 @@ export const querySearchEndpoint = (
   entityFlags: SearchEntity,
   limit: number,
   offset: number
-): Promise<Array<SearchItemResponse>> => {
-  return new Promise<Array<SearchItemResponse>>((resolve, reject) => {
+): Promise<SearchItemResponse[]> => {
+  return new Promise<SearchItemResponse[]>((resolve, reject) => {
     setTimeout(() => {
       resolve(searchEntities.slice(0, 5));
     }, 2000);

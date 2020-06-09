@@ -6,8 +6,7 @@ const searchResultItem = css`
   flex-direction: column;
 `;
 
-const searchResultHeader = css`
-`;
+const searchResultHeader = css``;
 
 const searchResultTitle = css`
   margin-bottom: 16px;
@@ -23,14 +22,17 @@ const searchResultDescription = css`
   }
 `;
 
-const searchResultFooter = css`
-`;
+const searchResultFooter = css``;
 
 const searchResultBtnWithNoSpacing = css`
   padding: 0;
 `;
 
 export {
-  searchResultItem, searchResultHeader, searchResultTitle,
-  searchResultDescription, searchResultFooter, searchResultBtnWithNoSpacing
+  searchResultItem,
+  searchResultHeader,
+  searchResultTitle,
+  searchResultDescription,
+  searchResultFooter,
+  searchResultBtnWithNoSpacing,
 };

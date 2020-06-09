@@ -21,7 +21,6 @@ const mapStateToProps = (state: RootState) => ({
 type AppProps = ReturnType<typeof mapStateToProps> & AppRootProps;
 
 class App extends React.Component<AppProps, {}> {
-
   constructor(props: AppProps) {
     super(props);
   }
@@ -31,30 +30,26 @@ class App extends React.Component<AppProps, {}> {
 
     switch (view) {
       case SearchView.Detail:
-        return <DetailPage/>;
+        return <DetailPage />;
       case SearchView.Search:
-        return <SearchPage/>;
+        return <SearchPage />;
       case SearchView.Index:
-        return <IndexPage/>;
+        return <IndexPage />;
       default:
         return;
-    };         
+    }
   }
 
   render() {
     return (
       <div className={appLayout}>
-        <SearchForm/>
-        <Actions/>
-        <Aside/>
+        <SearchForm />
+        <Actions />
+        <Aside />
         {this.renderPageComponent()}
       </div>
     );
   }
 }
 
-
-export default connect(
-  mapStateToProps,
-  {},
-)(App);
+export default connect(mapStateToProps, {})(App);

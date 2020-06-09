@@ -15,7 +15,7 @@ const _genMatchingName = (pattern: string) => {
     'hinv.map.dmname',
     'kvm.nmi_injections',
   ];
-  return `${_.sample(randomMetricNames)}_${pattern}`;  
+  return `${_.sample(randomMetricNames)}_${pattern}`;
 };
 
 export { _genMatchingName };

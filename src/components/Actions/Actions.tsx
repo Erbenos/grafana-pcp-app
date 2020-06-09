@@ -1,5 +1,5 @@
 import React from 'react';
-import { VerticalGroup, Button } from "@grafana/ui";
+import { VerticalGroup, Button } from '@grafana/ui';
 import { connect } from 'react-redux';
 import { ThunkDispatch } from 'redux-thunk';
 
@@ -19,7 +19,6 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, null, AnyAction>)
 type ActionsProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
 class Actions extends React.Component<ActionsProps, {}> {
-
   constructor(props: ActionsProps) {
     super(props);
     this.queryLatestSearch = this.queryLatestSearch.bind(this);
@@ -32,7 +31,7 @@ class Actions extends React.Component<ActionsProps, {}> {
   }
 
   get showBackToIndexPageBtn() {
-    return this.props.search.view !== SearchView.Index; 
+    return this.props.search.view !== SearchView.Index;
   }
 
   clearResults() {
@@ -45,35 +44,30 @@ class Actions extends React.Component<ActionsProps, {}> {
   }
 
   render() {
-    const { clearResults, queryLatestSearch, showBackToPatternBtn, showBackToIndexPageBtn, props } = this; 
+    const { clearResults, queryLatestSearch, showBackToPatternBtn, showBackToIndexPageBtn, props } = this;
     const { search } = props;
     return (
       <VerticalGroup spacing="xs">
-        {showBackToIndexPageBtn &&
-          <Button
-            variant="link"
-            size="md"
-            icon="book"
-            className={actionsBtnWithNoSpacing}
-            onClick={clearResults}>
+        {showBackToIndexPageBtn && (
+          <Button variant="link" size="md" icon="book" className={actionsBtnWithNoSpacing} onClick={clearResults}>
             Back To Latest Searches &amp; Suggestions
-          </Button>}
-        {showBackToPatternBtn &&
+          </Button>
+        )}
+        {showBackToPatternBtn && (
           <Button
             variant="link"
             size="md"
             icon="list-ul"
             className={actionsBtnWithNoSpacing}
-            onClick={queryLatestSearch}>
+            onClick={queryLatestSearch}
+          >
             Back To Results for: <em>{search.query.pattern}</em>
-          </Button>}            
+          </Button>
+        )}
       </VerticalGroup>
     );
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Actions);
+export default connect(mapStateToProps, mapDispatchToProps)(Actions);
 export { ActionsProps };

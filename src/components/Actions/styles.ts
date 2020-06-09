@@ -1,4 +1,4 @@
-import { css } from "emotion";
+import { css } from 'emotion';
 
 const actionsContainer = css`
   grid-area: actions;

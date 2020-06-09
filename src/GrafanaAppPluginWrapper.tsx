@@ -41,7 +41,7 @@ class GrafanaAppPluginWrapper extends React.Component<AppRootProps, {}> {
   render() {
     return (
       <Provider store={store}>
-        <App {...this.props}/>
+        <App {...this.props} />
       </Provider>
     );
   }

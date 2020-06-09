@@ -5,15 +5,27 @@ import { css, cx } from 'emotion';
 import ReactPlaceholder from 'react-placeholder/lib';
 import { connect } from 'react-redux';
 
-
 import { addBookmark } from '../../actions/search';
 import { RootState } from '../../reducers/reducers';
-import { FetchStatus, EntityType } from 'actions/types';
-import { otherMetaItem, otherMetaItemTitle, detailPageSpinnerContainer, detailPageDescription, detailPageItem, detailPageHeader, detailPageTitle, detailPageFooter, detailPageBtn, detailPageContainer, otherMetaItemList, otherMetaItemValue } from './styles';
+import { FetchStatus, EntityType } from '../../actions/types';
+import {
+  otherMetaItem,
+  otherMetaItemTitle,
+  detailPageSpinnerContainer,
+  detailPageDescription,
+  detailPageItem,
+  detailPageHeader,
+  detailPageTitle,
+  detailPageFooter,
+  detailPageBtn,
+  detailPageContainer,
+  otherMetaItemList,
+  otherMetaItemValue,
+} from './styles';
 
 const mapStateToProps = (state: RootState) => ({
   entity: state.search.detail,
-  isBookmarked: state.search.bookmarks.some(x => x.id === state.search.detail.item?.name)
+  isBookmarked: state.search.bookmarks.some(x => x.id === state.search.detail.item?.name),
 });
 
 const dispatchProps = {
@@ -26,12 +38,12 @@ enum EntityTabOpt {
   InstanceDomains = 'instance-domains',
   Labels = 'labels',
   OtherMeta = 'other-meta',
-};
+}
 
 interface DetailPageState {
-  selectedOption: EntityTabOpt,
-  options: Array<SelectableValue<EntityTabOpt>>,
-};
+  selectedOption: EntityTabOpt;
+  options: Array<SelectableValue<EntityTabOpt>>;
+}
 
 class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
   state: DetailPageState = this.initialState;
@@ -45,7 +57,7 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
         // TODO: will we even render Labels
         // { label: 'Labels', value: EntityTabOpt.Labels },
       ],
-    }
+    };
   }
 
   constructor(props: DetailPageProps) {
@@ -84,11 +96,15 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
     if (this.props.entity.status === FetchStatus.PENDING) {
       console.log(this.props.theme.palette.black);
       return (
-        <div className={cx(
-          detailPageSpinnerContainer,
-          css`background-color: ${this.props.theme.colors.bg1}8f`
-        )}>
-          <Spinner size={40}/>
+        <div
+          className={cx(
+            detailPageSpinnerContainer,
+            css`
+              background-color: ${this.props.theme.colors.bg1}8f;
+            `
+          )}
+        >
+          <Spinner size={40} />
         </div>
       );
     }
@@ -101,23 +117,24 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
     if (item === null) {
       return;
     }
-    if (item["text-help"]) {
-      description = item["text-help"];
-    } else if (item["text-oneline"]) {
-      description = item["text-oneline"];
+    if (item['text-help']) {
+      description = item['text-help'];
+    } else if (item['text-oneline']) {
+      description = item['text-oneline'];
     }
-    return (
-      <div className={detailPageDescription}>
-        {description && <p>{description}</p>}
-      </div>
-    );
+    return <div className={detailPageDescription}>{description && <p>{description}</p>}</div>;
   }
 
   renderDetail() {
     const {
-      props, state, renderEntityInfoTab,
-      onBookmark, onPreview, setSelected,
-      hasInstanceDomains, renderDesc
+      props,
+      state,
+      renderEntityInfoTab,
+      onBookmark,
+      onPreview,
+      setSelected,
+      hasInstanceDomains,
+      renderDesc,
     } = this;
     const { isBookmarked, entity } = props;
     const { status, item } = entity;
@@ -129,35 +146,27 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
           return (
             <article className={detailPageItem}>
               <header className={detailPageHeader}>
-                <h2 className={detailPageTitle}>
-                  {item.name}
-                </h2>
+                <h2 className={detailPageTitle}>{item.name}</h2>
               </header>
               {renderDesc()}
               <footer className={detailPageFooter}>
                 <VerticalGroup spacing="lg">
                   <HorizontalGroup spacing="lg">
-                    {!isBookmarked &&
-                      <Button
-                        variant="link"
-                        size="md"
-                        icon="save"
-                        className={detailPageBtn}
-                        onClick={onBookmark}>
+                    {!isBookmarked && (
+                      <Button variant="link" size="md" icon="save" className={detailPageBtn} onClick={onBookmark}>
                         Bookmark This Result
                       </Button>
-                    }
-                    <Button
-                      variant="link"
-                      size="md"
-                      icon="chart-line"
-                      className={detailPageBtn}
-                      onClick={onPreview}>
+                    )}
+                    <Button variant="link" size="md" icon="chart-line" className={detailPageBtn} onClick={onPreview}>
                       Preview
                     </Button>
                   </HorizontalGroup>
-                  {hasInstanceDomains &&
-                    <div className={css`width: 100%`}>
+                  {hasInstanceDomains && (
+                    <div
+                      className={css`
+                        width: 100%;
+                      `}
+                    >
                       <RadioButtonGroup
                         options={state.options}
                         disabled={false}
@@ -167,7 +176,7 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
                         fullWidth
                       />
                     </div>
-                  }                  
+                  )}
                   {renderEntityInfoTab()}
                 </VerticalGroup>
               </footer>
@@ -175,19 +184,13 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
           );
         }
         if (status === FetchStatus.PENDING) {
-          return (
-            <p>Loading&hellip;</p>
-          );
+          return <p>Loading&hellip;</p>;
         }
-        return (
-          <p>Entity not found.</p>
-        );
+        return <p>Entity not found.</p>;
       }
       case FetchStatus.ERROR: {
-        return (
-          <p>Error fetching entity.</p>
-        );
-      };
+        return <p>Error fetching entity.</p>;
+      }
     }
     return;
   }
@@ -198,12 +201,12 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
     switch (selectedOption) {
       case EntityTabOpt.InstanceDomains:
         if (hasInstanceDomains) {
-          return <InstanceDomainsTab/>;
+          return <InstanceDomainsTab />;
         }
         break;
       case EntityTabOpt.Labels:
         if (hasInstanceDomains) {
-          return <LabelsTab/>;
+          return <LabelsTab />;
         }
         break;
       case EntityTabOpt.OtherMeta:
@@ -211,7 +214,7 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
           return;
         }
         const { pmid, type, sem, units } = props.entity.item;
-        return <OtherMetaTab pmid={pmid} type={type} sem={sem} units={units}/>;
+        return <OtherMetaTab pmid={pmid} type={type} sem={sem} units={units} />;
     }
     return;
   }
@@ -219,30 +222,27 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
   setSelected(selectedOption?: EntityTabOpt) {
     if (selectedOption) {
       this.setState({ selectedOption });
-    };
+    }
   }
 
   render() {
-    const {
-      renderSpinner,
-      renderDetail,
-    } = this;
+    const { renderSpinner, renderDetail } = this;
     return (
       <div className={detailPageContainer}>
         {renderSpinner()}
         {renderDetail()}
       </div>
-    );    
+    );
   }
 }
 
 class InstanceDomainsTab extends React.Component<{}, {}> {
-
   render() {
     return (
       <VerticalGroup spacing="lg">
         <h4>Instance Domains</h4>
         <ReactPlaceholder type="text" rows={3} ready={false}>
+          &nbsp;
         </ReactPlaceholder>
       </VerticalGroup>
     );
@@ -250,12 +250,12 @@ class InstanceDomainsTab extends React.Component<{}, {}> {
 }
 
 class LabelsTab extends React.Component<{}, {}> {
-
   render() {
     return (
       <VerticalGroup spacing="lg">
         <h4>Labels</h4>
         <ReactPlaceholder type="text" rows={5} ready={false}>
+          &nsbp;
         </ReactPlaceholder>
       </VerticalGroup>
     );
@@ -263,14 +263,13 @@ class LabelsTab extends React.Component<{}, {}> {
 }
 
 interface OtherMetaTabProps {
-  pmid: string,
-  type: string,
-  sem: string,
-  units: string,
+  pmid: string;
+  type: string;
+  sem: string;
+  units: string;
 }
 
 class OtherMetaTab extends React.Component<OtherMetaTabProps, {}> {
-
   render() {
     const { pmid, type, sem, units } = this.props;
     return (
@@ -278,36 +277,20 @@ class OtherMetaTab extends React.Component<OtherMetaTabProps, {}> {
         <h4>Other Meta</h4>
         <div className={otherMetaItemList}>
           <div className={otherMetaItem}>
-            <span className={otherMetaItemTitle}>
-              PMID:
-            </span>
-            <span className={otherMetaItemValue}>
-              {pmid}
-            </span>
+            <span className={otherMetaItemTitle}>PMID:</span>
+            <span className={otherMetaItemValue}>{pmid}</span>
           </div>
           <div className={otherMetaItem}>
-            <span className={otherMetaItemTitle}>
-              Type:
-            </span>
-            <span className={otherMetaItemValue}>
-              {type}
-            </span>
+            <span className={otherMetaItemTitle}>Type:</span>
+            <span className={otherMetaItemValue}>{type}</span>
           </div>
           <div className={otherMetaItem}>
-            <span className={otherMetaItemTitle}>
-              Semantics:
-            </span>
-            <span className={otherMetaItemValue}>
-              {sem}
-            </span>
+            <span className={otherMetaItemTitle}>Semantics:</span>
+            <span className={otherMetaItemValue}>{sem}</span>
           </div>
           <div className={otherMetaItem}>
-            <span className={otherMetaItemTitle}>
-              Units:
-            </span>
-            <span className={otherMetaItemValue}>
-              {units}
-            </span>
+            <span className={otherMetaItemTitle}>Units:</span>
+            <span className={otherMetaItemValue}>{units}</span>
           </div>
         </div>
       </VerticalGroup>
@@ -315,9 +298,6 @@ class OtherMetaTab extends React.Component<OtherMetaTabProps, {}> {
   }
 }
 
-export default withTheme(connect(
-  mapStateToProps,
-  { addBookmark }
-)(DetailPage));
+export default withTheme(connect(mapStateToProps, { addBookmark })(DetailPage));
 
 export { DetailPageProps };

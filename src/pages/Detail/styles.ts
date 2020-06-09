@@ -24,8 +24,7 @@ const detailPageItem = css`
   flex-direction: column;
 `;
 
-const detailPageHeader = css`
-`;
+const detailPageHeader = css``;
 
 const detailPageTitle = css`
   margin-bottom: 24px;
@@ -40,8 +39,7 @@ const detailPageDescription = css`
   }
 `;
 
-const detailPageFooter = css`
-`;
+const detailPageFooter = css``;
 
 const detailPageBtn = css`
   padding: 0;
@@ -70,9 +68,7 @@ const otherMetaItemList = css`
   }
 `;
 
-const otherMetaItem = css`
-
-`;
+const otherMetaItem = css``;
 
 const otherMetaItemTitle = css`
   display: block;
@@ -84,8 +80,16 @@ const otherMetaItemValue = css`
 `;
 
 export {
-  detailPageContainer, detailPageSpinnerContainer, detailPageItem,
-  detailPageHeader, detailPageTitle, detailPageDescription,
-  detailPageFooter, detailPageBtn,
-  otherMetaItemList, otherMetaItem, otherMetaItemTitle, otherMetaItemValue
+  detailPageContainer,
+  detailPageSpinnerContainer,
+  detailPageItem,
+  detailPageHeader,
+  detailPageTitle,
+  detailPageDescription,
+  detailPageFooter,
+  detailPageBtn,
+  otherMetaItemList,
+  otherMetaItem,
+  otherMetaItemTitle,
+  otherMetaItemValue,
 };

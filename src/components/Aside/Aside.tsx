@@ -5,7 +5,7 @@ import ReactPlaceholder from 'react-placeholder/lib';
 import { asideContainer } from './styles';
 import { SearchView } from 'actions/types';
 import { connect } from 'react-redux';
-import { RootState } from 'reducers';
+import { RootState } from 'reducers/reducers';
 
 const mapStateToProps = (state: RootState) => ({
   view: state.search.view,
@@ -14,7 +14,6 @@ const mapStateToProps = (state: RootState) => ({
 type AsideProps = ReturnType<typeof mapStateToProps>;
 
 class Aside extends React.Component<AsideProps, {}> {
-  
   constructor(props: AsideProps) {
     super(props);
     this.renderContents = this.renderContents.bind(this);
@@ -29,6 +28,7 @@ class Aside extends React.Component<AsideProps, {}> {
             <VerticalGroup spacing="lg">
               <h4>Metrics From Same Namespace</h4>
               <ReactPlaceholder type="text" rows={6} ready={false}>
+                &nbsp;
               </ReactPlaceholder>
             </VerticalGroup>
           </>
@@ -39,6 +39,7 @@ class Aside extends React.Component<AsideProps, {}> {
             <VerticalGroup spacing="lg">
               <h4>Metrics Index</h4>
               <ReactPlaceholder type="text" rows={10} ready={false}>
+                &nsbp;
               </ReactPlaceholder>
             </VerticalGroup>
           </>
@@ -48,16 +49,8 @@ class Aside extends React.Component<AsideProps, {}> {
 
   render() {
     const { renderContents } = this;
-    return (
-      <div className={asideContainer}>
-        {renderContents()}
-      </div>
-    );
+    return <div className={asideContainer}>{renderContents()}</div>;
   }
 }
 
-
-export default connect(
-  mapStateToProps,
-  {},
-)(Aside);
+export default connect(mapStateToProps, {})(Aside);

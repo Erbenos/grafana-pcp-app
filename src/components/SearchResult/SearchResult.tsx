@@ -2,21 +2,27 @@ import React from 'react';
 import { HorizontalGroup, Button } from '@grafana/ui';
 
 import { SearchItemResponse } from '../../actions/types';
-import { searchResultDescription, searchResultFooter, searchResultBtnWithNoSpacing, searchResultItem, searchResultHeader, searchResultTitle } from './styles';
+import {
+  searchResultDescription,
+  searchResultFooter,
+  searchResultBtnWithNoSpacing,
+  searchResultItem,
+  searchResultHeader,
+  searchResultTitle,
+} from './styles';
 
 interface SearchResultProps {
-  item: SearchItemResponse,
+  item: SearchItemResponse;
   openDetail: (entity: SearchItemResponse) => void;
-};
+}
 
 class SearchResult extends React.PureComponent<SearchResultProps, {}> {
-
   constructor(props: SearchResultProps) {
     super(props);
     this.renderDesc = this.renderDesc.bind(this);
     this.renderFooter = this.renderFooter.bind(this);
   }
-  
+
   get hasInstanceDomains() {
     return this.props.item.indom !== 'PM_INDOM_NULL';
   }
@@ -29,11 +35,7 @@ class SearchResult extends React.PureComponent<SearchResultProps, {}> {
     } else if (item.helptext) {
       description = item.helptext;
     }
-    return (
-      <div className={searchResultDescription}>
-        {description && <p>{description}</p>}
-      </div>
-    );
+    return <div className={searchResultDescription}>{description && <p>{description}</p>}</div>;
   }
 
   renderFooter() {
@@ -46,33 +48,37 @@ class SearchResult extends React.PureComponent<SearchResultProps, {}> {
             size="md"
             icon="eye"
             className={searchResultBtnWithNoSpacing}
-            onClick={() => props.openDetail(props.item)}>
+            onClick={() => props.openDetail(props.item)}
+          >
             Read More
           </Button>
           <HorizontalGroup spacing="md">
-            {hasInstanceDomains && 
+            {hasInstanceDomains && (
               <Button
                 variant="link"
                 size="md"
                 className={searchResultBtnWithNoSpacing}
-                onClick={() => props.openDetail(props.item)}>
+                onClick={() => props.openDetail(props.item)}
+              >
                 Instance Domain
               </Button>
-            }
-            {hasInstanceDomains &&
+            )}
+            {hasInstanceDomains && (
               <Button
                 variant="link"
                 size="md"
                 className={searchResultBtnWithNoSpacing}
-                onClick={() => props.openDetail(props.item)}>
+                onClick={() => props.openDetail(props.item)}
+              >
                 Labels
               </Button>
-            }
+            )}
             <Button
               variant="link"
               size="md"
               className={searchResultBtnWithNoSpacing}
-              onClick={() => props.openDetail(props.item)}>
+              onClick={() => props.openDetail(props.item)}
+            >
               Other Meta
             </Button>
           </HorizontalGroup>
@@ -89,8 +95,8 @@ class SearchResult extends React.PureComponent<SearchResultProps, {}> {
         <header className={searchResultHeader}>
           <h4 className={searchResultTitle}>{item.name}</h4>
         </header>
-        { renderDesc() }
-        { renderFooter() }
+        {renderDesc()}
+        {renderFooter()}
       </article>
     );
   }

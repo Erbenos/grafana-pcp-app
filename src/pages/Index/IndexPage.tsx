@@ -20,7 +20,6 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, null, QuerySearch
 type IndexPageProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
 class IndexPage extends React.Component<IndexPageProps, {}> {
-
   constructor(props: IndexPageProps) {
     super(props);
     this.onClearSearchHistoryClick = this.onClearSearchHistoryClick.bind(this);
@@ -51,33 +50,28 @@ class IndexPage extends React.Component<IndexPageProps, {}> {
   renderSearchHistory() {
     const { props, onSearchHistoryClick, onClearSearchHistoryClick } = this;
     const { searchHistory } = props;
-    
+
     if (searchHistory.length === 0) {
-      return (
-        <p>No search queries in history.</p>
-      );
+      return <p>No search queries in history.</p>;
     }
 
     return (
       <VerticalGroup spacing="md">
         <div className={indexColumnsList}>
-          {searchHistory.map((item, index) => 
+          {searchHistory.map((item, index) => (
             <Button
               key={index}
               variant="link"
               size="md"
               icon="search"
               className={indexPageBtnWithNoSpacing}
-              onClick={() => onSearchHistoryClick(item)}>
+              onClick={() => onSearchHistoryClick(item)}
+            >
               {item.pattern}
             </Button>
-          )}
-        </div>          
-        <Button
-          variant="destructive"
-          size="md"
-          icon="trash-alt"
-          onClick={onClearSearchHistoryClick}>
+          ))}
+        </div>
+        <Button variant="destructive" size="md" icon="trash-alt" onClick={onClearSearchHistoryClick}>
           Clear History
         </Button>
       </VerticalGroup>
@@ -89,31 +83,26 @@ class IndexPage extends React.Component<IndexPageProps, {}> {
     const { bookmarks } = props;
 
     if (bookmarks.length === 0) {
-      return (
-        <p>No bookmarks saved.</p>
-      );
+      return <p>No bookmarks saved.</p>;
     }
 
     return (
       <VerticalGroup spacing="md">
         <div className={indexColumnsList}>
-          {bookmarks.map((item, index) => 
+          {bookmarks.map((item, index) => (
             <Button
               key={index}
               variant="link"
               size="md"
               icon="star"
               className={indexPageBtnWithNoSpacing}
-              onClick={() => onBookmarksClick(item)}>
+              onClick={() => onBookmarksClick(item)}
+            >
               {item.id}
             </Button>
-          )}
+          ))}
         </div>
-        <Button
-          variant="destructive"
-          size="md"
-          icon="trash-alt"
-          onClick={onClearBookmarksClick}>
+        <Button variant="destructive" size="md" icon="trash-alt" onClick={onClearBookmarksClick}>
           Clear Bookmarks
         </Button>
       </VerticalGroup>
@@ -127,7 +116,7 @@ class IndexPage extends React.Component<IndexPageProps, {}> {
         <VerticalGroup spacing="lg">
           <VerticalGroup spacing="md">
             <h4>Bookmarked Results:</h4>
-            {renderBookmarks()}          
+            {renderBookmarks()}
           </VerticalGroup>
           <VerticalGroup spacing="md">
             <h4>Latest Searches:</h4>
@@ -139,8 +128,5 @@ class IndexPage extends React.Component<IndexPageProps, {}> {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(IndexPage);
+export default connect(mapStateToProps, mapDispatchToProps)(IndexPage);
 export { IndexPageProps };

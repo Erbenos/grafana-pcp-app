@@ -20,12 +20,12 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, null, AnyAction>)
 type SearchFormProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
 interface SearchFormState {
-  inputTouched: boolean,
+  inputTouched: boolean;
   query: {
-    pattern: string,
-    entityFlags: SearchEntity,
-  },
-};
+    pattern: string;
+    entityFlags: SearchEntity;
+  };
+}
 
 class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
   state: SearchFormState = this.initialState;
@@ -57,12 +57,12 @@ class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
   onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const submitForm = (() => {
+    const submitForm = () => {
       if (!(this.state.inputTouched && this.isValidInput)) {
         return;
       }
       this.props.querySearch({ ...this.state.query, pageNum: 1 });
-    });
+    };
     if (this.state.inputTouched) {
       submitForm();
     } else {
@@ -83,15 +83,15 @@ class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
   }
 
   get metricFlag(): boolean {
-    return (this.state.query.entityFlags & 1 << 0) > 0;
+    return (this.state.query.entityFlags & (1 << 0)) > 0;
   }
 
   get instanceDomainsFlag(): boolean {
-    return (this.state.query.entityFlags & 1 << 1) > 0;
+    return (this.state.query.entityFlags & (1 << 1)) > 0;
   }
 
   get instancesFlag(): boolean {
-    return (this.state.query.entityFlags & 1 << 2) > 0;
+    return (this.state.query.entityFlags & (1 << 2)) > 0;
   }
 
   get isValidInput(): boolean {
@@ -112,10 +112,16 @@ class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
   }
 
   render() {
-    const { 
-      onSubmit, onInputChange, state,
-      metricFlag, instancesFlag, instanceDomainsFlag,
-      setEntityFlag, isValidInput, isTouchedInput
+    const {
+      onSubmit,
+      onInputChange,
+      state,
+      metricFlag,
+      instancesFlag,
+      instanceDomainsFlag,
+      setEntityFlag,
+      isValidInput,
+      isTouchedInput,
     } = this;
     const { pattern } = state.query;
     return (
@@ -125,28 +131,22 @@ class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
             <Field
               className={searchBlock}
               invalid={!isValidInput && isTouchedInput}
-              error={!isValidInput && isTouchedInput ? 'This input is required' : ''}>
+              error={!isValidInput && isTouchedInput ? 'This input is required' : ''}
+            >
               <Input
                 prefix={<Icon name="search" />}
                 value={pattern}
                 onChange={onInputChange}
-                placeholder="Search Phrase"/>
+                placeholder="Search Phrase"
+              />
             </Field>
-            <Button
-              className={searchSubmitBtn}
-              variant="primary"
-              size="md"
-              type="submit">
+            <Button className={searchSubmitBtn} variant="primary" size="md" type="submit">
               Search
             </Button>
           </div>
           <div className={searchFormGroup}>
             <HorizontalGroup spacing="lg">
-              <Checkbox
-                value={metricFlag}
-                onChange={() => setEntityFlag(SearchEntity.Metrics)}
-                label="Metrics"
-              />
+              <Checkbox value={metricFlag} onChange={() => setEntityFlag(SearchEntity.Metrics)} label="Metrics" />
               <Checkbox
                 value={instancesFlag}
                 onChange={() => setEntityFlag(SearchEntity.Instances)}
@@ -165,8 +165,5 @@ class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(SearchForm);
+export default connect(mapStateToProps, mapDispatchToProps)(SearchForm);
 export { SearchEntity, SearchFormProps };

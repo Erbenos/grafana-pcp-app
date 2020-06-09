@@ -25,10 +25,9 @@ import {
 } from './types';
 import { querySearchEndpoint, detailFetchEndpoint } from '../mocks/endpoints';
 
-const querySearch = 
-  (query: SearchQuery): ThunkAction<Promise<void>, {}, {}, QuerySearchAction> =>
-  async (dispatch: ThunkDispatch<{}, {}, QuerySearchAction>): Promise<void> => {
-
+const querySearch = (query: SearchQuery): ThunkAction<Promise<void>, {}, {}, QuerySearchAction> => async (
+  dispatch: ThunkDispatch<{}, {}, QuerySearchAction>
+): Promise<void> => {
   dispatch({
     type: QUERY_SEARCH_INIT,
     payload: query,
@@ -38,9 +37,7 @@ const querySearch =
   const offset = (query.pageNum - 1) * limit;
 
   try {
-    dispatch({
-      type: QUERY_SEARCH_PENDING
-    });
+    dispatch({ type: QUERY_SEARCH_PENDING });
     const { pattern, entityFlags } = query;
     const response = await querySearchEndpoint(pattern, entityFlags, limit, offset);
     const result: SearchResult = {
@@ -62,34 +59,25 @@ const querySearch =
   }
 };
 
-const openDetail =
-  (id: string): ThunkAction<Promise<void>, {}, {}, OpenDetailAction> =>
-  async (dispatch: ThunkDispatch<{}, {}, OpenDetailAction>): Promise<void> => {
-
-  dispatch({
-    type: OPEN_DETAIL_INIT,
-  });
+const openDetail = (id: string): ThunkAction<Promise<void>, {}, {}, OpenDetailAction> => async (
+  dispatch: ThunkDispatch<{}, {}, OpenDetailAction>
+): Promise<void> => {
+  dispatch({ type: OPEN_DETAIL_INIT });
 
   try {
-    dispatch({
-      type: OPEN_DETAIL_PENDING,
-    });
+    dispatch({ type: OPEN_DETAIL_PENDING });
     const response = await detailFetchEndpoint(id);
     dispatch({
       type: OPEN_DETAIL_SUCCESS,
       payload: response,
     });
   } catch {
-    dispatch({
-      type: OPEN_DETAIL_ERROR,
-    });
+    dispatch({ type: OPEN_DETAIL_ERROR });
   }
 };
 
 const clearSearchHistory = (): ClearSeachHistoryAction => {
-  return {
-    type: CLEAR_SEARCH_HISTORY,
-  };
+  return { type: CLEAR_SEARCH_HISTORY };
 };
 
 const addBookmark = (item: BookmarkItem): AddBookmarkAction => {
@@ -100,15 +88,11 @@ const addBookmark = (item: BookmarkItem): AddBookmarkAction => {
 };
 
 const clearBookmarks = (): ClearBookmarksAction => {
-  return {
-    type: CLEAR_BOOKMARKS,
-  };
+  return { type: CLEAR_BOOKMARKS };
 };
 
 const clearResults = (): ClearResultsAction => {
-  return {
-    type: CLEAR_RESULTS,
-  };
+  return { type: CLEAR_RESULTS };
 };
 
 export { querySearch, clearSearchHistory, addBookmark, clearBookmarks, clearResults, openDetail };
