@@ -26,3 +26,7 @@ Moved all shared state into Redux, culling many actions which were needless. Nex
 ### 08.06.2020
 
 Created some sample mocks for query search and fetch detail endpoints which return sample of something thats closer to real life data than React placehodler were. These mocks are implemented into relevant methods, therefore its now possible to 'search' and 'fetch' these samples. Added loading indicators for simulated delays. Will do more output formatting with more end-result-like data soon.
+
+### 09.06.2020
+
+Updated mocks with sample responses from /pmapi/metric, integrated some of Grafana code convention, integrated with app veyor. Started splitting details page into entity type specific subpages, improved rendering. There are some issues with Grafana's Prettier setup, since vscode's prettier doesn't seem to respect all the rules in .prettierrc.js .

@@ -23,7 +23,7 @@ interface MetricDetailPageProps {
   metric: PmApiMetricEndpointMetricResponse;
   onBookmark: (item: BookmarkItem) => void;
   onPreview: () => void;
-};
+}
 
 enum EntityTabOpt {
   InstanceDomains = 'instance-domains',
@@ -164,7 +164,6 @@ class MetricDetailPage extends React.Component<MetricDetailPageProps, MetricDeta
       this.setState({ selectedOption });
     }
   }
-
 }
 
 class InstanceDomainsTab extends React.Component<{}, {}> {

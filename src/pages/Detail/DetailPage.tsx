@@ -34,7 +34,6 @@ interface DetailPageState {
 }
 
 class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
-
   constructor(props: DetailPageProps) {
     super(props);
     this.renderSpinner = this.renderSpinner.bind(this);
@@ -78,11 +77,7 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
   }
 
   renderDetail() {
-    const {
-      props,
-      onBookmark,
-      onPreview,
-    } = this;
+    const { props, onBookmark, onPreview } = this;
     const { entity, status } = props;
     switch (status) {
       case FetchStatus.PENDING:
@@ -90,7 +85,7 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
         if (entity !== null) {
           switch (entity.type) {
             case EntityType.Metric:
-              return <MetricDetailPage metric={entity.item} onBookmark={onBookmark} onPreview={onPreview}/>
+              return <MetricDetailPage metric={entity.item} onBookmark={onBookmark} onPreview={onPreview} />;
           }
         }
         if (status === FetchStatus.PENDING) {
