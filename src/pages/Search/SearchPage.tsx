@@ -36,7 +36,7 @@ class SearchPage extends React.Component<SearchPageProps> {
   }
 
   handleDetailClick(entity: SearchItemResponse) {
-    this.props.openDetail(entity.entityId);
+    this.props.openDetail(entity.name);
   }
 
   renderSpinner() {

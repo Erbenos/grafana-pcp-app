@@ -7,15 +7,15 @@ import { connect } from 'react-redux';
 
 import {
   DetailPageContainer, DetailPageItem, DetailPageHeader, DetailPageTitle,
-  DetailPageDescription, DetailPageFooter, DetailPageBtn, DetailPageSpinnerContainer
+  DetailPageDescription, DetailPageFooter, DetailPageBtn, DetailPageSpinnerContainer, OtherMetaItemList, OtherMetaItem, OtherMetaItemTitle, OtherMetaItemValue
 } from './styles';
 import { addBookmark } from '../../actions/search';
 import { RootState } from '../../reducers';
-import { FetchStatus } from 'actions/types';
+import { FetchStatus, EntityType } from 'actions/types';
 
 const mapStateToProps = (state: RootState) => ({
   entity: state.search.detail,
-  isBookmarked: state.search.bookmarks.some(x => x.entityId === state.search.detail.item?.entityId)
+  isBookmarked: state.search.bookmarks.some(x => x.id === state.search.detail.item?.name)
 });
 
 const dispatchProps = {
@@ -44,7 +44,8 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
       options: [
         { label: 'Other Meta', value: EntityTabOpt.OtherMeta },
         { label: 'Instance Domains', value: EntityTabOpt.InstanceDomains },
-        { label: 'Labels', value: EntityTabOpt.Labels },
+        // TODO: will we even render Labels
+        // { label: 'Labels', value: EntityTabOpt.Labels },
       ],
     }
   }
@@ -63,7 +64,7 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
   get hasInstanceDomains() {
     const { entity } = this.props;
     if (entity.item !== null) {
-      return entity.item.indom !== 'PM_INDOM_NULL';
+      return entity.item.indom !== undefined;
     }
     return false;
   }
@@ -72,8 +73,8 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
     const { props } = this;
     const { item } = props.entity;
     if (item) {
-      const { name, entityId } = item;
-      props.addBookmark({ name, entityId });
+      const { name: id } = item;
+      props.addBookmark({ id, type: EntityType.Metric });
     }
   }
 
@@ -102,10 +103,10 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
     if (item === null) {
       return;
     }
-    if (item.helptext) {
-      description = item.helptext;
-    } else if (item.oneline) {
-      description = item.oneline;
+    if (item["text-help"]) {
+      description = item["text-help"];
+    } else if (item["text-oneline"]) {
+      description = item["text-oneline"];
     }
     return (
       <div className={DetailPageDescription}>
@@ -130,9 +131,9 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
           return (
             <article className={DetailPageItem}>
               <header className={DetailPageHeader}>
-                <h4 className={DetailPageTitle}>
+                <h2 className={DetailPageTitle}>
                   {item.name}
-                </h4>
+                </h2>
               </header>
               {renderDesc()}
               <footer className={DetailPageFooter}>
@@ -194,7 +195,7 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
   }
 
   renderEntityInfoTab() {
-    const { hasInstanceDomains, state } = this;
+    const { hasInstanceDomains, state, props } = this;
     const { selectedOption } = state;
     switch (selectedOption) {
       case EntityTabOpt.InstanceDomains:
@@ -208,7 +209,11 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
         }
         break;
       case EntityTabOpt.OtherMeta:
-        return <OtherMetaTab/>;
+        if (props.entity.item === null) {
+          return;
+        }
+        const { pmid, type, sem, units } = props.entity.item;
+        return <OtherMetaTab pmid={pmid} type={type} sem={sem} units={units}/>;
     }
     return;
   }
@@ -233,34 +238,83 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
   }
 }
 
-function InstanceDomainsTab() {
-  return (
-    <VerticalGroup spacing="lg">
-      <h4>Instance Domains</h4>
-      <ReactPlaceholder type="text" rows={3} ready={false}>
-      </ReactPlaceholder>
-    </VerticalGroup>
-  );
+class InstanceDomainsTab extends React.Component<{}, {}> {
+
+  render() {
+    return (
+      <VerticalGroup spacing="lg">
+        <h4>Instance Domains</h4>
+        <ReactPlaceholder type="text" rows={3} ready={false}>
+        </ReactPlaceholder>
+      </VerticalGroup>
+    );
+  }
 }
 
-function LabelsTab() {
-  return (
-    <VerticalGroup spacing="lg">
-      <h4>Labels</h4>
-      <ReactPlaceholder type="text" rows={5} ready={false}>
-      </ReactPlaceholder>
-    </VerticalGroup>
-  );
+class LabelsTab extends React.Component<{}, {}> {
+
+  render() {
+    return (
+      <VerticalGroup spacing="lg">
+        <h4>Labels</h4>
+        <ReactPlaceholder type="text" rows={5} ready={false}>
+        </ReactPlaceholder>
+      </VerticalGroup>
+    );
+  }
 }
 
-function OtherMetaTab() {
-  return (
-    <VerticalGroup spacing="lg">
-      <h4>Other Meta</h4>
-      <ReactPlaceholder type="text" rows={4} ready={false}>
-      </ReactPlaceholder>
-    </VerticalGroup>
-  );
+interface OtherMetaTabProps {
+  pmid: string,
+  type: string,
+  sem: string,
+  units: string,
+}
+
+class OtherMetaTab extends React.Component<OtherMetaTabProps, {}> {
+
+  render() {
+    const { pmid, type, sem, units } = this.props;
+    return (
+      <VerticalGroup spacing="lg">
+        <h4>Other Meta</h4>
+        <div className={OtherMetaItemList}>
+          <div className={OtherMetaItem}>
+            <span className={OtherMetaItemTitle}>
+              PMID:
+            </span>
+            <span className={OtherMetaItemValue}>
+              {pmid}
+            </span>
+          </div>
+          <div className={OtherMetaItem}>
+            <span className={OtherMetaItemTitle}>
+              Type:
+            </span>
+            <span className={OtherMetaItemValue}>
+              {type}
+            </span>
+          </div>
+          <div className={OtherMetaItem}>
+            <span className={OtherMetaItemTitle}>
+              Semantics:
+            </span>
+            <span className={OtherMetaItemValue}>
+              {sem}
+            </span>
+          </div>
+          <div className={OtherMetaItem}>
+            <span className={OtherMetaItemTitle}>
+              Units:
+            </span>
+            <span className={OtherMetaItemValue}>
+              {units}
+            </span>
+          </div>
+        </div>
+      </VerticalGroup>
+    );
+  }
 }
 
 export default withTheme(connect(

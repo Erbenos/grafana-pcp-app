@@ -1,3 +1,5 @@
+import { PmApiMetricEndpointMetricResponse } from 'mocks/responses';
+
 export const ADD_BOOKMARK = 'CREATE_BOOKMARK';
 
 export const CLEAR_BOOKMARKS = 'CLEAR_BOOKMARKS';
@@ -75,7 +77,7 @@ export interface OpenDetailPendingAction {
 
 export interface OpenDetailSuccessAction {
   type: typeof OPEN_DETAIL_SUCCESS,
-  payload: SearchItemResponse,
+  payload: PmApiMetricEndpointMetricResponse,
 };
 
 export interface OpenDetailErrorAction {
@@ -112,9 +114,9 @@ export interface SearchItemResponse {
 };
 
 export interface BookmarkItem {
-  entityId: string,
-  name: string,
-  // TODO: type?
+  // Is also human readable name
+  id: string,
+  type: EntityType,
 };
 
 export enum FetchStatus {
@@ -138,7 +140,7 @@ export interface SearchResultState extends SearchResult {
 
 export interface SearchDetailState {
   status: FetchStatus,
-  item: SearchItemResponse | null,
+  item: PmApiMetricEndpointMetricResponse | null,
 };
 
 export interface SearchState {

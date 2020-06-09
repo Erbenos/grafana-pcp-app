@@ -32,7 +32,6 @@ const DetailPageTitle = css`
 `;
 
 const DetailPageDescription = css`
-  font-size: 0.85rem;
   margin-bottom: 8px;
   white-space: pre-line;
 
@@ -48,4 +47,45 @@ const DetailPageBtn = css`
   padding: 0;
 `;
 
-export { DetailPageContainer, DetailPageSpinnerContainer, DetailPageItem, DetailPageHeader, DetailPageTitle, DetailPageDescription, DetailPageFooter, DetailPageBtn };
+const OtherMetaItemList = css`
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  > * {
+    flex: 1 1 50%;
+  }
+
+  > *:nth-child(2n + 3),
+  > *:nth-child(2n + 4) {
+    margin-top: 8px;
+  }
+
+  @media screen and (max-width: 600px) {
+    > * {
+      flex: 1 1 100%;
+      margin-top: 8px;
+    }
+  }
+`;
+
+const OtherMetaItem = css`
+
+`;
+
+const OtherMetaItemTitle = css`
+  display: block;
+  font-weight: bold;
+`;
+
+const OtherMetaItemValue = css`
+  display: block;
+`;
+
+export {
+  DetailPageContainer, DetailPageSpinnerContainer, DetailPageItem,
+  DetailPageHeader, DetailPageTitle, DetailPageDescription,
+  DetailPageFooter, DetailPageBtn,
+  OtherMetaItemList, OtherMetaItem, OtherMetaItemTitle, OtherMetaItemValue
+};

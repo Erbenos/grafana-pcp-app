@@ -63,7 +63,7 @@ const querySearch =
 };
 
 const openDetail =
-  (entityId: string): ThunkAction<Promise<void>, {}, {}, OpenDetailAction> =>
+  (id: string): ThunkAction<Promise<void>, {}, {}, OpenDetailAction> =>
   async (dispatch: ThunkDispatch<{}, {}, OpenDetailAction>): Promise<void> => {
 
   dispatch({
@@ -74,7 +74,7 @@ const openDetail =
     dispatch({
       type: OPEN_DETAIL_PENDING,
     });
-    const response = await detailFetchEndpoint(entityId);
+    const response = await detailFetchEndpoint(id);
     dispatch({
       type: OPEN_DETAIL_SUCCESS,
       payload: response,

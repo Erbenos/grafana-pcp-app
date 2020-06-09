@@ -32,7 +32,8 @@ class IndexPage extends React.Component<IndexPageProps> {
   }
 
   handleBookmarksClick(item: BookmarkItem) {
-    this.props.openDetail(item.entityId);
+    // TODO: will need to pass type as well eventually
+    this.props.openDetail(item.id);
   }
 
   handleClearBookmarksClick() {
@@ -104,7 +105,7 @@ class IndexPage extends React.Component<IndexPageProps> {
               icon="star"
               className={IndexPageBtnWithNoSpacing}
               onClick={() => handleBookmarksClick(item)}>
-              {item.name}
+              {item.id}
             </Button>
           )}
         </div>

@@ -1,5 +1,5 @@
 import { SearchItemResponse, SearchEntity } from 'actions/types';
-import { entities } from './responses';
+import { searchEntities, detailEntities, PmApiMetricEndpointMetricResponse } from './responses';
 
 export const querySearchEndpoint = (
   pattern: string,
@@ -9,16 +9,17 @@ export const querySearchEndpoint = (
 ): Promise<Array<SearchItemResponse>> => {
   return new Promise<Array<SearchItemResponse>>((resolve, reject) => {
     setTimeout(() => {
-      resolve(entities.slice(0, 5));
+      resolve(searchEntities.slice(0, 5));
     }, 2000);
   });
 };
 
-// For now, lets assume this always finds the entity
-export const detailFetchEndpoint = (entityId: string): Promise<SearchItemResponse> => {
-  return new Promise<SearchItemResponse>((resolve, reject) => {
+// For now, lets assume this always finds the entity and the entity is always metric name
+export const detailFetchEndpoint = (metricId: string): Promise<PmApiMetricEndpointMetricResponse> => {
+  return new Promise<PmApiMetricEndpointMetricResponse>((resolve, reject) => {
+    // TODO: possibly also fetch /pmapi/indom, instance domains?
     setTimeout(() => {
-      resolve(entities.find(x => x.entityId === entityId));
+      resolve(detailEntities.find(x => x.metrics.some(m => m.name === metricId))?.metrics[0]);
     }, 2000);
   });
 };
