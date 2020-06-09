@@ -1,3 +1,5 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/ykpibmmkylg64jvm/branch/master?svg=true)](https://ci.appveyor.com/project/Erbenos/grafana-pcp-app/branch/master)
+
 ## Getting started
 1. Install dependencies
 ```BASH
