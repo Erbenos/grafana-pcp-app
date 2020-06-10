@@ -68,6 +68,21 @@ export interface PmApiMetricEndpointResponse {
   metrics: PmApiMetricEndpointMetricResponse[];
 }
 
+export interface PmApiIndomEndpointInstanceResponse {
+  instance: number;
+  name: string;
+  labels: PmApiLabelsResponse;
+}
+
+export interface PmApiIndomEndpointResponse {
+  context: number;
+  indom: string;
+  labels: PmApiLabelsResponse;
+  'text-oneline': string;
+  'text-help': string;
+  instances: PmApiIndomEndpointInstanceResponse[];
+}
+
 export const detailEntities: PmApiMetricEndpointResponse[] = [
   {
     context: 1173037301,
@@ -175,6 +190,87 @@ export const detailEntities: PmApiMetricEndpointResponse[] = [
         },
         'text-oneline': 'free system memory metric from /proc/meminfo',
         'text-help': 'free system memory metric from /proc/meminfo',
+      },
+    ],
+  },
+];
+
+export const indomEntities: PmApiIndomEndpointResponse[] = [
+  {
+    context: 927862141,
+    indom: '60.3',
+    labels: {
+      device_type: 'interface',
+      domainname: 'localdomain',
+      hostname: 'localhost.localdomain',
+      indom_name: 'per interface',
+      machineid: 'e89b1710db70431e96453dae52cd95c2',
+    },
+    'text-oneline': 'set of network interfaces',
+    'text-help': 'set of network interfaces',
+    instances: [
+      {
+        instance: 5,
+        name: 'docker0',
+        labels: {
+          domainname: 'localdomain',
+          hostname: 'localhost.localdomain',
+          machineid: 'e89b1710db70431e96453dae52cd95c2',
+        },
+      },
+      {
+        instance: 2,
+        name: 'wlp0s20f3',
+        labels: {
+          domainname: 'localdomain',
+          hostname: 'localhost.localdomain',
+          machineid: 'e89b1710db70431e96453dae52cd95c2',
+        },
+      },
+      {
+        instance: 35,
+        name: 'veth80732b1',
+        labels: {
+          domainname: 'localdomain',
+          hostname: 'localhost.localdomain',
+          machineid: 'e89b1710db70431e96453dae52cd95c2',
+        },
+      },
+      {
+        instance: 0,
+        name: 'lo',
+        labels: {
+          domainname: 'localdomain',
+          hostname: 'localhost.localdomain',
+          machineid: 'e89b1710db70431e96453dae52cd95c2',
+        },
+      },
+      {
+        instance: 4,
+        name: 'virbr0-nic',
+        labels: {
+          domainname: 'localdomain',
+          hostname: 'localhost.localdomain',
+          machineid: 'e89b1710db70431e96453dae52cd95c2',
+        },
+      },
+      {
+        instance: 3,
+        name: 'virbr0',
+        labels: {
+          domainname: 'localdomain',
+          hostname: 'localhost.localdomain',
+          machineid: 'e89b1710db70431e96453dae52cd95c2',
+        },
+      },
+      {
+        instance: 1,
+        name: 'ens20u2',
+        labels: {
+          domainname: 'localdomain',
+          hostname: 'localhost.localdomain',
+          machineid: 'e89b1710db70431e96453dae52cd95c2',
+        },
       },
     ],
   },

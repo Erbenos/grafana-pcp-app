@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { EntityType, BookmarkItem } from 'actions/types';
+import { EntityType } from 'actions/types';
 import { VerticalGroup, HorizontalGroup, Button, RadioButtonGroup } from '@grafana/ui';
 import ReactPlaceholder from 'react-placeholder/lib';
 import {
@@ -18,11 +18,10 @@ import {
 import { SelectableValue } from '@grafana/data';
 import { css } from 'emotion';
 import { PmApiMetricEndpointMetricResponse } from 'mocks/responses';
+import { DetailEntityPageProps } from '../DetailPage';
 
-interface MetricDetailPageProps {
+interface MetricDetailPageProps extends DetailEntityPageProps {
   metric: PmApiMetricEndpointMetricResponse;
-  onBookmark: (item: BookmarkItem) => void;
-  onPreview: () => void;
 }
 
 enum EntityTabOpt {
@@ -43,8 +42,8 @@ class MetricDetailPage extends React.Component<MetricDetailPageProps, MetricDeta
     return {
       selectedOption: EntityTabOpt.OtherMeta,
       options: [
-        { label: 'Other Meta', value: EntityTabOpt.OtherMeta },
-        { label: 'Instance Domains', value: EntityTabOpt.InstanceDomains },
+        { label: 'Metric Metadata', value: EntityTabOpt.OtherMeta },
+        { label: 'Instance Domain', value: EntityTabOpt.InstanceDomains },
         // TODO: will we even render Labels
         // { label: 'Labels', value: EntityTabOpt.Labels },
       ],
@@ -170,7 +169,7 @@ class InstanceDomainsTab extends React.Component<{}, {}> {
   render() {
     return (
       <VerticalGroup spacing="lg">
-        <h4>Instance Domains</h4>
+        <h4>Instance Domain</h4>
         <ReactPlaceholder type="text" rows={3} ready={false}>
           &nbsp;
         </ReactPlaceholder>

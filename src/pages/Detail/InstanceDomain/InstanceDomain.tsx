@@ -1,6 +1,12 @@
 import React from 'react';
+import { DetailEntityPageProps } from '../DetailPage';
+import { PmApiIndomEndpointResponse } from 'mocks/responses';
 
-class InstanceDomainDetailPage extends React.Component<{}, {}> {
+interface InstanceDomainDetailPageProps extends DetailEntityPageProps {
+  instanceDomain: PmApiIndomEndpointResponse;
+}
+
+class InstanceDomainDetailPage extends React.Component<InstanceDomainDetailPageProps, {}> {
   render() {
     return <p>Instance Domain Detail Page.</p>;
   }

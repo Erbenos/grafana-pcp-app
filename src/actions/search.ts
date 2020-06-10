@@ -19,12 +19,13 @@ import {
   OPEN_DETAIL_PENDING,
   QUERY_SEARCH_ERROR,
   QUERY_SEARCH_SUCCESS,
-  SearchResult,
   OPEN_DETAIL_SUCCESS,
   OPEN_DETAIL_ERROR,
   EntityType,
+  MetricData,
+  SearchResultData,
 } from './types';
-import { querySearchEndpoint, detailFetchEndpoint } from '../mocks/endpoints';
+import { querySearchEndpoint, detailFetchEndpoint, indomFetchEndpoint } from '../mocks/endpoints';
 
 const querySearch = (query: SearchQuery): ThunkAction<Promise<void>, {}, {}, QuerySearchAction> => async (
   dispatch: ThunkDispatch<{}, {}, QuerySearchAction>
@@ -41,7 +42,7 @@ const querySearch = (query: SearchQuery): ThunkAction<Promise<void>, {}, {}, Que
     dispatch({ type: QUERY_SEARCH_PENDING });
     const { pattern, entityFlags } = query;
     const response = await querySearchEndpoint(pattern, entityFlags, limit, offset);
-    const result: SearchResult = {
+    const result: SearchResultData = {
       items: response,
       // TODO: probably should be a part of response
       pagination: {
@@ -60,7 +61,6 @@ const querySearch = (query: SearchQuery): ThunkAction<Promise<void>, {}, {}, Que
   }
 };
 
-// TODO: wont always assume entity type
 const openDetail = (
   id: string,
   type: EntityType = EntityType.Metric
@@ -68,17 +68,30 @@ const openDetail = (
   dispatch: ThunkDispatch<{}, {}, OpenDetailAction>
 ): Promise<void> => {
   dispatch({ type: OPEN_DETAIL_INIT });
+  dispatch({ type: OPEN_DETAIL_PENDING });
 
   try {
-    dispatch({ type: OPEN_DETAIL_PENDING });
-    const response = await detailFetchEndpoint(id);
-    dispatch({
-      type: OPEN_DETAIL_SUCCESS,
-      payload: {
-        type: EntityType.Metric,
-        item: response,
-      },
-    });
+    switch (type) {
+      case EntityType.Metric: {
+        const metric = await detailFetchEndpoint(id);
+        const payload: MetricData = {
+          type: EntityType.Metric,
+          metric,
+        };
+        if (metric.indom) {
+          const indom = await indomFetchEndpoint(metric.indom);
+          payload.indom = indom;
+        }
+        dispatch({
+          type: OPEN_DETAIL_SUCCESS,
+          payload,
+        });
+        break;
+      }
+      default: {
+        dispatch({ type: OPEN_DETAIL_ERROR });
+      }
+    }
   } catch {
     dispatch({ type: OPEN_DETAIL_ERROR });
   }

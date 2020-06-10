@@ -9,12 +9,18 @@ import { FetchStatus, EntityType, BookmarkItem } from '../../actions/types';
 import { detailPageSpinnerContainer, detailPageContainer } from './styles';
 import { Themeable, Spinner, withTheme } from '@grafana/ui';
 import MetricDetailPage from './Metric/Metric';
+// import InstanceDomainDetailPage from './InstanceDomain/InstanceDomain';
+// import InstanceDetailPage from './Instance/Instance';
 
 const mapStateToProps = (state: RootState) => ({
-  status: state.search.detail.status,
-  entity: state.search.detail.detail,
-  isBookmarked: state.search.bookmarks.some(x => x.id === state.search.detail.detail?.item?.name),
+  status: state.search.entity.status,
+  entity: state.search.entity.data,
 });
+
+interface DetailEntityPageProps {
+  onBookmark: (item: BookmarkItem) => void;
+  onPreview: () => void;
+}
 
 const dispatchProps = {
   addBookmark,
@@ -40,14 +46,6 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
     this.renderDetail = this.renderDetail.bind(this);
     this.onPreview = this.onPreview.bind(this);
     this.onBookmark = this.onBookmark.bind(this);
-  }
-
-  get hasInstanceDomains() {
-    const { entity } = this.props;
-    if (entity !== null) {
-      return entity.item.indom !== undefined;
-    }
-    return false;
   }
 
   onBookmark(item: BookmarkItem) {
@@ -82,14 +80,20 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
     switch (status) {
       case FetchStatus.PENDING:
       case FetchStatus.SUCCESS: {
-        if (entity !== null) {
-          switch (entity.type) {
-            case EntityType.Metric:
-              return <MetricDetailPage metric={entity.item} onBookmark={onBookmark} onPreview={onPreview} />;
-          }
-        }
         if (status === FetchStatus.PENDING) {
           return <p>Loading&hellip;</p>;
+        }
+        if (entity === null) {
+          return <p>Incorrect response</p>;
+        }
+        switch (entity.type) {
+          case EntityType.Metric:
+            return <MetricDetailPage metric={entity.metric} onBookmark={onBookmark} onPreview={onPreview} />;
+          // TODO: support other types
+          // case EntityType.InstanceDomain:
+          //   return <InstanceDomainDetailPage instanceDomain={entity.item} onBookmark={onBookmark} onPreview={onPreview} />;
+          // case EntityType.Instance:
+          //   return <InstanceDetailPage instance={entity.item} onBookmark={onBookmark} onPreview={onPreview} />;
         }
         return <p>Entity not found.</p>;
       }
@@ -113,4 +117,4 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
 
 export default withTheme(connect(mapStateToProps, { addBookmark })(DetailPage));
 
-export { DetailPageProps };
+export { DetailPageProps, DetailEntityPageProps };

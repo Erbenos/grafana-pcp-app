@@ -16,18 +16,15 @@ import {
   OPEN_DETAIL_ERROR,
   QUERY_SEARCH_INIT,
   OPEN_DETAIL_INIT,
-  SearchResultState,
-  SearchDetailState,
   QUERY_SEARCH_ERROR,
+  EntityType,
+  EntityDetail,
+  SearchResult,
 } from '../actions/types';
 
-const initialResult = (): SearchResultState => ({
+const initialResult = (): SearchResult => ({
   status: FetchStatus.INIT,
-  items: [],
-  pagination: {
-    currentPage: 1,
-    numberOfPages: 5,
-  },
+  data: null,
 });
 
 const initialQuery = (): SearchQuery => ({
@@ -36,9 +33,9 @@ const initialQuery = (): SearchQuery => ({
   pageNum: 1,
 });
 
-const initialDetail = (): SearchDetailState => ({
+const initialEntity = (): EntityDetail => ({
   status: FetchStatus.INIT,
-  detail: null,
+  data: null,
 });
 
 const initialState: SearchState = {
@@ -47,7 +44,7 @@ const initialState: SearchState = {
   bookmarks: [],
   result: initialResult(),
   query: initialQuery(),
-  detail: initialDetail(),
+  entity: initialEntity(),
 };
 
 const searchReducer = (state = initialState, action: SearchAction): SearchState => {
@@ -66,7 +63,7 @@ const searchReducer = (state = initialState, action: SearchAction): SearchState 
         view: SearchView.Search,
         history: updateSearchHistory(query) ? [query, ...state.history] : state.history,
         // TODO: do we really want to reset detail?
-        detail: initialDetail(),
+        entity: initialEntity(),
       };
     }
     case QUERY_SEARCH_PENDING:
@@ -78,11 +75,11 @@ const searchReducer = (state = initialState, action: SearchAction): SearchState 
         },
       };
     case QUERY_SEARCH_SUCCESS: {
-      const result = action.payload;
+      const data = action.payload;
       return {
         ...state,
         result: {
-          ...result,
+          data,
           status: FetchStatus.SUCCESS,
         },
       };
@@ -119,26 +116,29 @@ const searchReducer = (state = initialState, action: SearchAction): SearchState 
     case OPEN_DETAIL_PENDING:
       return {
         ...state,
-        detail: {
-          ...state.detail,
+        entity: {
+          ...state.entity,
           status: FetchStatus.PENDING,
         },
       };
     case OPEN_DETAIL_SUCCESS: {
-      const detail = action.payload;
-      return {
-        ...state,
-        detail: {
-          detail,
-          status: FetchStatus.SUCCESS,
-        },
-      };
+      const { payload } = action;
+      if (payload.type === EntityType.Metric) {
+        const data = payload;
+        return {
+          ...state,
+          entity: {
+            data,
+            status: FetchStatus.SUCCESS,
+          },
+        };
+      }
     }
     case OPEN_DETAIL_ERROR:
       return {
         ...state,
-        detail: {
-          ...state.detail,
+        entity: {
+          ...state.entity,
           status: FetchStatus.ERROR,
         },
       };

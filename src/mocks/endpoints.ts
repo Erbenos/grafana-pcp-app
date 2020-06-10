@@ -1,5 +1,10 @@
 import { RedisFulltextItemResponse, SearchEntity } from 'actions/types';
-import { searchEntities, detailEntities, PmApiMetricEndpointMetricResponse } from './responses';
+import {
+  searchEntities,
+  detailEntities,
+  PmApiMetricEndpointMetricResponse,
+  PmApiIndomEndpointResponse,
+} from './responses';
 
 export const querySearchEndpoint = (
   pattern: string,
@@ -10,16 +15,24 @@ export const querySearchEndpoint = (
   return new Promise<RedisFulltextItemResponse[]>((resolve, reject) => {
     setTimeout(() => {
       resolve(searchEntities.slice(0, 5));
-    }, 2000);
+    }, 1000);
   });
 };
 
 // For now, lets assume this always finds the entity and the entity is always metric name
 export const detailFetchEndpoint = (metricId: string): Promise<PmApiMetricEndpointMetricResponse> => {
   return new Promise<PmApiMetricEndpointMetricResponse>((resolve, reject) => {
-    // TODO: possibly also fetch /pmapi/indom, instance domains?
     setTimeout(() => {
       resolve(detailEntities.find(x => x.metrics.some(m => m.name === metricId))?.metrics[0]);
-    }, 2000);
+    }, 1000);
+  });
+};
+
+// Separate endpoint, will be fetched lazily
+export const indomFetchEndpoint = (indom: string): Promise<PmApiIndomEndpointResponse> => {
+  return new Promise<PmApiIndomEndpointResponse>((resolve, reject) => {
+    setTimeout(() => {
+      resolve();
+    }, 1000);
   });
 };

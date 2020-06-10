@@ -59,32 +59,35 @@ class SearchPage extends React.Component<SearchPageProps, {}> {
 
   renderResults() {
     const { props, onPaginationClick, onDetailClick } = this;
-    const { items, pagination, status } = props.search.result;
+    const { data, status } = props.search.result;
 
     switch (status) {
       case FetchStatus.PENDING:
       case FetchStatus.SUCCESS: {
-        if (items.length > 0) {
+        if (status === FetchStatus.PENDING) {
+          return <p>Searching&hellip;</p>;
+        }
+        if (data === null) {
+          return <p>Incorrect server response.</p>;
+        }
+        if (data.items.length > 0) {
           return (
             <VerticalGroup spacing="lg">
               <h4>Results:</h4>
               <VerticalGroup spacing="lg">
-                {items.map((x, i) => (
+                {data.items.map((x, i) => (
                   <SearchResult item={x} openDetail={entity => onDetailClick(entity)} />
                 ))}
               </VerticalGroup>
               <div className={paginationContainer}>
                 <Pagination
-                  numberOfPages={pagination.numberOfPages}
-                  currentPage={pagination.currentPage}
+                  numberOfPages={data.pagination.numberOfPages}
+                  currentPage={data.pagination.currentPage}
                   onNavigate={onPaginationClick}
                 />
               </div>
             </VerticalGroup>
           );
-        }
-        if (status === FetchStatus.PENDING) {
-          return <p>Searching&hellip;</p>;
         }
         return (
           <VerticalGroup spacing="lg">

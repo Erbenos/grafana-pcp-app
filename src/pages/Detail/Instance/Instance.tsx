@@ -1,6 +1,11 @@
 import React from 'react';
+import { DetailEntityPageProps } from '../DetailPage';
 
-class InstanceDetailPage extends React.Component<{}, {}> {
+interface InstanceDetailPageProps extends DetailEntityPageProps {
+  instance: any;
+}
+
+class InstanceDetailPage extends React.Component<InstanceDetailPageProps, {}> {
   render() {
     return <p>Instance Detail Page.</p>;
   }

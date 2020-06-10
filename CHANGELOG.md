@@ -30,3 +30,7 @@ Created some sample mocks for query search and fetch detail endpoints which retu
 ### 09.06.2020
 
 Updated mocks with sample responses from /pmapi/metric, integrated some of Grafana code convention, integrated with app veyor. Started splitting details page into entity type specific subpages, improved rendering. There are some issues with Grafana's Prettier setup, since vscode's prettier doesn't seem to respect all the rules in .prettierrc.js .
+
+### 10.06.2020
+
+Improved typing and structure on Redux store, added mock for /pmapi/indom response, added some boilerplate for other detail pages. Less productive day. 

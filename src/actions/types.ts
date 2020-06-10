@@ -1,4 +1,4 @@
-import { PmApiMetricEndpointMetricResponse } from 'mocks/responses';
+import { PmApiMetricEndpointMetricResponse, PmApiIndomEndpointResponse } from 'mocks/responses';
 
 export const ADD_BOOKMARK = 'CREATE_BOOKMARK';
 
@@ -58,7 +58,7 @@ export interface QuerySearchPendingAction {
 
 export interface QuerySearchSuccessAction {
   type: typeof QUERY_SEARCH_SUCCESS;
-  payload: SearchResult;
+  payload: SearchResultData;
 }
 
 export interface QuerySearchErrorAction {
@@ -81,7 +81,7 @@ export interface OpenDetailPendingAction {
 
 export interface OpenDetailSuccessAction {
   type: typeof OPEN_DETAIL_SUCCESS;
-  payload: EntityDetail;
+  payload: EntityData;
 }
 
 export interface OpenDetailErrorAction {
@@ -134,7 +134,7 @@ export enum FetchStatus {
   ERROR,
 }
 
-export interface SearchResult {
+export interface SearchResultData {
   items: RedisFulltextItemResponse[];
   pagination: {
     currentPage: number;
@@ -142,41 +142,41 @@ export interface SearchResult {
   };
 }
 
-export interface SearchResultState extends SearchResult {
-  status: FetchStatus;
+export interface SearchResult extends TrackableStatus {
+  data: SearchResultData | null;
 }
 
-export interface MetricDetail {
+export interface MetricData {
   type: EntityType.Metric;
-  item: PmApiMetricEndpointMetricResponse;
+  metric: PmApiMetricEndpointMetricResponse;
+  indom?: PmApiIndomEndpointResponse;
 }
 
-export interface InstanceDetail {
+export interface InstanceData {
   type: EntityType.Instance;
-  // TODO: type for instance
-  item: any;
 }
 
-export interface InstanceDomainDetail {
+export interface InstanceDomainData {
   type: EntityType.InstanceDomain;
-  // TODO: type for instance domain
-  item: any;
 }
 
-export type EntityDetail = MetricDetail | InstanceDetail | InstanceDomainDetail;
+export type EntityData = MetricData | InstanceData | InstanceDomainData;
 
-export interface SearchDetailState {
+export interface EntityDetail extends TrackableStatus {
+  data: EntityData | null;
+}
+
+export interface TrackableStatus {
   status: FetchStatus;
-  detail: EntityDetail | null;
 }
 
 export interface SearchState {
   view: SearchView;
   query: SearchQuery;
   history: SearchQuery[];
-  result: SearchResultState;
+  result: SearchResult;
   bookmarks: BookmarkItem[];
-  detail: SearchDetailState;
+  entity: EntityDetail;
 }
 
 export enum SearchEntity {
