@@ -79,6 +79,17 @@ const otherMetaItemValue = css`
   display: block;
 `;
 
+const instanceDomainContent = css``;
+
+const instanceDomainItemList = css`
+  margin-left: 1rem;
+  margin-bottom: 1rem;
+`;
+
+const radioBtnGroupContainer = css`
+  width: 100%;
+`;
+
 export {
   detailPageContainer,
   detailPageSpinnerContainer,
@@ -92,4 +103,7 @@ export {
   otherMetaItem,
   otherMetaItemTitle,
   otherMetaItemValue,
+  radioBtnGroupContainer,
+  instanceDomainContent,
+  instanceDomainItemList,
 };

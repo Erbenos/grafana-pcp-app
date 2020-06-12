@@ -40,7 +40,6 @@ class SearchPage extends React.Component<SearchPageProps, {}> {
 
   renderSpinner() {
     if (this.props.search.result.status === FetchStatus.PENDING) {
-      console.log(this.props.theme.palette.black);
       return (
         <div
           className={cx(

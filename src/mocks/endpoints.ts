@@ -4,6 +4,7 @@ import {
   detailEntities,
   PmApiMetricEndpointMetricResponse,
   PmApiIndomEndpointResponse,
+  indomEntities,
 } from './responses';
 
 export const querySearchEndpoint = (
@@ -20,7 +21,7 @@ export const querySearchEndpoint = (
 };
 
 // For now, lets assume this always finds the entity and the entity is always metric name
-export const detailFetchEndpoint = (metricId: string): Promise<PmApiMetricEndpointMetricResponse> => {
+export const metricFetchEndpoint = (metricId: string): Promise<PmApiMetricEndpointMetricResponse> => {
   return new Promise<PmApiMetricEndpointMetricResponse>((resolve, reject) => {
     setTimeout(() => {
       resolve(detailEntities.find(x => x.metrics.some(m => m.name === metricId))?.metrics[0]);
@@ -32,7 +33,7 @@ export const detailFetchEndpoint = (metricId: string): Promise<PmApiMetricEndpoi
 export const indomFetchEndpoint = (indom: string): Promise<PmApiIndomEndpointResponse> => {
   return new Promise<PmApiIndomEndpointResponse>((resolve, reject) => {
     setTimeout(() => {
-      resolve();
+      resolve(indomEntities.find(x => x.indom === indom));
     }, 1000);
   });
 };

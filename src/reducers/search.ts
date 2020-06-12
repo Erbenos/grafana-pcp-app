@@ -11,15 +11,24 @@ import {
   FetchStatus,
   QUERY_SEARCH_PENDING,
   QUERY_SEARCH_SUCCESS,
-  OPEN_DETAIL_PENDING,
-  OPEN_DETAIL_SUCCESS,
-  OPEN_DETAIL_ERROR,
   QUERY_SEARCH_INIT,
-  OPEN_DETAIL_INIT,
   QUERY_SEARCH_ERROR,
   EntityType,
-  EntityDetail,
   SearchResult,
+  DetailState,
+  LOAD_INDOM_PENDING,
+  LOAD_METRIC_INDOM_INIT,
+  LOAD_METRIC_INIT,
+  LOAD_INDOM_INIT,
+  LOAD_INDOM_SUCCESS,
+  LOAD_INDOM_ERROR,
+  LOAD_METRIC_INDOM_PENDING,
+  LOAD_METRIC_INDOM_SUCCESS,
+  LOAD_METRIC_INDOM_ERROR,
+  LOAD_METRIC_PENDING,
+  LOAD_METRIC_SUCCESS,
+  LOAD_METRIC_ERROR,
+  OPEN_DETAIL,
 } from '../actions/types';
 
 const initialResult = (): SearchResult => ({
@@ -33,10 +42,7 @@ const initialQuery = (): SearchQuery => ({
   pageNum: 1,
 });
 
-const initialEntity = (): EntityDetail => ({
-  status: FetchStatus.INIT,
-  data: null,
-});
+const initialEntity = (): DetailState => null;
 
 const initialState: SearchState = {
   view: SearchView.Index,
@@ -108,39 +114,174 @@ const searchReducer = (state = initialState, action: SearchAction): SearchState 
         ...state,
         bookmarks: [],
       };
-    case OPEN_DETAIL_INIT:
+    case OPEN_DETAIL:
       return {
         ...state,
         view: SearchView.Detail,
       };
-    case OPEN_DETAIL_PENDING:
+    case LOAD_INDOM_INIT:
       return {
         ...state,
         entity: {
-          ...state.entity,
-          status: FetchStatus.PENDING,
+          type: EntityType.InstanceDomain,
+          indom: {
+            status: FetchStatus.INIT,
+            data: null,
+          },
         },
       };
-    case OPEN_DETAIL_SUCCESS: {
-      const { payload } = action;
-      if (payload.type === EntityType.Metric) {
-        const data = payload;
+    case LOAD_INDOM_PENDING:
+      if (state.entity && state.entity.type === EntityType.InstanceDomain) {
         return {
           ...state,
           entity: {
-            data,
-            status: FetchStatus.SUCCESS,
+            ...state.entity,
+            indom: {
+              ...state.entity.indom,
+              status: FetchStatus.PENDING,
+            },
           },
         };
       }
-    }
-    case OPEN_DETAIL_ERROR:
+      return state;
+    case LOAD_INDOM_SUCCESS:
+      if (state.entity && state.entity.type === EntityType.InstanceDomain) {
+        return {
+          ...state,
+          entity: {
+            ...state.entity,
+            indom: {
+              status: FetchStatus.SUCCESS,
+              data: action.payload.data,
+            },
+          },
+        };
+      }
+      return state;
+    case LOAD_INDOM_ERROR:
+      if (state.entity && state.entity.type === EntityType.InstanceDomain) {
+        return {
+          ...state,
+          entity: {
+            ...state.entity,
+            indom: {
+              status: FetchStatus.ERROR,
+              data: null,
+            },
+          },
+        };
+      }
+      return state;
+    case LOAD_METRIC_INDOM_INIT:
+      if (state.entity && state.entity.type === EntityType.Metric) {
+        return {
+          ...state,
+          entity: {
+            ...state.entity,
+            indom: {
+              status: FetchStatus.INIT,
+              data: null,
+            },
+          },
+        };
+      }
+      return state;
+    case LOAD_METRIC_INDOM_PENDING:
+      if (state.entity && state.entity.type === EntityType.Metric && state.entity.indom) {
+        return {
+          ...state,
+          entity: {
+            ...state.entity,
+            indom: {
+              ...state.entity.indom,
+              status: FetchStatus.PENDING,
+            },
+          },
+        };
+      }
+      return state;
+    case LOAD_METRIC_INDOM_SUCCESS:
+      if (state.entity && state.entity.type === EntityType.Metric && state.entity.indom) {
+        return {
+          ...state,
+          entity: {
+            ...state.entity,
+            indom: {
+              status: FetchStatus.SUCCESS,
+              data: action.payload.data,
+            },
+          },
+        };
+      }
+      return state;
+    case LOAD_METRIC_INDOM_ERROR:
+      if (state.entity && state.entity.type === EntityType.Metric && state.entity.indom) {
+        return {
+          ...state,
+          entity: {
+            ...state.entity,
+            indom: {
+              status: FetchStatus.ERROR,
+              data: null,
+            },
+          },
+        };
+      }
+      return state;
+    case LOAD_METRIC_INIT:
       return {
         ...state,
         entity: {
-          ...state.entity,
-          status: FetchStatus.ERROR,
+          type: EntityType.Metric,
+          metric: {
+            status: FetchStatus.INIT,
+            data: null,
+          },
         },
+      };
+    case LOAD_METRIC_PENDING:
+      if (state.entity && state.entity.type === EntityType.Metric) {
+        return {
+          ...state,
+          entity: {
+            ...state.entity,
+            metric: {
+              ...state.entity.metric,
+              status: FetchStatus.PENDING,
+            },
+          },
+        };
+      }
+      return state;
+    case LOAD_METRIC_SUCCESS:
+      if (state.entity && state.entity.type === EntityType.Metric) {
+        return {
+          ...state,
+          entity: {
+            ...state.entity,
+            metric: {
+              status: FetchStatus.SUCCESS,
+              data: action.payload.data,
+            },
+          },
+        };
+      }
+      return state;
+    case LOAD_METRIC_ERROR:
+      if (state.entity && state.entity.type === EntityType.Metric) {
+        return {
+          ...state,
+          entity: {
+            ...state.entity,
+            metric: {
+              status: FetchStatus.ERROR,
+              data: null,
+            },
+          },
+        };
+      }
+      return {
+        ...state,
       };
     case CLEAR_RESULTS:
       return {

@@ -10,22 +10,34 @@ import {
   CLEAR_BOOKMARKS,
   ClearResultsAction,
   CLEAR_RESULTS,
-  OPEN_DETAIL_INIT,
   BookmarkItem,
   SearchQuery,
   QuerySearchAction,
   OpenDetailAction,
   QUERY_SEARCH_PENDING,
-  OPEN_DETAIL_PENDING,
   QUERY_SEARCH_ERROR,
   QUERY_SEARCH_SUCCESS,
-  OPEN_DETAIL_SUCCESS,
-  OPEN_DETAIL_ERROR,
   EntityType,
-  MetricData,
   SearchResultData,
+  LoadMetricIndomAction,
+  LOAD_METRIC_INDOM_INIT,
+  LOAD_METRIC_INDOM_PENDING,
+  LoadIndomAction,
+  LOAD_METRIC_INDOM_ERROR,
+  LOAD_INDOM_INIT,
+  LOAD_INDOM_PENDING,
+  LOAD_INDOM_ERROR,
+  LoadMetricAction,
+  LOAD_METRIC_INIT,
+  LOAD_METRIC_PENDING,
+  LOAD_METRIC_SUCCESS,
+  LOAD_METRIC_ERROR,
+  LOAD_METRIC_INDOM_SUCCESS,
+  LOAD_INDOM_SUCCESS,
+  OPEN_DETAIL,
 } from './types';
-import { querySearchEndpoint, detailFetchEndpoint, indomFetchEndpoint } from '../mocks/endpoints';
+import { querySearchEndpoint, indomFetchEndpoint, metricFetchEndpoint } from '../mocks/endpoints';
+import { PmApiIndomEndpointResponse, PmApiMetricEndpointMetricResponse } from 'mocks/responses';
 
 const querySearch = (query: SearchQuery): ThunkAction<Promise<void>, {}, {}, QuerySearchAction> => async (
   dispatch: ThunkDispatch<{}, {}, QuerySearchAction>
@@ -67,34 +79,88 @@ const openDetail = (
 ): ThunkAction<Promise<void>, {}, {}, OpenDetailAction> => async (
   dispatch: ThunkDispatch<{}, {}, OpenDetailAction>
 ): Promise<void> => {
-  dispatch({ type: OPEN_DETAIL_INIT });
-  dispatch({ type: OPEN_DETAIL_PENDING });
-
-  try {
-    switch (type) {
-      case EntityType.Metric: {
-        const metric = await detailFetchEndpoint(id);
-        const payload: MetricData = {
-          type: EntityType.Metric,
-          metric,
-        };
-        if (metric.indom) {
-          const indom = await indomFetchEndpoint(metric.indom);
-          payload.indom = indom;
+  dispatch({ type: OPEN_DETAIL });
+  switch (type) {
+    case EntityType.Metric: {
+      dispatch(loadMetric(id)).then(metric => {
+        // TODO: maybe fetch only when tab is navigated to?
+        if (metric?.indom) {
+          dispatch(loadMetricIndom(metric.indom));
         }
-        dispatch({
-          type: OPEN_DETAIL_SUCCESS,
-          payload,
-        });
-        break;
-      }
-      default: {
-        dispatch({ type: OPEN_DETAIL_ERROR });
-      }
+      });
+      return;
     }
-  } catch {
-    dispatch({ type: OPEN_DETAIL_ERROR });
+    case EntityType.InstanceDomain: {
+      dispatch(loadIndom(id));
+    }
   }
+};
+
+const loadMetric = (
+  id: string
+): ThunkAction<Promise<PmApiMetricEndpointMetricResponse | null>, {}, {}, LoadMetricAction> => async (
+  dispatch: ThunkDispatch<{}, {}, LoadMetricAction>
+): Promise<PmApiMetricEndpointMetricResponse | null> => {
+  dispatch({ type: LOAD_METRIC_INIT });
+  dispatch({ type: LOAD_METRIC_PENDING });
+  try {
+    const metric = await metricFetchEndpoint(id);
+    dispatch({
+      type: LOAD_METRIC_SUCCESS,
+      payload: {
+        data: metric,
+      },
+    });
+    return metric;
+  } catch {
+    dispatch({ type: LOAD_METRIC_ERROR });
+  }
+  return null;
+};
+
+const loadMetricIndom = (
+  id: string
+): ThunkAction<Promise<PmApiIndomEndpointResponse | null>, {}, {}, LoadMetricIndomAction> => async (
+  dispatch: ThunkDispatch<{}, {}, LoadMetricIndomAction>
+): Promise<PmApiIndomEndpointResponse | null> => {
+  dispatch({ type: LOAD_METRIC_INDOM_INIT });
+  dispatch({ type: LOAD_METRIC_INDOM_PENDING });
+  try {
+    const indom = await indomFetchEndpoint(id);
+    console.log(indom);
+    dispatch({
+      type: LOAD_METRIC_INDOM_SUCCESS,
+      payload: {
+        data: indom,
+      },
+    });
+    return indom;
+  } catch {
+    dispatch({ type: LOAD_METRIC_INDOM_ERROR });
+  }
+  return null;
+};
+
+const loadIndom = (
+  id: string
+): ThunkAction<Promise<PmApiIndomEndpointResponse | null>, {}, {}, LoadIndomAction> => async (
+  dispatch: ThunkDispatch<{}, {}, LoadIndomAction>
+): Promise<PmApiIndomEndpointResponse | null> => {
+  dispatch({ type: LOAD_INDOM_INIT });
+  dispatch({ type: LOAD_INDOM_PENDING });
+  try {
+    const indom = await indomFetchEndpoint(id);
+    dispatch({
+      type: LOAD_INDOM_SUCCESS,
+      payload: {
+        data: indom,
+      },
+    });
+    return indom;
+  } catch {
+    dispatch({ type: LOAD_INDOM_ERROR });
+  }
+  return null;
 };
 
 const clearSearchHistory = (): ClearSeachHistoryAction => {

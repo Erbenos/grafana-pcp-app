@@ -13,7 +13,6 @@ const searchResultTitle = css`
 `;
 
 const searchResultDescription = css`
-  font-size: 0.85rem;
   margin-bottom: 8px;
   white-space: pre-line;
 
