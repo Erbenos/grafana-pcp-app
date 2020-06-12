@@ -7,6 +7,7 @@ import { RootState } from '../../reducers/reducers';
 import { EntityType, BookmarkItem } from '../../actions/types';
 import { detailPageContainer } from './styles';
 import MetricDetailPage from './Metric/Metric';
+import InstanceDomainDetailPage from './InstanceDomain/InstanceDomain';
 
 const mapStateToProps = (state: RootState) => ({
   entity: state.search.entity,
@@ -58,6 +59,10 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
     switch (props.entity.type) {
       case EntityType.Metric:
         return <MetricDetailPage onBookmark={onBookmark} onPreview={onPreview} />;
+      // case EntityType.Instance:
+      //   return <InstanceDetailPage onBookmark={onBookmark} onPreview={onPreview} />;
+      case EntityType.InstanceDomain:
+        return <InstanceDomainDetailPage onBookmark={onBookmark} onPreview={onPreview} />;
     }
     return <p>Error rendering entity.</p>;
   }
