@@ -127,7 +127,6 @@ const loadMetricIndom = (
   dispatch({ type: LOAD_METRIC_INDOM_PENDING });
   try {
     const indom = await indomFetchEndpoint(id);
-    console.log(indom);
     dispatch({
       type: LOAD_METRIC_INDOM_SUCCESS,
       payload: {

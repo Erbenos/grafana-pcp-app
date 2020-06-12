@@ -23,6 +23,7 @@ import { cx, css } from 'emotion';
 
 const mapStateToProps = (state: RootState) => ({
   metric: (state.search.entity as MetricDetailState).metric,
+  bookmarks: state.search.bookmarks,
 });
 
 type MetricDetailPageProps = ReturnType<typeof mapStateToProps> & DetailEntityPageProps & Themeable;
@@ -69,6 +70,11 @@ class MetricDetailPage extends React.Component<MetricDetailPageProps, MetricDeta
     const { metric } = this.props;
     const { data } = metric;
     return !!data?.indom;
+  }
+
+  get isBookmarked() {
+    const { metric, bookmarks } = this.props;
+    return bookmarks.some(bookmark => metric.data?.name === bookmark.id && bookmark.type === EntityType.Metric);
   }
 
   setSelected(selectedOption?: EntityTabOpt) {
@@ -155,14 +161,13 @@ class MetricDetailPage extends React.Component<MetricDetailPageProps, MetricDeta
       setSelected,
       hasInstanceDomain,
       renderDesc,
+      isBookmarked,
     } = this;
     const { metric } = props;
     const { data } = metric;
     if (!data) {
       return <p>No metric.</p>;
     }
-    // TODO: get info from somewhere
-    const isBookmarked = false;
     return (
       <article className={detailPageItem}>
         <header className={detailPageHeader}>
