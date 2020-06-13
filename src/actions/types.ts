@@ -1,20 +1,24 @@
 import { PmApiMetricEndpointMetricResponse, PmApiIndomEndpointResponse } from 'mocks/responses';
 
-export const ADD_BOOKMARK = 'CREATE_BOOKMARK';
+export const ADD_BOOKMARK = 'ADD_BOOKMARK';
 
 export const CLEAR_BOOKMARKS = 'CLEAR_BOOKMARKS';
 
-export const CLEAR_SEARCH_HISTORY = 'CLEAR_SEARCH_HISTORY';
+export const ADD_HISTORY = 'ADD_HISTORY';
 
-export const OPEN_DETAIL = 'OPEN_DETAIL';
+export const CLEAR_HISTORY = 'CLEAR_HISTORY';
 
-export const QUERY_SEARCH_INIT = 'QUERY_SEARCH_INIT';
+export const SET_QUERY = 'SET_QUERY';
 
-export const QUERY_SEARCH_PENDING = 'QUERY_SEARCH_PENDING';
+export const CLEAR_QUERY = 'CLEAR_QUERY';
 
-export const QUERY_SEARCH_SUCCESS = 'QUERY_SEARCH_SUCCESS';
+export const LOAD_RESULT_INIT = 'LOAD_RESULT_INIT';
 
-export const QUERY_SEARCH_ERROR = 'QUERY_SEARCH_ERROR';
+export const LOAD_RESULT_PENDING = 'LOAD_RESULT_PENDING';
+
+export const LOAD_RESULT_SUCCESS = 'LOAD_RESULT_SUCCESS';
+
+export const LOAD_RESULT_ERROR = 'LOAD_RESULT_ERROR';
 
 export const LOAD_METRIC_INIT = 'LOAD_METRIC_INIT';
 
@@ -42,7 +46,9 @@ export const LOAD_METRIC_INDOM_ERROR = 'LOAD_METRIC_INDOM_ERROR';
 
 export const CLEAR_RESULTS = 'CLEAR_RESULTS';
 
-export enum SearchView {
+export const SET_VIEW = 'SET_VIEW';
+
+export enum ViewState {
   Detail,
   Search,
   Index,
@@ -57,40 +63,52 @@ export interface ClearBookmarksAction {
   type: typeof CLEAR_BOOKMARKS;
 }
 
-export interface BookmarksState {
-  items: RedisFulltextItemResponse[];
+export interface ClearHistoryAction {
+  type: typeof CLEAR_HISTORY;
 }
 
-export interface ClearSeachHistoryAction {
-  type: typeof CLEAR_SEARCH_HISTORY;
+export interface LoadResultInitAction {
+  type: typeof LOAD_RESULT_INIT;
 }
 
-export interface QuerySearchInitAction {
-  type: typeof QUERY_SEARCH_INIT;
+export interface LoadResultPendingAction {
+  type: typeof LOAD_RESULT_PENDING;
+}
+
+export interface LoadResultSuccessAction {
+  type: typeof LOAD_RESULT_SUCCESS;
+  payload: ResultData;
+}
+
+export interface LoadResultErrorAction {
+  type: typeof LOAD_RESULT_ERROR;
+}
+
+export interface ClearQueryAction {
+  type: typeof CLEAR_QUERY;
+}
+
+export interface SetQueryAction {
+  type: typeof SET_QUERY;
   payload: SearchQuery;
 }
 
-export interface QuerySearchPendingAction {
-  type: typeof QUERY_SEARCH_PENDING;
+export type LoadResultAction =
+  | LoadResultInitAction
+  | LoadResultPendingAction
+  | LoadResultSuccessAction
+  | LoadResultErrorAction;
+
+export interface SwitchViewAction {
+  type: typeof SET_VIEW;
+  payload: ViewState;
 }
 
-export interface QuerySearchSuccessAction {
-  type: typeof QUERY_SEARCH_SUCCESS;
-  payload: SearchResultData;
-}
+export type ViewAction = SwitchViewAction;
 
-export interface QuerySearchErrorAction {
-  type: typeof QUERY_SEARCH_ERROR;
-}
-
-export type QuerySearchAction =
-  | QuerySearchInitAction
-  | QuerySearchPendingAction
-  | QuerySearchSuccessAction
-  | QuerySearchErrorAction;
-
-export interface OpenDetailAction {
-  type: typeof OPEN_DETAIL;
+export interface AddHistoryAction {
+  type: typeof ADD_HISTORY;
+  payload: SearchQuery;
 }
 
 export interface ClearResultsAction {
@@ -166,14 +184,21 @@ export type LoadIndomAction =
   | LoadIndomSuccessAction
   | LoadIndomErrorAction;
 
+export type BookmarksAction = ClearBookmarksAction | AddBookmarkAction;
+
+export type EntityAction = LoadMetricAction | LoadMetricIndomAction | LoadIndomAction;
+
+export type HistoryAction = ClearHistoryAction | AddHistoryAction;
+
+export type QueryAction = ClearQueryAction | SetQueryAction;
+
+export type ResultAction = LoadResultAction;
+
 export type SearchAction =
   | ClearBookmarksAction
-  | ClearSeachHistoryAction
-  | QuerySearchAction
-  | OpenDetailAction
-  | LoadIndomAction
-  | LoadMetricAction
-  | LoadMetricIndomAction
+  | ClearHistoryAction
+  | LoadResultAction
+  | EntityAction
   | AddBookmarkAction
   | ClearResultsAction;
 
@@ -205,16 +230,12 @@ export enum FetchStatus {
   ERROR,
 }
 
-export interface SearchResultData {
+export interface SearchData {
   items: RedisFulltextItemResponse[];
   pagination: {
     currentPage: number;
     numberOfPages: number;
   };
-}
-
-export interface SearchResult extends TrackableStatus {
-  data: SearchResultData | null;
 }
 
 export interface MetricDetailState {
@@ -244,19 +265,33 @@ export interface IndomData {
   data: PmApiIndomEndpointResponse | null;
 }
 
-export type DetailState = MetricDetailState | InstanceDetailState | InstanceDomainDetailState | null;
+export type EntityState = MetricDetailState | InstanceDetailState | InstanceDomainDetailState | null;
 
 export interface TrackableStatus {
   status: FetchStatus;
 }
 
+export type BookmarksState = BookmarkItem[];
+
+export type HistoryState = SearchQuery[];
+
+export type QueryState = SearchQuery;
+
+export interface ResultData {
+  data: SearchData | null;
+}
+
+export type ResultDataState = ResultData & TrackableStatus;
+
+export type ResultState = ResultDataState | null;
+
 export interface SearchState {
-  view: SearchView;
-  query: SearchQuery;
-  history: SearchQuery[];
-  result: SearchResult;
-  bookmarks: BookmarkItem[];
-  entity: DetailState;
+  view: ViewState;
+  query: QueryState;
+  history: HistoryState;
+  result: ResultState;
+  bookmarks: BookmarksState;
+  entity: EntityState;
 }
 
 export enum SearchEntity {

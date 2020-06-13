@@ -11,7 +11,7 @@ import { appLayout } from './styles';
 import Actions from './components/Actions/Actions';
 import Aside from './components/Aside/Aside';
 import SearchForm from './components/SearchForm/SearchForm';
-import { SearchView } from './actions/types';
+import { ViewState } from './actions/types';
 import { RootState } from './reducers/reducers';
 
 const mapStateToProps = (state: RootState) => ({
@@ -29,11 +29,11 @@ class App extends React.Component<AppProps, {}> {
     const { view } = this.props;
 
     switch (view) {
-      case SearchView.Detail:
+      case ViewState.Detail:
         return <DetailPage />;
-      case SearchView.Search:
+      case ViewState.Search:
         return <SearchPage />;
-      case SearchView.Index:
+      case ViewState.Index:
         return <IndexPage />;
       default:
         return;

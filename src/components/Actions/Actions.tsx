@@ -5,8 +5,8 @@ import { ThunkDispatch } from 'redux-thunk';
 
 import { actionsBtnWithNoSpacing } from './styles';
 import { RootState } from '../../reducers/reducers';
-import { SearchView } from '../../actions/types';
-import { clearResults, querySearch } from '../../actions/search';
+import { ViewState } from '../../actions/types';
+import { openIndex, querySearch } from '../../actions/search';
 import { bindActionCreators, AnyAction } from 'redux';
 
 const mapStateToProps = (state: RootState) => ({
@@ -14,7 +14,7 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, null, AnyAction>) =>
-  bindActionCreators({ querySearch, clearResults }, dispatch);
+  bindActionCreators({ querySearch, openIndex }, dispatch);
 
 type ActionsProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
 
@@ -22,20 +22,20 @@ class Actions extends React.Component<ActionsProps, {}> {
   constructor(props: ActionsProps) {
     super(props);
     this.queryLatestSearch = this.queryLatestSearch.bind(this);
-    this.clearResults = this.clearResults.bind(this);
+    this.openIndex = this.openIndex.bind(this);
   }
 
   get showBackToPatternBtn() {
     const { search } = this.props;
-    return search.query.pattern && search.view === SearchView.Detail;
+    return search.query.pattern && search.view === ViewState.Detail;
   }
 
   get showBackToIndexPageBtn() {
-    return this.props.search.view !== SearchView.Index;
+    return this.props.search.view !== ViewState.Index;
   }
 
-  clearResults() {
-    this.props.clearResults();
+  openIndex() {
+    this.props.openIndex();
   }
 
   queryLatestSearch() {
@@ -44,12 +44,12 @@ class Actions extends React.Component<ActionsProps, {}> {
   }
 
   render() {
-    const { clearResults, queryLatestSearch, showBackToPatternBtn, showBackToIndexPageBtn, props } = this;
+    const { openIndex, queryLatestSearch, showBackToPatternBtn, showBackToIndexPageBtn, props } = this;
     const { search } = props;
     return (
       <VerticalGroup spacing="xs">
         {showBackToIndexPageBtn && (
-          <Button variant="link" size="md" icon="book" className={actionsBtnWithNoSpacing} onClick={clearResults}>
+          <Button variant="link" size="md" icon="book" className={actionsBtnWithNoSpacing} onClick={openIndex}>
             Back To Latest Searches &amp; Suggestions
           </Button>
         )}

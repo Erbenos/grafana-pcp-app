@@ -2,7 +2,7 @@ import React from 'react';
 import { RootState } from 'reducers/reducers';
 import { InstanceDomainDetailState, EntityType } from 'actions/types';
 import { connect } from 'react-redux';
-import { Themeable } from '@grafana/ui';
+import { Themeable, withTheme } from '@grafana/ui';
 import { DetailEntityPageProps } from '../DetailPage';
 
 const mapStateToProps = (state: RootState) => ({
@@ -39,4 +39,4 @@ class InstanceDomainDetailPage extends React.Component<InstanceDomainDetailPageP
   }
 }
 
-export default connect(mapStateToProps, {})(InstanceDomainDetailPage);
+export default withTheme(connect(mapStateToProps, {})(InstanceDomainDetailPage));

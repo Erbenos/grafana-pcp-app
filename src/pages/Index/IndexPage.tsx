@@ -1,11 +1,11 @@
 import React from 'react';
 import { Button, VerticalGroup } from '@grafana/ui';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { bindActionCreators, AnyAction } from 'redux';
 
 import { clearBookmarks, clearSearchHistory, querySearch, openDetail } from '../../actions/search';
 import { RootState } from '../../reducers/reducers';
-import { SearchQuery, BookmarkItem, OpenDetailAction, QuerySearchAction } from '../../actions/types';
+import { SearchQuery, BookmarkItem } from '../../actions/types';
 import { ThunkDispatch } from 'redux-thunk';
 import { indexColumnsList, indexPageBtnWithNoSpacing, indexPageContainer } from './styles';
 
@@ -14,7 +14,7 @@ const mapStateToProps = (state: RootState) => ({
   searchHistory: state.search.history,
 });
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, null, QuerySearchAction | OpenDetailAction>) =>
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, null, AnyAction>) =>
   bindActionCreators({ querySearch, openDetail, clearBookmarks, clearSearchHistory }, dispatch);
 
 type IndexPageProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
@@ -31,8 +31,7 @@ class IndexPage extends React.Component<IndexPageProps, {}> {
   }
 
   onBookmarksClick(item: BookmarkItem) {
-    // TODO: will need to pass type as well eventually
-    this.props.openDetail(item.id);
+    this.props.openDetail(item.id, item.type);
   }
 
   onClearBookmarksClick() {

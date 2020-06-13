@@ -39,7 +39,7 @@ class SearchPage extends React.Component<SearchPageProps, {}> {
   }
 
   renderSpinner() {
-    if (this.props.search.result.status === FetchStatus.PENDING) {
+    if (this.props.search.result?.status === FetchStatus.PENDING) {
       return (
         <div
           className={cx(
@@ -58,15 +58,17 @@ class SearchPage extends React.Component<SearchPageProps, {}> {
 
   renderResults() {
     const { props, onPaginationClick, onDetailClick } = this;
+    if (!props.search.result) {
+      return <p>No result data.</p>;
+    }
     const { data, status } = props.search.result;
-
     switch (status) {
       case FetchStatus.PENDING:
       case FetchStatus.SUCCESS: {
         if (status === FetchStatus.PENDING) {
           return <p>Searching&hellip;</p>;
         }
-        if (data === null) {
+        if (!data) {
           return <p>Incorrect server response.</p>;
         }
         if (data.items.length > 0) {

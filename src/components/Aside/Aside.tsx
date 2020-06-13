@@ -3,7 +3,7 @@ import { VerticalGroup } from '@grafana/ui';
 import ReactPlaceholder from 'react-placeholder/lib';
 
 import { asideContainer } from './styles';
-import { SearchView } from 'actions/types';
+import { ViewState } from 'actions/types';
 import { connect } from 'react-redux';
 import { RootState } from 'reducers/reducers';
 
@@ -22,7 +22,7 @@ class Aside extends React.Component<AsideProps, {}> {
   renderContents() {
     const { view } = this.props;
     switch (view) {
-      case SearchView.Detail:
+      case ViewState.Detail:
         return (
           <>
             <VerticalGroup spacing="lg">

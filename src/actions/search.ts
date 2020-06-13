@@ -1,85 +1,121 @@
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
-
 import {
-  ClearSeachHistoryAction,
-  CLEAR_SEARCH_HISTORY,
-  QUERY_SEARCH_INIT,
+  SearchQuery,
+  EntityType,
+  LoadMetricAction,
+  LOAD_METRIC_INIT,
+  LOAD_METRIC_PENDING,
+  LOAD_METRIC_SUCCESS,
+  LOAD_METRIC_ERROR,
+  LoadMetricIndomAction,
+  LOAD_METRIC_INDOM_INIT,
+  LOAD_METRIC_INDOM_PENDING,
+  LOAD_METRIC_INDOM_SUCCESS,
+  LOAD_METRIC_INDOM_ERROR,
+  LoadIndomAction,
+  LOAD_INDOM_INIT,
+  LOAD_INDOM_PENDING,
+  LOAD_INDOM_SUCCESS,
+  LOAD_INDOM_ERROR,
+  BookmarkItem,
   AddBookmarkAction,
   ADD_BOOKMARK,
   ClearBookmarksAction,
   CLEAR_BOOKMARKS,
   ClearResultsAction,
   CLEAR_RESULTS,
-  BookmarkItem,
-  SearchQuery,
-  QuerySearchAction,
-  OpenDetailAction,
-  QUERY_SEARCH_PENDING,
-  QUERY_SEARCH_ERROR,
-  QUERY_SEARCH_SUCCESS,
-  EntityType,
-  SearchResultData,
-  LoadMetricIndomAction,
-  LOAD_METRIC_INDOM_INIT,
-  LOAD_METRIC_INDOM_PENDING,
-  LoadIndomAction,
-  LOAD_METRIC_INDOM_ERROR,
-  LOAD_INDOM_INIT,
-  LOAD_INDOM_PENDING,
-  LOAD_INDOM_ERROR,
-  LoadMetricAction,
-  LOAD_METRIC_INIT,
-  LOAD_METRIC_PENDING,
-  LOAD_METRIC_SUCCESS,
-  LOAD_METRIC_ERROR,
-  LOAD_METRIC_INDOM_SUCCESS,
-  LOAD_INDOM_SUCCESS,
-  OPEN_DETAIL,
+  CLEAR_HISTORY,
+  ClearHistoryAction,
+  LoadResultAction,
+  LOAD_RESULT_INIT,
+  LOAD_RESULT_PENDING,
+  ResultData,
+  LOAD_RESULT_SUCCESS,
+  LOAD_RESULT_ERROR,
+  SET_VIEW,
+  ViewState,
+  SwitchViewAction,
+  ADD_HISTORY,
+  HistoryAction,
+  ViewAction,
+  EntityAction,
+  SET_QUERY,
+  SetQueryAction,
 } from './types';
-import { querySearchEndpoint, indomFetchEndpoint, metricFetchEndpoint } from '../mocks/endpoints';
-import { PmApiIndomEndpointResponse, PmApiMetricEndpointMetricResponse } from 'mocks/responses';
+import { metricFetchEndpoint, indomFetchEndpoint, querySearchEndpoint } from '../mocks/endpoints';
+import { PmApiMetricEndpointMetricResponse, PmApiIndomEndpointResponse } from '../mocks/responses';
+import { store } from 'store/store';
 
-const querySearch = (query: SearchQuery): ThunkAction<Promise<void>, {}, {}, QuerySearchAction> => async (
-  dispatch: ThunkDispatch<{}, {}, QuerySearchAction>
+const querySearch = (
+  query: SearchQuery
+): ThunkAction<Promise<void>, {}, {}, LoadResultAction | SwitchViewAction | HistoryAction | SetQueryAction> => async (
+  dispatch: ThunkDispatch<{}, {}, LoadResultAction | SwitchViewAction | HistoryAction | SetQueryAction>
 ): Promise<void> => {
   dispatch({
-    type: QUERY_SEARCH_INIT,
-    payload: query,
+    type: SET_VIEW,
+    payload: ViewState.Search,
+  });
+  dispatch({
+    type: LOAD_RESULT_INIT,
   });
 
   const limit = 5;
   const offset = (query.pageNum - 1) * limit;
 
+  dispatch({
+    type: SET_QUERY,
+    payload: query,
+  });
+
   try {
-    dispatch({ type: QUERY_SEARCH_PENDING });
+    dispatch({
+      type: LOAD_RESULT_PENDING,
+    });
     const { pattern, entityFlags } = query;
     const response = await querySearchEndpoint(pattern, entityFlags, limit, offset);
-    const result: SearchResultData = {
-      items: response,
-      // TODO: probably should be a part of response
-      pagination: {
-        currentPage: query.pageNum,
-        numberOfPages: 5,
+    const result: ResultData = {
+      data: {
+        items: response,
+        // TODO: probably should be a part of response
+        pagination: {
+          currentPage: query.pageNum,
+          numberOfPages: 5,
+        },
       },
     };
     dispatch({
-      type: QUERY_SEARCH_SUCCESS,
+      type: LOAD_RESULT_SUCCESS,
       payload: result,
     });
   } catch {
     dispatch({
-      type: QUERY_SEARCH_ERROR,
+      type: LOAD_RESULT_ERROR,
     });
+    return;
+  }
+
+  // Now check if we should update search history
+  if (query.pageNum === 1) {
+    const { history } = store.getState().search;
+    if (!history.some(record => record.pattern === query.pattern && record.entityFlags === query.entityFlags)) {
+      dispatch({
+        type: ADD_HISTORY,
+        payload: query,
+      });
+    }
   }
 };
 
 const openDetail = (
   id: string,
   type: EntityType = EntityType.Metric
-): ThunkAction<Promise<void>, {}, {}, OpenDetailAction> => async (
-  dispatch: ThunkDispatch<{}, {}, OpenDetailAction>
+): ThunkAction<Promise<void>, {}, {}, EntityAction | ViewAction> => async (
+  dispatch: ThunkDispatch<{}, {}, EntityAction | ViewAction>
 ): Promise<void> => {
-  dispatch({ type: OPEN_DETAIL });
+  dispatch({
+    type: SET_VIEW,
+    payload: ViewState.Detail,
+  });
   switch (type) {
     case EntityType.Metric: {
       dispatch(loadMetric(id)).then(metric => {
@@ -162,8 +198,12 @@ const loadIndom = (
   return null;
 };
 
-const clearSearchHistory = (): ClearSeachHistoryAction => {
-  return { type: CLEAR_SEARCH_HISTORY };
+const openIndex = (): SwitchViewAction => {
+  return { type: SET_VIEW, payload: ViewState.Index };
+};
+
+const clearSearchHistory = (): ClearHistoryAction => {
+  return { type: CLEAR_HISTORY };
 };
 
 const addBookmark = (item: BookmarkItem): AddBookmarkAction => {
@@ -181,4 +221,4 @@ const clearResults = (): ClearResultsAction => {
   return { type: CLEAR_RESULTS };
 };
 
-export { querySearch, clearSearchHistory, addBookmark, clearBookmarks, clearResults, openDetail };
+export { querySearch, clearSearchHistory, openIndex, addBookmark, clearBookmarks, clearResults, openDetail };
