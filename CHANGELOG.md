@@ -37,3 +37,7 @@ Improved typing and structure on Redux store, added mock for /pmapi/indom respon
 ### 12.06.2020
 
 Loading mock instance domain for metric, updated root store structure even further for easier state management and fetch status tracking, this structure will be used by other detail pages as well. Will need to come up with better file structure though as some files are getting quite big and repetitive.
+
+### 13.06.2020
+
+Refactored reducer structure - introduced separated reducers for each slice of Redux state. Made appropriate edits to actions.
