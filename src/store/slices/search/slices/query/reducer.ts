@@ -1,5 +1,8 @@
-import { SearchQuery, SearchEntity, QueryAction, QueryState, SET_QUERY, CLEAR_QUERY } from '../../../actions/types';
 import { Reducer } from 'redux';
+import { SearchQuery, SearchEntity } from '../../shared/state';
+import { QueryState } from './state';
+import { QueryAction } from './actions';
+import { SET_QUERY, CLEAR_QUERY } from './types';
 
 const initialQuery = (): SearchQuery => ({
   pattern: '',

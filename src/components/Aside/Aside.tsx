@@ -3,9 +3,9 @@ import { VerticalGroup } from '@grafana/ui';
 import ReactPlaceholder from 'react-placeholder/lib';
 
 import { asideContainer } from './styles';
-import { ViewState } from 'actions/types';
 import { connect } from 'react-redux';
-import { RootState } from 'reducers/reducers';
+import { RootState } from 'store/reducer';
+import { ViewState } from 'store/slices/search/slices/view/state';
 
 const mapStateToProps = (state: RootState) => ({
   view: state.search.view,

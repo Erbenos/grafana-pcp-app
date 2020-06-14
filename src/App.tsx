@@ -1,18 +1,15 @@
-import React from 'react';
+import { RootState } from 'store/reducer';
 import { AppRootProps } from '@grafana/data';
+import React from 'react';
+import { ViewState } from 'store/slices/search/slices/view/state';
+import DetailPage from 'pages/Detail/DetailPage';
+import SearchPage from 'pages/Search/SearchPage';
+import IndexPage from 'pages/Index/IndexPage';
+import { appLayout } from 'styles';
+import SearchForm from 'components/SearchForm/SearchForm';
+import Actions from 'components/Actions/Actions';
+import Aside from 'components/Aside/Aside';
 import { connect } from 'react-redux';
-import 'react-placeholder/lib/reactPlaceholder.css';
-
-import DetailPage from './pages/Detail/DetailPage';
-import SearchPage from './pages/Search/SearchPage';
-import IndexPage from './pages/Index/IndexPage';
-import { appLayout } from './styles';
-
-import Actions from './components/Actions/Actions';
-import Aside from './components/Aside/Aside';
-import SearchForm from './components/SearchForm/SearchForm';
-import { ViewState } from './actions/types';
-import { RootState } from './reducers/reducers';
 
 const mapStateToProps = (state: RootState) => ({
   view: state.search.view,

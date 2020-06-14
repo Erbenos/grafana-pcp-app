@@ -1,7 +1,6 @@
 import React from 'react';
 import { HorizontalGroup, Button } from '@grafana/ui';
 
-import { RedisFulltextItemResponse } from '../../actions/types';
 import {
   searchResultDescription,
   searchResultFooter,
@@ -10,6 +9,7 @@ import {
   searchResultHeader,
   searchResultTitle,
 } from './styles';
+import { RedisFulltextItemResponse } from 'store/slices/search/slices/result/state';
 
 interface SearchResultProps {
   item: RedisFulltextItemResponse;

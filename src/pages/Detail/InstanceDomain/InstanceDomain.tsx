@@ -1,9 +1,10 @@
 import React from 'react';
-import { RootState } from 'reducers/reducers';
-import { InstanceDomainDetailState, EntityType } from 'actions/types';
+import { RootState } from 'store/reducer';
 import { connect } from 'react-redux';
 import { Themeable, withTheme } from '@grafana/ui';
 import { DetailEntityPageProps } from '../DetailPage';
+import { InstanceDomainDetailState } from 'store/slices/search/slices/entity/state';
+import { EntityType } from 'store/slices/search/shared/state';
 
 const mapStateToProps = (state: RootState) => ({
   indom: (state.search.entity as InstanceDomainDetailState).indom,

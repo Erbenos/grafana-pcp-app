@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { EntityType, MetricDetailState, FetchStatus } from 'actions/types';
 import { VerticalGroup, HorizontalGroup, Button, RadioButtonGroup, Spinner, Themeable, withTheme } from '@grafana/ui';
 import {
   detailPageItem,
@@ -16,10 +15,12 @@ import { SelectableValue } from '@grafana/data';
 import { DetailEntityPageProps } from '../DetailPage';
 import InstanceDomainTab from './InstanceDomainTab/InstanceDomainTab';
 import OtherMetaTab from './OtherMetaTab/OtherMetaTab';
-import { RootState } from 'reducers/reducers';
+import { RootState } from 'store/reducer';
 import { connect } from 'react-redux';
 import LabelsTab from './LabelsTab/LabelsTab';
 import { cx, css } from 'emotion';
+import { MetricDetailState } from 'store/slices/search/slices/entity/state';
+import { EntityType, FetchStatus } from 'store/slices/search/shared/state';
 
 const mapStateToProps = (state: RootState) => ({
   metric: (state.search.entity as MetricDetailState).metric,

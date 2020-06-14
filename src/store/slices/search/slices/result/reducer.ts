@@ -1,13 +1,8 @@
-import {
-  ResultAction,
-  ResultState,
-  LOAD_RESULT_INIT,
-  LOAD_RESULT_PENDING,
-  LOAD_RESULT_ERROR,
-  LOAD_RESULT_SUCCESS,
-  FetchStatus,
-} from '../../../actions/types';
 import { Reducer } from 'redux';
+import { ResultState } from './state';
+import { FetchStatus } from '../../shared/state';
+import { LOAD_RESULT_INIT, LOAD_RESULT_PENDING, LOAD_RESULT_SUCCESS, LOAD_RESULT_ERROR } from './types';
+import { ResultAction } from './actions';
 
 const initialState: ResultState = { status: FetchStatus.INIT, data: null };
 

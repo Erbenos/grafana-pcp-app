@@ -1,4 +1,5 @@
-import { EntityType, RedisFulltextItemResponse } from 'actions/types';
+import { RedisFulltextItemResponse } from 'store/slices/search/slices/result/state';
+import { EntityType } from 'store/slices/search/shared/state';
 
 export const searchEntities: RedisFulltextItemResponse[] = [
   {

@@ -1,4 +1,3 @@
-import { RedisFulltextItemResponse, SearchEntity } from 'actions/types';
 import {
   searchEntities,
   detailEntities,
@@ -6,6 +5,8 @@ import {
   PmApiIndomEndpointResponse,
   indomEntities,
 } from './responses';
+import { SearchEntity } from 'store/slices/search/shared/state';
+import { RedisFulltextItemResponse } from 'store/slices/search/slices/result/state';
 
 export const querySearchEndpoint = (
   pattern: string,

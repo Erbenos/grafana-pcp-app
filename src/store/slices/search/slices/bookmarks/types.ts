@@ -1,0 +1,2 @@
+export const ADD_BOOKMARK = 'ADD_BOOKMARK';
+export const CLEAR_BOOKMARKS = 'CLEAR_BOOKMARKS';

@@ -1,5 +1,7 @@
-import { HistoryState, HistoryAction, ADD_HISTORY, CLEAR_HISTORY } from '../../../actions/types';
 import { Reducer } from 'redux';
+import { HistoryState } from './state';
+import { HistoryAction } from './actions';
+import { ADD_HISTORY, CLEAR_HISTORY } from './types';
 
 const initialState: HistoryState = [];
 

@@ -2,12 +2,13 @@ import { SelectableValue } from '@grafana/data';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { addBookmark } from '../../actions/search';
-import { RootState } from '../../reducers/reducers';
-import { EntityType, BookmarkItem } from '../../actions/types';
 import { detailPageContainer } from './styles';
 import MetricDetailPage from './Metric/Metric';
 import InstanceDomainDetailPage from './InstanceDomain/InstanceDomain';
+import { RootState } from 'store/reducer';
+import { BookmarkItem } from 'store/slices/search/slices/bookmarks/state';
+import { EntityType } from 'store/slices/search/shared/state';
+import { addBookmark } from 'store/slices/search/slices/bookmarks/actionCreators';
 
 const mapStateToProps = (state: RootState) => ({
   entity: state.search.entity,

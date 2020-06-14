@@ -1,7 +1,6 @@
 import React from 'react';
 import { Spinner, Themeable, withTheme, VerticalGroup } from '@grafana/ui';
-import { RootState } from 'reducers/reducers';
-import { MetricDetailState, FetchStatus } from 'actions/types';
+import { RootState } from 'store/reducer';
 import { connect } from 'react-redux';
 import { cx, css } from 'emotion';
 import {
@@ -10,6 +9,8 @@ import {
   instanceDomainContent,
   instanceDomainItemList,
 } from '../../styles';
+import { MetricDetailState } from 'store/slices/search/slices/entity/state';
+import { FetchStatus } from 'store/slices/search/shared/state';
 
 const mapStateToProps = (state: RootState) => ({
   indom: (state.search.entity as MetricDetailState).indom,

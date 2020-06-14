@@ -2,12 +2,12 @@ import React from 'react';
 import { VerticalGroup, Input, Icon, Button, HorizontalGroup, Checkbox, Field } from '@grafana/ui';
 import { connect } from 'react-redux';
 
-import { querySearch } from '../../actions/search';
-import { RootState } from '../../reducers/reducers';
-import { SearchEntity } from '../../actions/types';
 import { ThunkDispatch } from 'redux-thunk';
 import { bindActionCreators, AnyAction } from 'redux';
 import { searchContainer, searchFormGroup, searchBlock, searchSubmitBtn } from './styles';
+import { querySearch } from 'store/slices/search/shared/actionCreators';
+import { RootState } from 'store/reducer';
+import { SearchEntity } from 'store/slices/search/shared/state';
 
 const mapStateToProps = (state: RootState) => ({
   query: state.search.query,
@@ -166,4 +166,4 @@ class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SearchForm);
-export { SearchEntity, SearchFormProps };
+export { SearchFormProps };

@@ -2,12 +2,14 @@ import React from 'react';
 import { Button, VerticalGroup } from '@grafana/ui';
 import { connect } from 'react-redux';
 import { bindActionCreators, AnyAction } from 'redux';
-
-import { clearBookmarks, clearSearchHistory, querySearch, openDetail } from '../../actions/search';
-import { RootState } from '../../reducers/reducers';
-import { SearchQuery, BookmarkItem } from '../../actions/types';
+import { RootState } from 'store/reducer';
 import { ThunkDispatch } from 'redux-thunk';
+import { BookmarkItem } from 'store/slices/search/slices/bookmarks/state';
+import { SearchQuery } from 'store/slices/search/shared/state';
 import { indexColumnsList, indexPageBtnWithNoSpacing, indexPageContainer } from './styles';
+import { querySearch, openDetail } from 'store/slices/search/shared/actionCreators';
+import { clearBookmarks } from 'store/slices/search/slices/bookmarks/actionCreators';
+import { clearSearchHistory } from 'store/slices/search/slices/history/actionCreators';
 
 const mapStateToProps = (state: RootState) => ({
   bookmarks: state.search.bookmarks,

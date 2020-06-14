@@ -41,3 +41,7 @@ Loading mock instance domain for metric, updated root store structure even furth
 ### 13.06.2020
 
 Refactored reducer structure - introduced separated reducers for each slice of Redux state. Made appropriate edits to actions.
+
+### 14.06.2020
+
+Put all other store slice specific code separately - no giant action/(types|search).ts anymore :)

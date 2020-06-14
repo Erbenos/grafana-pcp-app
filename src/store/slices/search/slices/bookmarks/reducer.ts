@@ -1,5 +1,7 @@
-import { BookmarksState, BookmarksAction, ADD_BOOKMARK, CLEAR_BOOKMARKS } from '../../../actions/types';
 import { Reducer } from 'redux';
+import { BookmarksState } from './state';
+import { BookmarksAction } from './actions';
+import { ADD_BOOKMARK, CLEAR_BOOKMARKS } from './types';
 
 const initialState: BookmarksState = [];
 

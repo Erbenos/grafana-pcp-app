@@ -3,13 +3,13 @@ import { VerticalGroup, Pagination, Spinner, withTheme, Themeable } from '@grafa
 import { connect } from 'react-redux';
 import { AnyAction, bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-
-import { SearchResult } from '../../components/SearchResult/SearchResult';
-import { RootState } from '../../reducers/reducers';
-import { querySearch, openDetail } from '../../actions/search';
-import { RedisFulltextItemResponse, FetchStatus } from '../../actions/types';
+import { RootState } from 'store/reducer';
+import { RedisFulltextItemResponse } from 'store/slices/search/slices/result/state';
+import { FetchStatus } from 'store/slices/search/shared/state';
 import { cx, css } from 'emotion';
 import { searchPageSpinnerContainer, paginationContainer, searchPageContainer } from './styles';
+import { SearchResult } from 'components/SearchResult/SearchResult';
+import { querySearch, openDetail } from 'store/slices/search/shared/actionCreators';
 
 const mapStateToProps = (state: RootState) => ({
   search: state.search,

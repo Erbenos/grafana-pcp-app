@@ -1,22 +1,21 @@
+import { Reducer } from 'redux';
+import { EntityState } from './state';
+import { EntityAction } from './actions';
 import {
-  EntityAction,
-  EntityState,
-  EntityType,
-  FetchStatus,
   LOAD_METRIC_INIT,
-  LOAD_METRIC_SUCCESS,
   LOAD_METRIC_PENDING,
-  LOAD_INDOM_INIT,
+  LOAD_METRIC_SUCCESS,
+  LOAD_METRIC_ERROR,
   LOAD_METRIC_INDOM_INIT,
   LOAD_METRIC_INDOM_PENDING,
+  LOAD_METRIC_INDOM_SUCCESS,
+  LOAD_METRIC_INDOM_ERROR,
+  LOAD_INDOM_INIT,
   LOAD_INDOM_PENDING,
   LOAD_INDOM_SUCCESS,
   LOAD_INDOM_ERROR,
-  LOAD_METRIC_ERROR,
-  LOAD_METRIC_INDOM_SUCCESS,
-  LOAD_METRIC_INDOM_ERROR,
-} from '../../../actions/types';
-import { Reducer } from 'redux';
+} from './types';
+import { EntityType, FetchStatus } from '../../shared/state';
 
 const initialState: EntityState = null;
 
