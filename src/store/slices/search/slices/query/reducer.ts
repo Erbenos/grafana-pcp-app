@@ -1,16 +1,7 @@
 import { Reducer } from 'redux';
-import { SearchQuery, SearchEntity } from '../../shared/state';
-import { QueryState } from './state';
+import { QueryState, initialState, initialQuery } from './state';
 import { QueryAction } from './actions';
 import { SET_QUERY, CLEAR_QUERY } from './types';
-
-const initialQuery = (): SearchQuery => ({
-  pattern: '',
-  entityFlags: SearchEntity.All,
-  pageNum: 1,
-});
-
-const initialState: SearchQuery = initialQuery();
 
 const queryReducer: Reducer<QueryState, QueryAction> = (state, action) => {
   if (state === undefined) {

@@ -1,9 +1,7 @@
 import { Reducer } from 'redux';
-import { BookmarksState } from './state';
+import { BookmarksState, initialState } from './state';
 import { BookmarksAction } from './actions';
 import { ADD_BOOKMARK, CLEAR_BOOKMARKS } from './types';
-
-const initialState: BookmarksState = [];
 
 const bookmarksReducer: Reducer<BookmarksState, BookmarksAction> = (state, action) => {
   if (state === undefined) {

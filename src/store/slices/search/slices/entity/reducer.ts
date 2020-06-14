@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import { EntityState } from './state';
+import { EntityState, initialState } from './state';
 import { EntityAction } from './actions';
 import {
   LOAD_METRIC_INIT,
@@ -16,8 +16,6 @@ import {
   LOAD_INDOM_ERROR,
 } from './types';
 import { EntityType, FetchStatus } from '../../shared/state';
-
-const initialState: EntityState = null;
 
 const entityReducer: Reducer<EntityState, EntityAction> = (state, action) => {
   if (state === undefined) {

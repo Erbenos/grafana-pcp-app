@@ -1,4 +1,4 @@
-import { EntityType, TrackableStatus } from '../../shared/state';
+import { EntityType, TrackableStatus, FetchStatus } from '../../shared/state';
 
 export interface RedisFulltextItemResponse {
   entityId: string;
@@ -24,3 +24,5 @@ export interface ResultData {
 export type ResultDataState = ResultData & TrackableStatus;
 
 export type ResultState = ResultDataState | null;
+
+export const initialState: ResultState = { status: FetchStatus.INIT, data: null };

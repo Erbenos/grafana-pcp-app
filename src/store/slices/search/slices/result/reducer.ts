@@ -1,10 +1,8 @@
 import { Reducer } from 'redux';
-import { ResultState } from './state';
+import { ResultState, initialState } from './state';
 import { FetchStatus } from '../../shared/state';
 import { LOAD_RESULT_INIT, LOAD_RESULT_PENDING, LOAD_RESULT_SUCCESS, LOAD_RESULT_ERROR } from './types';
 import { ResultAction } from './actions';
-
-const initialState: ResultState = { status: FetchStatus.INIT, data: null };
 
 const resultReducer: Reducer<ResultState, ResultAction> = (state, action) => {
   if (state === undefined) {

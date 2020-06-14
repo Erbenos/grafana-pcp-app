@@ -44,4 +44,4 @@ Refactored reducer structure - introduced separated reducers for each slice of R
 
 ### 14.06.2020
 
-Put all other store slice specific code separately - no giant action/(types|search).ts anymore :)
+Put all other slice specific code separately - no giant action/(types|search).ts anymore :)

@@ -3,3 +3,5 @@ export enum ViewState {
   Search,
   Index,
 }
+
+export const initialState: ViewState = ViewState.Index;
