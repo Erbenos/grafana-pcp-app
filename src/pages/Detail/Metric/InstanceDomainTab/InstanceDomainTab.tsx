@@ -1,54 +1,30 @@
 import React from 'react';
-import { Spinner, Themeable, withTheme, VerticalGroup } from '@grafana/ui';
+import { Themeable, withTheme, VerticalGroup, Button } from '@grafana/ui';
 import { RootState } from 'store/reducer';
 import { connect } from 'react-redux';
-import { cx, css } from 'emotion';
-import {
-  detailPageSpinnerContainer,
-  detailPageDescription,
-  instanceDomainContent,
-  instanceDomainItemList,
-} from '../../styles';
+import { detailPageDescription, instanceDomainContent, instanceDomainItemList, detailPageBtn } from '../../styles';
 import { MetricDetailState } from 'store/slices/search/slices/entity/state';
-import { FetchStatus } from 'store/slices/search/shared/state';
+import { FetchStatus, EntityType } from 'store/slices/search/shared/state';
+import Loader from 'components/Loader/Loader';
+import { ThunkDispatch } from 'redux-thunk';
+import { AnyAction, bindActionCreators } from 'redux';
+import { openDetail } from 'store/slices/search/shared/actionCreators';
 
 const mapStateToProps = (state: RootState) => ({
   indom: (state.search.entity as MetricDetailState).indom,
 });
 
-type InstanceDomainTabProps = ReturnType<typeof mapStateToProps> & Themeable;
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, null, AnyAction>) =>
+  bindActionCreators({ openDetail }, dispatch);
+
+type InstanceDomainTabProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & Themeable;
 
 class InstanceDomainTab extends React.Component<InstanceDomainTabProps, {}> {
   constructor(props: InstanceDomainTabProps) {
     super(props);
     this.renderDetail = this.renderDetail.bind(this);
-    this.renderSpinner = this.renderSpinner.bind(this);
     this.renderDesc = this.renderDesc.bind(this);
     this.renderInstanceDomain = this.renderInstanceDomain.bind(this);
-  }
-
-  renderSpinner() {
-    const { props } = this;
-    const { indom, theme } = props;
-    if (!indom) {
-      return <p>No indom.</p>;
-    }
-    const { status } = indom;
-    if (status === FetchStatus.PENDING) {
-      return (
-        <div
-          className={cx(
-            detailPageSpinnerContainer,
-            css`
-              background-color: ${theme.colors.bg1}8f;
-            `
-          )}
-        >
-          <Spinner size={40} />
-        </div>
-      );
-    }
-    return;
   }
 
   renderDetail() {
@@ -109,20 +85,24 @@ class InstanceDomainTab extends React.Component<InstanceDomainTabProps, {}> {
             ))}
           </ul>
           <p>Instance Count: {data.instances.length}</p>
+          <Button
+            variant="link"
+            size="md"
+            icon="eye"
+            className={detailPageBtn}
+            onClick={() => props.openDetail(data.indom, EntityType.InstanceDomain)}
+          >
+            Read More
+          </Button>
         </div>
       </VerticalGroup>
     );
   }
 
   render() {
-    const { renderSpinner, renderDetail } = this;
-    return (
-      <>
-        {renderSpinner()}
-        {renderDetail()}
-      </>
-    );
+    const { renderDetail, props } = this;
+    return <Loader loaded={props.indom?.status !== FetchStatus.PENDING}>{renderDetail()}</Loader>;
   }
 }
 
-export default withTheme(connect(mapStateToProps, {})(InstanceDomainTab));
+export default withTheme(connect(mapStateToProps, mapDispatchToProps)(InstanceDomainTab));

@@ -7,8 +7,8 @@ export const searchEntities: RedisFulltextItemResponse[] = [
     name: 'kernel.uname.distro',
     type: EntityType.Metric,
     indom: 'PM_INDOM_NULL',
-    oneline: 'Linux distribution name',
-    helptext: `The Linux distribution name, as determined by a number of heuristics.
+    oneline: 'Linux <strong>distribution</strong> name',
+    helptext: `The Linux distribution name, as <strong>determined</strong> by a number of heuristics.
 For example:
 + on Fedora, the contents of /etc/fedora-release
 + on RedHat, the contents of /etc/redhat-release`,
@@ -18,32 +18,40 @@ For example:
     name: 'kernel.uname.sysname',
     type: EntityType.Metric,
     indom: 'PM_INDOM_NULL',
-    oneline: 'name of the implementation of the operating system',
-    helptext: `Name of the implementation of the running operating system as reported by the sysname[] value returned from uname(2) or uname -s. Usually "Linux".`,
+    oneline: 'name of the <strong>implementation<strong> of the operating system',
+    helptext: `Name of the implementation of the <strong>running</strong> operating system as reported by the sysname[] value returned from uname(2) or uname -s. Usually "Linux".`,
   },
   {
     entityId: '73e91dbd17f34634228b87c63bab8a4b90437512',
     name: 'kernel.all.uptime',
     type: EntityType.Metric,
     indom: 'PM_INDOM_NULL',
-    oneline: 'time the current kernel has been running',
-    helptext: 'time the current kernel has been running',
+    oneline: 'time the <strong>current</strong> kernel has been running',
+    helptext: 'time the current <strong>kernel</strong> has been running',
   },
   {
     entityId: '77c80fa867cc066fca97a6a1e33d9579a3d48f65',
     name: 'network.interface.speed',
     type: EntityType.Metric,
     indom: '60.3',
-    oneline: 'interface speed in megabytes per second',
-    helptext: `The linespeed on the network interface, as reported by the kernel, scaled from Megabits/second to Megabytes/second. See also network.interface.baudrate for the bytes/second value.`,
+    oneline: 'interface speed in <strong>megabytes</strong> per second',
+    helptext: `The linespeed on the network interface, as <strong>reported</strong> by the kernel, scaled from Megabits/second to Megabytes/second. See also network.interface.baudrate for the bytes/second value.`,
   },
   {
     entityId: '946086f939d2db36941aa4cf3d7788e1a7b2790a',
     name: 'mem.freemem',
     type: EntityType.Metric,
     indom: 'PM_INDOM_NULL',
-    oneline: 'free system memory metric from /proc/meminfo',
-    helptext: 'free system memory metric from /proc/meminfo',
+    oneline: 'free system memory metric from <strong>/proc/meminfo</strong>',
+    helptext: 'free system memory metric from <strong>/proc/meminfo</strong>',
+  },
+  {
+    entityId: 'd95f683f17c9f1ee05edf25e59fc8deba376ba27',
+    name: '60.3',
+    type: EntityType.InstanceDomain,
+    indom: '60.3',
+    oneline: 'set of <strong>network</strong> interfaces',
+    helptext: 'set of <strong>network</strong> interfaces',
   },
 ];
 

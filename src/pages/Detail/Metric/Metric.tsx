@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { VerticalGroup, HorizontalGroup, Button, RadioButtonGroup, Spinner, Themeable, withTheme } from '@grafana/ui';
+import { VerticalGroup, HorizontalGroup, Button, RadioButtonGroup, Themeable, withTheme } from '@grafana/ui';
 import {
   detailPageItem,
   detailPageHeader,
@@ -9,7 +9,6 @@ import {
   detailPageBtn,
   radioBtnGroupContainer,
   detailPageDescription,
-  detailPageSpinnerContainer,
 } from '../styles';
 import { SelectableValue } from '@grafana/data';
 import { DetailEntityPageProps } from '../DetailPage';
@@ -18,9 +17,9 @@ import OtherMetaTab from './OtherMetaTab/OtherMetaTab';
 import { RootState } from 'store/reducer';
 import { connect } from 'react-redux';
 import LabelsTab from './LabelsTab/LabelsTab';
-import { cx, css } from 'emotion';
 import { MetricDetailState } from 'store/slices/search/slices/entity/state';
 import { EntityType, FetchStatus } from 'store/slices/search/shared/state';
+import Loader from 'components/Loader/Loader';
 
 const mapStateToProps = (state: RootState) => ({
   metric: (state.search.entity as MetricDetailState).metric,
@@ -58,7 +57,6 @@ class MetricDetailPage extends React.Component<MetricDetailPageProps, MetricDeta
   constructor(props: MetricDetailPageProps) {
     super(props);
     this.renderDetail = this.renderDetail.bind(this);
-    this.renderSpinner = this.renderSpinner.bind(this);
     this.renderEntityInfoTab = this.renderEntityInfoTab.bind(this);
     this.renderDesc = this.renderDesc.bind(this);
     this.renderMetric = this.renderMetric.bind(this);
@@ -94,27 +92,6 @@ class MetricDetailPage extends React.Component<MetricDetailPageProps, MetricDeta
 
   onPreview() {
     this.props.onPreview();
-  }
-
-  renderSpinner() {
-    const { props } = this;
-    const { metric, theme } = props;
-    const { status } = metric;
-    if (status === FetchStatus.PENDING) {
-      return (
-        <div
-          className={cx(
-            detailPageSpinnerContainer,
-            css`
-              background-color: ${theme.colors.bg1}8f;
-            `
-          )}
-        >
-          <Spinner size={40} />
-        </div>
-      );
-    }
-    return;
   }
 
   renderDetail() {
@@ -233,13 +210,9 @@ class MetricDetailPage extends React.Component<MetricDetailPageProps, MetricDeta
   }
 
   render() {
-    const { renderSpinner, renderDetail } = this;
-    return (
-      <>
-        {renderSpinner()}
-        {renderDetail()}
-      </>
-    );
+    const { renderDetail, props } = this;
+    const { metric } = props;
+    return <Loader loaded={metric.status !== FetchStatus.PENDING}>{renderDetail()}</Loader>;
   }
 }
 

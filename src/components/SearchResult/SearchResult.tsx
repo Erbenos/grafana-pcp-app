@@ -10,6 +10,7 @@ import {
   searchResultTitle,
 } from './styles';
 import { RedisFulltextItemResponse } from 'store/slices/search/slices/result/state';
+import { EntityType } from 'store/slices/search/shared/state';
 
 interface SearchResultProps {
   item: RedisFulltextItemResponse;
@@ -19,12 +20,17 @@ interface SearchResultProps {
 class SearchResult extends React.PureComponent<SearchResultProps, {}> {
   constructor(props: SearchResultProps) {
     super(props);
+    this.renderName = this.renderName.bind(this);
     this.renderDesc = this.renderDesc.bind(this);
     this.renderFooter = this.renderFooter.bind(this);
   }
 
   get hasInstanceDomains() {
     return this.props.item.indom !== 'PM_INDOM_NULL';
+  }
+
+  get isMetric() {
+    return this.props.item.type === EntityType.Metric;
   }
 
   renderDesc() {
@@ -34,12 +40,18 @@ class SearchResult extends React.PureComponent<SearchResultProps, {}> {
       description = item.oneline;
     } else if (item.helptext) {
       description = item.helptext;
+    } else {
+      description = 'No description.';
     }
-    return <div className={searchResultDescription}>{description && <p>{description}</p>}</div>;
+    return (
+      <div className={searchResultDescription}>
+        <p dangerouslySetInnerHTML={{ __html: description }}></p>
+      </div>
+    );
   }
 
   renderFooter() {
-    const { props, hasInstanceDomains } = this;
+    const { props, hasInstanceDomains, isMetric } = this;
     return (
       <footer className={searchResultFooter}>
         <HorizontalGroup spacing="lg" justify="space-between">
@@ -53,7 +65,7 @@ class SearchResult extends React.PureComponent<SearchResultProps, {}> {
             Read More
           </Button>
           <HorizontalGroup spacing="md">
-            {hasInstanceDomains && (
+            {hasInstanceDomains && isMetric && (
               <Button
                 variant="link"
                 size="md"
@@ -63,7 +75,7 @@ class SearchResult extends React.PureComponent<SearchResultProps, {}> {
                 Instance Domain
               </Button>
             )}
-            {hasInstanceDomains && (
+            {hasInstanceDomains && isMetric && (
               <Button
                 variant="link"
                 size="md"
@@ -73,27 +85,30 @@ class SearchResult extends React.PureComponent<SearchResultProps, {}> {
                 Labels
               </Button>
             )}
-            <Button
-              variant="link"
-              size="md"
-              className={searchResultBtnWithNoSpacing}
-              onClick={() => props.openDetail(props.item)}
-            >
-              Other Meta
-            </Button>
           </HorizontalGroup>
         </HorizontalGroup>
       </footer>
     );
   }
 
+  renderName() {
+    const { item } = this.props;
+    switch (item.type) {
+      case EntityType.Metric:
+        return item.name;
+      case EntityType.InstanceDomain:
+        return item.indom;
+      default:
+        return 'no name';
+    }
+  }
+
   render() {
-    const { props, renderDesc, renderFooter } = this;
-    const { item } = props;
+    const { renderDesc, renderFooter, renderName } = this;
     return (
       <article className={searchResultItem}>
         <header className={searchResultHeader}>
-          <h4 className={searchResultTitle}>{item.name}</h4>
+          <h4 className={searchResultTitle}>{renderName()}</h4>
         </header>
         {renderDesc()}
         {renderFooter()}

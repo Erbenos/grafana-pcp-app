@@ -45,3 +45,7 @@ Refactored reducer structure - introduced separated reducers for each slice of R
 ### 14.06.2020
 
 Put all store slice specific code separately - no giant action/(types|search).ts anymore :)
+
+### 15.06.2020
+
+Done detail page for Instance Domain, persistance of bookmarks and search history in localStorage and abstracted loading related graphics to separate component. `redux-persist` seems to have some typescript typing issues so it proved somewhat troublesome / frustrating to get it working.

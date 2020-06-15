@@ -16,7 +16,7 @@ export const querySearchEndpoint = (
 ): Promise<RedisFulltextItemResponse[]> => {
   return new Promise<RedisFulltextItemResponse[]>((resolve, reject) => {
     setTimeout(() => {
-      resolve(searchEntities.slice(0, 5));
+      resolve(searchEntities.slice(0, limit));
     }, 1000);
   });
 };

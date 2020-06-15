@@ -1,15 +1,15 @@
 import React from 'react';
-import { VerticalGroup, Pagination, Spinner, withTheme, Themeable } from '@grafana/ui';
+import { VerticalGroup, Pagination, withTheme, Themeable } from '@grafana/ui';
 import { connect } from 'react-redux';
 import { AnyAction, bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { RootState } from 'store/reducer';
 import { RedisFulltextItemResponse } from 'store/slices/search/slices/result/state';
 import { FetchStatus } from 'store/slices/search/shared/state';
-import { cx, css } from 'emotion';
-import { searchPageSpinnerContainer, paginationContainer, searchPageContainer } from './styles';
+import { paginationContainer } from './styles';
 import { SearchResult } from 'components/SearchResult/SearchResult';
 import { querySearch, openDetail } from 'store/slices/search/shared/actionCreators';
+import Loader from 'components/Loader/Loader';
 
 const mapStateToProps = (state: RootState) => ({
   search: state.search,
@@ -25,7 +25,6 @@ class SearchPage extends React.Component<SearchPageProps, {}> {
     super(props);
     this.onPaginationClick = this.onPaginationClick.bind(this);
     this.onDetailClick = this.onDetailClick.bind(this);
-    this.renderSpinner = this.renderSpinner.bind(this);
     this.renderResults = this.renderResults.bind(this);
   }
 
@@ -35,25 +34,7 @@ class SearchPage extends React.Component<SearchPageProps, {}> {
   }
 
   onDetailClick(entity: RedisFulltextItemResponse) {
-    this.props.openDetail(entity.name);
-  }
-
-  renderSpinner() {
-    if (this.props.search.result?.status === FetchStatus.PENDING) {
-      return (
-        <div
-          className={cx(
-            searchPageSpinnerContainer,
-            css`
-              background-color: ${this.props.theme.colors.bg1}8f;
-            `
-          )}
-        >
-          <Spinner size={40} />
-        </div>
-      );
-    }
-    return;
+    this.props.openDetail(entity.name, entity.type);
   }
 
   renderResults() {
@@ -105,13 +86,8 @@ class SearchPage extends React.Component<SearchPageProps, {}> {
   }
 
   render() {
-    const { renderSpinner, renderResults } = this;
-    return (
-      <div className={searchPageContainer}>
-        {renderSpinner()}
-        {renderResults()}
-      </div>
-    );
+    const { renderResults, props } = this;
+    return <Loader loaded={props.search.result?.status !== FetchStatus.PENDING}>{renderResults()}</Loader>;
   }
 }
 

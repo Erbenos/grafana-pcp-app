@@ -1,9 +1,10 @@
 import React from 'react';
 import { AppRootProps } from '@grafana/data';
 import { Provider } from 'react-redux';
-
 import App from './App';
-import { store } from './store/store';
+import { store, persistor } from './store/store';
+import { PersistGate } from 'redux-persist/integration/react';
+import Loader from 'components/Loader/Loader';
 
 class GrafanaAppPluginWrapper extends React.Component<AppRootProps, {}> {
   constructor(props: AppRootProps) {
@@ -41,7 +42,15 @@ class GrafanaAppPluginWrapper extends React.Component<AppRootProps, {}> {
   render() {
     return (
       <Provider store={store}>
-        <App {...this.props} />
+        {/* Seems like redux-persist has really buggy typings 
+          // @ts-ignore */}
+        <PersistGate persistor={persistor}>
+          {loaded => (
+            <Loader loaded={loaded}>
+              <App {...this.props} />
+            </Loader>
+          )}
+        </PersistGate>
       </Provider>
     );
   }

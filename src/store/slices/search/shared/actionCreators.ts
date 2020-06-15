@@ -28,7 +28,7 @@ export const querySearch = (
     type: LOAD_RESULT_INIT,
   });
 
-  const limit = 5;
+  const limit = 6;
   const offset = (query.pageNum - 1) * limit;
 
   dispatch({
@@ -77,7 +77,7 @@ export const querySearch = (
 
 export const openDetail = (
   id: string,
-  type: EntityType = EntityType.Metric
+  type: EntityType
 ): ThunkAction<Promise<void>, {}, {}, EntityAction | ViewAction> => async (
   dispatch: ThunkDispatch<{}, {}, EntityAction | ViewAction>
 ): Promise<void> => {
@@ -97,6 +97,7 @@ export const openDetail = (
     }
     case EntityType.InstanceDomain: {
       dispatch(loadIndom(id));
+      return;
     }
   }
 };
