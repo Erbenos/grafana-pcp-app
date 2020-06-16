@@ -49,3 +49,7 @@ Put all store slice specific code separately - no giant action/(types|search).ts
 ### 15.06.2020
 
 Done detail page for Instance Domain, persistance of bookmarks and search history in localStorage and abstracted loading related graphics to separate component. `redux-persist` seems to have some typescript typing issues so it proved somewhat troublesome / frustrating to get it working.
+
+### 16.06.2020
+
+Did some RediSearch analysis for backend handling logic [doc](https://gist.github.com/Erbenos/d44af5817dfe9d114d6f796210e4f3dc), possible response and request models for new /pmapi/search endpoint. Made bookmarks removable one by one, updated some 'fetching' logic to handle newly drafted response model and limited maximum number of records in search history.

@@ -8,7 +8,7 @@ import InstanceDomainDetailPage from './InstanceDomain/InstanceDomain';
 import { RootState } from 'store/reducer';
 import { BookmarkItem } from 'store/slices/search/slices/bookmarks/state';
 import { EntityType } from 'store/slices/search/shared/state';
-import { addBookmark } from 'store/slices/search/slices/bookmarks/actionCreators';
+import { addBookmark, removeBookmark } from 'store/slices/search/slices/bookmarks/actionCreators';
 
 const mapStateToProps = (state: RootState) => ({
   entity: state.search.entity,
@@ -16,11 +16,13 @@ const mapStateToProps = (state: RootState) => ({
 
 interface DetailEntityPageProps {
   onBookmark: (item: BookmarkItem) => void;
+  onUnbookmark: (item: BookmarkItem) => void;
   onPreview: () => void;
 }
 
 const dispatchProps = {
   addBookmark,
+  removeBookmark,
 };
 
 type DetailPageProps = ReturnType<typeof mapStateToProps> & typeof dispatchProps;
@@ -42,10 +44,15 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
     this.renderDetail = this.renderDetail.bind(this);
     this.onPreview = this.onPreview.bind(this);
     this.onBookmark = this.onBookmark.bind(this);
+    this.onUnbookmark = this.onUnbookmark.bind(this);
   }
 
   onBookmark(item: BookmarkItem) {
     this.props.addBookmark(item);
+  }
+
+  onUnbookmark(item: BookmarkItem) {
+    this.props.removeBookmark(item);
   }
 
   onPreview() {
@@ -53,17 +60,17 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
   }
 
   renderDetail() {
-    const { props, onBookmark, onPreview } = this;
+    const { props, onBookmark, onUnbookmark, onPreview } = this;
     if (!props.entity) {
       return <p>Entity state not initialized.</p>;
     }
     switch (props.entity.type) {
       case EntityType.Metric:
-        return <MetricDetailPage onBookmark={onBookmark} onPreview={onPreview} />;
+        return <MetricDetailPage onBookmark={onBookmark} onUnbookmark={onUnbookmark} onPreview={onPreview} />;
       // case EntityType.Instance:
       //   return <InstanceDetailPage onBookmark={onBookmark} onPreview={onPreview} />;
       case EntityType.InstanceDomain:
-        return <InstanceDomainDetailPage onBookmark={onBookmark} onPreview={onPreview} />;
+        return <InstanceDomainDetailPage onBookmark={onBookmark} onUnbookmark={onUnbookmark} onPreview={onPreview} />;
     }
     return <p>Error rendering entity.</p>;
   }
@@ -74,6 +81,6 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
   }
 }
 
-export default connect(mapStateToProps, { addBookmark })(DetailPage);
+export default connect(mapStateToProps, dispatchProps)(DetailPage);
 
 export { DetailPageProps, DetailEntityPageProps };

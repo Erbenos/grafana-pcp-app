@@ -1,9 +1,8 @@
-import { RedisFulltextItemResponse } from 'store/slices/search/slices/result/state';
 import { EntityType } from 'store/slices/search/shared/state';
 
-export const searchEntities: RedisFulltextItemResponse[] = [
+export const searchEntities: PmApiSearchItemResponse[] = [
   {
-    entityId: '489dbe44c0fd4746fed850433b9eab1af5bee1b5',
+    id: '489dbe44c0fd4746fed850433b9eab1af5bee1b5',
     name: 'kernel.uname.distro',
     type: EntityType.Metric,
     indom: 'PM_INDOM_NULL',
@@ -14,7 +13,7 @@ For example:
 + on RedHat, the contents of /etc/redhat-release`,
   },
   {
-    entityId: '0dce1bdbfc415b485ef04c1dedf0c09a3663e25d',
+    id: '0dce1bdbfc415b485ef04c1dedf0c09a3663e25d',
     name: 'kernel.uname.sysname',
     type: EntityType.Metric,
     indom: 'PM_INDOM_NULL',
@@ -22,7 +21,7 @@ For example:
     helptext: `Name of the implementation of the <strong>running</strong> operating system as reported by the sysname[] value returned from uname(2) or uname -s. Usually "Linux".`,
   },
   {
-    entityId: '73e91dbd17f34634228b87c63bab8a4b90437512',
+    id: '73e91dbd17f34634228b87c63bab8a4b90437512',
     name: 'kernel.all.uptime',
     type: EntityType.Metric,
     indom: 'PM_INDOM_NULL',
@@ -30,7 +29,7 @@ For example:
     helptext: 'time the current <strong>kernel</strong> has been running',
   },
   {
-    entityId: '77c80fa867cc066fca97a6a1e33d9579a3d48f65',
+    id: '77c80fa867cc066fca97a6a1e33d9579a3d48f65',
     name: 'network.interface.speed',
     type: EntityType.Metric,
     indom: '60.3',
@@ -38,7 +37,7 @@ For example:
     helptext: `The linespeed on the network interface, as <strong>reported</strong> by the kernel, scaled from Megabits/second to Megabytes/second. See also network.interface.baudrate for the bytes/second value.`,
   },
   {
-    entityId: '946086f939d2db36941aa4cf3d7788e1a7b2790a',
+    id: '946086f939d2db36941aa4cf3d7788e1a7b2790a',
     name: 'mem.freemem',
     type: EntityType.Metric,
     indom: 'PM_INDOM_NULL',
@@ -46,7 +45,7 @@ For example:
     helptext: 'free system memory metric from <strong>/proc/meminfo</strong>',
   },
   {
-    entityId: 'd95f683f17c9f1ee05edf25e59fc8deba376ba27',
+    id: 'd95f683f17c9f1ee05edf25e59fc8deba376ba27',
     name: '60.3',
     type: EntityType.InstanceDomain,
     indom: '60.3',
@@ -55,11 +54,28 @@ For example:
   },
 ];
 
+export interface PmApiSearchItemResponse {
+  id: string; // docId from redisearch
+  /* All the ones below may be omited when they are filtered out by ?return param, or whey they lack any value (helptexts for example) */
+  name?: string; // name field
+  type?: number; // type field (we always have only single type value on any record
+  indom?: string; // indom field
+  oneline?: string; // oneline field
+  helptext?: string; // helptext field
+}
+
+export interface PmApiSearchResponse {
+  items: PmApiSearchItemResponse[];
+  limit: number;
+  offset: number;
+  total: number; // Redisearch returns total number of matching records even if results themselves are limited
+}
+
 export interface PmApiLabelsResponse {
   [key: string]: string;
 }
 
-export interface PmApiMetricEndpointMetricResponse {
+export interface PmApiMetricMetricResponse {
   name: string;
   series: string;
   pmid: string;
@@ -74,7 +90,7 @@ export interface PmApiMetricEndpointMetricResponse {
 
 export interface PmApiMetricEndpointResponse {
   context: number;
-  metrics: PmApiMetricEndpointMetricResponse[];
+  metrics: PmApiMetricMetricResponse[];
 }
 
 export interface PmApiIndomEndpointInstanceResponse {

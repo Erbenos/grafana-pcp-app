@@ -60,8 +60,10 @@ class MetricDetailPage extends React.Component<MetricDetailPageProps, MetricDeta
     this.renderEntityInfoTab = this.renderEntityInfoTab.bind(this);
     this.renderDesc = this.renderDesc.bind(this);
     this.renderMetric = this.renderMetric.bind(this);
+    this.renderBookmarkBtn = this.renderBookmarkBtn.bind(this);
     this.onPreview = this.onPreview.bind(this);
     this.onBookmark = this.onBookmark.bind(this);
+    this.onUnbookmark = this.onUnbookmark.bind(this);
     this.setSelected = this.setSelected.bind(this);
   }
 
@@ -87,6 +89,14 @@ class MetricDetailPage extends React.Component<MetricDetailPageProps, MetricDeta
     const { data } = metric;
     if (data) {
       this.props.onBookmark({ id: data.name, type: EntityType.Metric });
+    }
+  }
+
+  onUnbookmark() {
+    const { metric } = this.props;
+    const { data } = metric;
+    if (data) {
+      this.props.onUnbookmark({ id: data.name, type: EntityType.Metric });
     }
   }
 
@@ -129,17 +139,33 @@ class MetricDetailPage extends React.Component<MetricDetailPageProps, MetricDeta
     return <div className={detailPageDescription}>{description && <p>{description}</p>}</div>;
   }
 
+  renderBookmarkBtn() {
+    const { isBookmarked, onBookmark, onUnbookmark } = this;
+    if (!isBookmarked) {
+      return (
+        <Button variant="link" size="md" icon="save" className={detailPageBtn} onClick={onBookmark}>
+          Bookmark This Result
+        </Button>
+      );
+    } else {
+      return (
+        <Button variant="destructive" size="md" icon="trash-alt" onClick={onUnbookmark}>
+          Unbookmark This Result
+        </Button>
+      );
+    }
+  }
+
   renderMetric() {
     const {
       props,
       state,
       renderEntityInfoTab,
-      onBookmark,
       onPreview,
       setSelected,
       hasInstanceDomain,
       renderDesc,
-      isBookmarked,
+      renderBookmarkBtn,
     } = this;
     const { metric } = props;
     const { data } = metric;
@@ -155,11 +181,7 @@ class MetricDetailPage extends React.Component<MetricDetailPageProps, MetricDeta
         <footer className={detailPageFooter}>
           <VerticalGroup spacing="lg">
             <HorizontalGroup spacing="lg">
-              {!isBookmarked && (
-                <Button variant="link" size="md" icon="save" className={detailPageBtn} onClick={onBookmark}>
-                  Bookmark This Result
-                </Button>
-              )}
+              {renderBookmarkBtn()}
               <Button variant="link" size="md" icon="chart-line" className={detailPageBtn} onClick={onPreview}>
                 Preview
               </Button>

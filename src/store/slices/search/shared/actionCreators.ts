@@ -43,14 +43,7 @@ export const querySearch = (
     const { pattern, entityFlags } = query;
     const response = await querySearchEndpoint(pattern, entityFlags, limit, offset);
     const result: ResultData = {
-      data: {
-        items: response,
-        // TODO: probably should be a part of response
-        pagination: {
-          currentPage: query.pageNum,
-          numberOfPages: 5,
-        },
-      },
+      data: response,
     };
     dispatch({
       type: LOAD_RESULT_SUCCESS,

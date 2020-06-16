@@ -1,5 +1,5 @@
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
-import { PmApiMetricEndpointMetricResponse, PmApiIndomEndpointResponse } from 'mocks/responses';
+import { PmApiMetricMetricResponse, PmApiIndomEndpointResponse } from 'mocks/responses';
 import { LoadMetricAction, LoadMetricIndomAction, LoadIndomAction } from './actions';
 import { metricFetchEndpoint, indomFetchEndpoint } from 'mocks/endpoints';
 import {
@@ -19,9 +19,9 @@ import {
 
 export const loadMetric = (
   id: string
-): ThunkAction<Promise<PmApiMetricEndpointMetricResponse | null>, {}, {}, LoadMetricAction> => async (
+): ThunkAction<Promise<PmApiMetricMetricResponse | null>, {}, {}, LoadMetricAction> => async (
   dispatch: ThunkDispatch<{}, {}, LoadMetricAction>
-): Promise<PmApiMetricEndpointMetricResponse | null> => {
+): Promise<PmApiMetricMetricResponse | null> => {
   dispatch({ type: LOAD_METRIC_INIT });
   dispatch({ type: LOAD_METRIC_PENDING });
   try {

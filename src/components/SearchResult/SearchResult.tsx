@@ -9,12 +9,12 @@ import {
   searchResultHeader,
   searchResultTitle,
 } from './styles';
-import { RedisFulltextItemResponse } from 'store/slices/search/slices/result/state';
 import { EntityType } from 'store/slices/search/shared/state';
+import { PmApiSearchItemResponse } from 'mocks/responses';
 
 interface SearchResultProps {
-  item: RedisFulltextItemResponse;
-  openDetail: (entity: RedisFulltextItemResponse) => void;
+  item: PmApiSearchItemResponse;
+  openDetail: (entity: PmApiSearchItemResponse) => void;
 }
 
 class SearchResult extends React.PureComponent<SearchResultProps, {}> {

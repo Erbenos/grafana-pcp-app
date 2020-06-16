@@ -4,12 +4,12 @@ import { connect } from 'react-redux';
 import { AnyAction, bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { RootState } from 'store/reducer';
-import { RedisFulltextItemResponse } from 'store/slices/search/slices/result/state';
 import { FetchStatus } from 'store/slices/search/shared/state';
 import { paginationContainer } from './styles';
 import { SearchResult } from 'components/SearchResult/SearchResult';
 import { querySearch, openDetail } from 'store/slices/search/shared/actionCreators';
 import Loader from 'components/Loader/Loader';
+import { PmApiSearchItemResponse } from 'mocks/responses';
 
 const mapStateToProps = (state: RootState) => ({
   search: state.search,
@@ -28,17 +28,35 @@ class SearchPage extends React.Component<SearchPageProps, {}> {
     this.renderResults = this.renderResults.bind(this);
   }
 
+  get pagesCount() {
+    const { result } = this.props.search;
+    if (result?.data) {
+      return Math.ceil(result.data.total / result.data.limit);
+    }
+    return 0;
+  }
+
+  get currentPage() {
+    const { result } = this.props.search;
+    if (result?.data) {
+      return result.data.offset / result.data.limit + 1;
+    }
+    return 0;
+  }
+
   onPaginationClick(pageNum: number) {
     const { search } = this.props;
     this.props.querySearch({ ...search.query, pageNum });
   }
 
-  onDetailClick(entity: RedisFulltextItemResponse) {
-    this.props.openDetail(entity.name, entity.type);
+  onDetailClick(entity: PmApiSearchItemResponse) {
+    if (entity.name !== undefined && entity.type !== undefined) {
+      this.props.openDetail(entity.name, entity.type);
+    }
   }
 
   renderResults() {
-    const { props, onPaginationClick, onDetailClick } = this;
+    const { props, onPaginationClick, onDetailClick, pagesCount, currentPage } = this;
     if (!props.search.result) {
       return <p>No result data.</p>;
     }
@@ -62,11 +80,7 @@ class SearchPage extends React.Component<SearchPageProps, {}> {
                 ))}
               </VerticalGroup>
               <div className={paginationContainer}>
-                <Pagination
-                  numberOfPages={data.pagination.numberOfPages}
-                  currentPage={data.pagination.currentPage}
-                  onNavigate={onPaginationClick}
-                />
+                <Pagination numberOfPages={pagesCount} currentPage={currentPage} onNavigate={onPaginationClick} />
               </div>
             </VerticalGroup>
           );

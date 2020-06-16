@@ -1,24 +1,8 @@
-import { EntityType, TrackableStatus, FetchStatus } from '../../shared/state';
-
-export interface RedisFulltextItemResponse {
-  entityId: string;
-  name: string;
-  type: EntityType;
-  indom: string;
-  oneline: string | null;
-  helptext: string;
-}
-
-export interface SearchData {
-  items: RedisFulltextItemResponse[];
-  pagination: {
-    currentPage: number;
-    numberOfPages: number;
-  };
-}
+import { TrackableStatus, FetchStatus } from '../../shared/state';
+import { PmApiSearchResponse } from 'mocks/responses';
 
 export interface ResultData {
-  data: SearchData | null;
+  data: PmApiSearchResponse | null;
 }
 
 export type ResultDataState = ResultData & TrackableStatus;

@@ -28,8 +28,10 @@ class InstanceDomainDetailPage extends React.Component<InstanceDomainDetailPageP
     super(props);
     this.renderDetail = this.renderDetail.bind(this);
     this.renderDesc = this.renderDesc.bind(this);
+    this.renderBookmarkBtn = this.renderBookmarkBtn.bind(this);
     this.renderIndom = this.renderIndom.bind(this);
     this.onBookmark = this.onBookmark.bind(this);
+    this.onUnbookmark = this.onUnbookmark.bind(this);
   }
 
   get isBookmarked() {
@@ -42,6 +44,14 @@ class InstanceDomainDetailPage extends React.Component<InstanceDomainDetailPageP
     const { data } = indom;
     if (data) {
       this.props.onBookmark({ id: data.indom, type: EntityType.InstanceDomain });
+    }
+  }
+
+  onUnbookmark() {
+    const { indom } = this.props;
+    const { data } = indom;
+    if (data) {
+      this.props.onUnbookmark({ id: data.indom, type: EntityType.InstanceDomain });
     }
   }
 
@@ -84,8 +94,25 @@ class InstanceDomainDetailPage extends React.Component<InstanceDomainDetailPageP
     return <div className={detailPageDescription}>{description && <p>{description}</p>}</div>;
   }
 
+  renderBookmarkBtn() {
+    const { isBookmarked, onBookmark, onUnbookmark } = this;
+    if (!isBookmarked) {
+      return (
+        <Button variant="link" size="md" icon="save" className={detailPageBtn} onClick={onBookmark}>
+          Bookmark This Result
+        </Button>
+      );
+    } else {
+      return (
+        <Button variant="destructive" size="md" icon="trash-alt" onClick={onUnbookmark}>
+          Unbookmark This Result
+        </Button>
+      );
+    }
+  }
+
   renderIndom() {
-    const { props, onBookmark, renderDesc, isBookmarked } = this;
+    const { props, renderBookmarkBtn, renderDesc } = this;
     const { indom } = props;
     const { data } = indom;
     if (!data) {
@@ -112,13 +139,7 @@ class InstanceDomainDetailPage extends React.Component<InstanceDomainDetailPageP
         </VerticalGroup>
         <footer className={detailPageFooter}>
           <VerticalGroup spacing="lg">
-            <HorizontalGroup spacing="lg">
-              {!isBookmarked && (
-                <Button variant="link" size="md" icon="save" className={detailPageBtn} onClick={onBookmark}>
-                  Bookmark This Result
-                </Button>
-              )}
-            </HorizontalGroup>
+            <HorizontalGroup spacing="lg">{renderBookmarkBtn()}</HorizontalGroup>
           </VerticalGroup>
         </footer>
       </article>
