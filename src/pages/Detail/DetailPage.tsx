@@ -14,10 +14,20 @@ const mapStateToProps = (state: RootState) => ({
   entity: state.search.entity,
 });
 
+export enum DetailPreviewType {
+  Graph,
+  Table,
+}
+
+export interface DetailPreview {
+  id: string;
+  type: DetailPreviewType;
+}
+
 interface DetailEntityPageProps {
   onBookmark: (item: BookmarkItem) => void;
   onUnbookmark: (item: BookmarkItem) => void;
-  onPreview: () => void;
+  onPreview: (item: DetailPreview) => void;
 }
 
 const dispatchProps = {
@@ -55,8 +65,25 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
     this.props.removeBookmark(item);
   }
 
-  onPreview() {
-    console.log('previewEntity not implemented.');
+  onPreview(item: DetailPreview) {
+    const grafanaRoot = `${location.protocol}//${location.host}`;
+    let dashboardName = '';
+    let dashboardUid = '';
+    const dashboardEntityVar = `?var-entity=${item.id}`;
+    switch (item.type) {
+      case DetailPreviewType.Graph:
+        dashboardName = 'graph-preview';
+        dashboardUid = 'grafana-pcp-app-graph-preview';
+        break;
+      case DetailPreviewType.Table:
+        dashboardName = 'table-preview';
+        dashboardUid = 'grafana-pcp-app-table-preview';
+        break;
+      default:
+        return;
+    }
+    const dashboardPath = `${grafanaRoot}/d/${dashboardUid}/${dashboardName}${dashboardEntityVar}`;
+    window.open(dashboardPath, '_blank');
   }
 
   renderDetail() {

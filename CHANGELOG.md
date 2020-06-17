@@ -53,3 +53,7 @@ Done detail page for Instance Domain, persistance of bookmarks and search histor
 ### 16.06.2020
 
 Did some RediSearch analysis for backend handling logic [doc](https://gist.github.com/Erbenos/d44af5817dfe9d114d6f796210e4f3dc), possible response and request models for new /pmapi/search endpoint. Made bookmarks removable one by one, updated some 'fetching' logic to handle newly drafted response model and limited maximum number of records in search history.
+
+### 17.06.2020
+
+Added support for entity (currently metric only) preview - graph for numeric types, table for string type. For now using `pcp-vector-datasource` (so works only when `grafana-pcp` is installed);

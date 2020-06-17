@@ -11,7 +11,7 @@ import {
   detailPageDescription,
 } from '../styles';
 import { SelectableValue } from '@grafana/data';
-import { DetailEntityPageProps } from '../DetailPage';
+import { DetailEntityPageProps, DetailPreviewType } from '../DetailPage';
 import InstanceDomainTab from './InstanceDomainTab/InstanceDomainTab';
 import OtherMetaTab from './OtherMetaTab/OtherMetaTab';
 import { RootState } from 'store/reducer';
@@ -61,6 +61,7 @@ class MetricDetailPage extends React.Component<MetricDetailPageProps, MetricDeta
     this.renderDesc = this.renderDesc.bind(this);
     this.renderMetric = this.renderMetric.bind(this);
     this.renderBookmarkBtn = this.renderBookmarkBtn.bind(this);
+    this.renderPreviewBtn = this.renderPreviewBtn.bind(this);
     this.onPreview = this.onPreview.bind(this);
     this.onBookmark = this.onBookmark.bind(this);
     this.onUnbookmark = this.onUnbookmark.bind(this);
@@ -101,7 +102,18 @@ class MetricDetailPage extends React.Component<MetricDetailPageProps, MetricDeta
   }
 
   onPreview() {
-    this.props.onPreview();
+    const { metric } = this.props;
+    const { data } = metric;
+    if (!data) {
+      return;
+    }
+    switch (data.type) {
+      case 'string':
+        this.props.onPreview({ id: data.name, type: DetailPreviewType.Table });
+        return;
+      default:
+        this.props.onPreview({ id: data.name, type: DetailPreviewType.Graph });
+    }
   }
 
   renderDetail() {
@@ -156,16 +168,30 @@ class MetricDetailPage extends React.Component<MetricDetailPageProps, MetricDeta
     }
   }
 
+  renderPreviewBtn() {
+    const { onPreview, props } = this;
+    const { metric } = props;
+    const { data } = metric;
+    if (!data) {
+      return;
+    }
+    return (
+      <Button variant="link" size="md" icon="chart-line" className={detailPageBtn} onClick={onPreview}>
+        Preview
+      </Button>
+    );
+  }
+
   renderMetric() {
     const {
       props,
       state,
       renderEntityInfoTab,
-      onPreview,
       setSelected,
       hasInstanceDomain,
       renderDesc,
       renderBookmarkBtn,
+      renderPreviewBtn,
     } = this;
     const { metric } = props;
     const { data } = metric;
@@ -182,9 +208,7 @@ class MetricDetailPage extends React.Component<MetricDetailPageProps, MetricDeta
           <VerticalGroup spacing="lg">
             <HorizontalGroup spacing="lg">
               {renderBookmarkBtn()}
-              <Button variant="link" size="md" icon="chart-line" className={detailPageBtn} onClick={onPreview}>
-                Preview
-              </Button>
+              {renderPreviewBtn()}
             </HorizontalGroup>
             {hasInstanceDomain && (
               <div className={radioBtnGroupContainer}>

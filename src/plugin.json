@@ -34,6 +34,16 @@
       "path": "/a/grafana-pcp-app",
       "addToNav": true,
       "defaultNav": true
+    },
+    {
+      "type": "dashboard",
+      "name": "Graph Entity Preview",
+      "path": "dashboards/fulltext-graph-preview.json"
+    },
+    {
+      "type": "dashboard",
+      "name": "Table Entity Preview",
+      "path": "dashboards/fulltext-table-preview.json"
     }
   ],
   "dependencies": {

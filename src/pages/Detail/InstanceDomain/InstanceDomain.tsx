@@ -55,10 +55,6 @@ class InstanceDomainDetailPage extends React.Component<InstanceDomainDetailPageP
     }
   }
 
-  onPreview() {
-    this.props.onPreview();
-  }
-
   renderDetail() {
     const { props, renderIndom } = this;
     const { indom } = props;
