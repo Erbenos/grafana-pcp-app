@@ -1,4 +1,5 @@
 import { SelectableValue } from '@grafana/data';
+import { getLocationSrv, LocationSrv } from '@grafana/runtime';
 import React from 'react';
 import { connect } from 'react-redux';
 
@@ -7,8 +8,8 @@ import MetricDetailPage from './Metric/Metric';
 import InstanceDomainDetailPage from './InstanceDomain/InstanceDomain';
 import { RootState } from 'store/reducer';
 import { BookmarkItem } from 'store/slices/search/slices/bookmarks/state';
-import { EntityType } from 'store/slices/search/shared/state';
 import { addBookmark, removeBookmark } from 'store/slices/search/slices/bookmarks/actionCreators';
+import { EntityType } from 'models/endpoints';
 
 const mapStateToProps = (state: RootState) => ({
   entity: state.search.entity,
@@ -49,12 +50,15 @@ interface DetailPageState {
 }
 
 class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
+  locationSrv: LocationSrv;
+
   constructor(props: DetailPageProps) {
     super(props);
     this.renderDetail = this.renderDetail.bind(this);
     this.onPreview = this.onPreview.bind(this);
     this.onBookmark = this.onBookmark.bind(this);
     this.onUnbookmark = this.onUnbookmark.bind(this);
+    this.locationSrv = getLocationSrv();
   }
 
   onBookmark(item: BookmarkItem) {
@@ -66,10 +70,8 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
   }
 
   onPreview(item: DetailPreview) {
-    const grafanaRoot = `${location.protocol}//${location.host}`;
     let dashboardName = '';
     let dashboardUid = '';
-    const dashboardEntityVar = `?var-entity=${item.id}`;
     switch (item.type) {
       case DetailPreviewType.Graph:
         dashboardName = 'graph-preview';
@@ -82,8 +84,14 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
       default:
         return;
     }
-    const dashboardPath = `${grafanaRoot}/d/${dashboardUid}/${dashboardName}${dashboardEntityVar}`;
-    window.open(dashboardPath, '_blank');
+    const path = `/d/${dashboardUid}/${dashboardName}`;
+    this.locationSrv.update({
+      path,
+      query: {
+        'var-entity': item.id,
+        refresh: '5s',
+      },
+    });
   }
 
   renderDetail() {

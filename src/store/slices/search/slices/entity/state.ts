@@ -1,5 +1,5 @@
-import { PmApiMetricMetricResponse, PmApiIndomEndpointResponse } from 'mocks/responses';
-import { TrackableStatus, EntityType } from '../../shared/state';
+import { PmApiMetricMetricResponse, PmApiIndomEndpointResponse, EntityType } from 'models/endpoints';
+import { TrackableStatus } from '../../shared/state';
 
 export interface MetricData {
   data: PmApiMetricMetricResponse | null;

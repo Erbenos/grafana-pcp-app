@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { Themeable, withTheme, VerticalGroup, HorizontalGroup, Button } from '@grafana/ui';
 import { DetailEntityPageProps } from '../DetailPage';
 import { InstanceDomainDetailState } from 'store/slices/search/slices/entity/state';
-import { EntityType, FetchStatus } from 'store/slices/search/shared/state';
 import Loader from 'components/Loader/Loader';
 import {
   detailPageDescription,
@@ -15,6 +14,8 @@ import {
   detailPageBtn,
   instanceDomainItemList,
 } from '../styles';
+import { EntityType } from 'models/endpoints';
+import { FetchStatus } from 'store/slices/search/shared/state';
 
 const mapStateToProps = (state: RootState) => ({
   indom: (state.search.entity as InstanceDomainDetailState).indom,

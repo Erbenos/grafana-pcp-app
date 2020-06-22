@@ -1,6 +1,11 @@
-import { EntityType } from 'store/slices/search/shared/state';
+import {
+  PmApiIndomEndpointResponse,
+  PmApiMetricEndpointResponse,
+  TextItemResponse,
+  EntityType,
+} from 'models/endpoints';
 
-export const searchEntities: PmApiSearchItemResponse[] = [
+export const searchEntities: TextItemResponse[] = [
   {
     id: '489dbe44c0fd4746fed850433b9eab1af5bee1b5',
     name: 'kernel.uname.distro',
@@ -53,60 +58,6 @@ For example:
     helptext: 'set of <strong>network</strong> interfaces',
   },
 ];
-
-export interface PmApiSearchItemResponse {
-  id: string; // docId from redisearch
-  /* All the ones below may be omited when they are filtered out by ?return param, or whey they lack any value (helptexts for example) */
-  name?: string; // name field
-  type?: number; // type field (we always have only single type value on any record
-  indom?: string; // indom field
-  oneline?: string; // oneline field
-  helptext?: string; // helptext field
-}
-
-export interface PmApiSearchResponse {
-  items: PmApiSearchItemResponse[];
-  limit: number;
-  offset: number;
-  total: number; // Redisearch returns total number of matching records even if results themselves are limited
-}
-
-export interface PmApiLabelsResponse {
-  [key: string]: string;
-}
-
-export interface PmApiMetricMetricResponse {
-  name: string;
-  series: string;
-  pmid: string;
-  type: string;
-  indom?: string;
-  sem: string;
-  units: string;
-  labels: PmApiLabelsResponse;
-  'text-oneline': string;
-  'text-help': string;
-}
-
-export interface PmApiMetricEndpointResponse {
-  context: number;
-  metrics: PmApiMetricMetricResponse[];
-}
-
-export interface PmApiIndomEndpointInstanceResponse {
-  instance: number;
-  name: string;
-  labels: PmApiLabelsResponse;
-}
-
-export interface PmApiIndomEndpointResponse {
-  context: number;
-  indom: string;
-  labels: PmApiLabelsResponse;
-  'text-oneline': string;
-  'text-help': string;
-  instances: PmApiIndomEndpointInstanceResponse[];
-}
 
 export const detailEntities: PmApiMetricEndpointResponse[] = [
   {

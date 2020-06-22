@@ -15,7 +15,8 @@ import {
   LOAD_INDOM_SUCCESS,
   LOAD_INDOM_ERROR,
 } from './types';
-import { EntityType, FetchStatus } from '../../shared/state';
+import { FetchStatus } from '../../shared/state';
+import { EntityType } from 'models/endpoints';
 
 const entityReducer: Reducer<EntityState, EntityAction> = (state, action) => {
   if (state === undefined) {

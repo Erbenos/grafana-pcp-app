@@ -57,3 +57,7 @@ Did some RediSearch analysis for backend handling logic [doc](https://gist.githu
 ### 17.06.2020
 
 Added support for entity (currently metric only) preview - graph for numeric types, table for string type. For now using `pcp-vector-datasource` (so works only when `grafana-pcp` is installed), I didn't figure how to allow selection of datasource from select UI.
+
+### 22.06.2020
+
+Moved some type defs around, little boilerplate in preparation for backend calls. Today did some tinkering with other PCP related stuff/issues and was figuring out stuff for upcoming days.

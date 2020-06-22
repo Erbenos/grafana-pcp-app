@@ -9,12 +9,11 @@ import {
   searchResultHeader,
   searchResultTitle,
 } from './styles';
-import { EntityType } from 'store/slices/search/shared/state';
-import { PmApiSearchItemResponse } from 'mocks/responses';
+import { TextItemResponse, EntityType } from 'models/endpoints';
 
 interface SearchResultProps {
-  item: PmApiSearchItemResponse;
-  openDetail: (entity: PmApiSearchItemResponse) => void;
+  item: TextItemResponse;
+  openDetail: (entity: TextItemResponse) => void;
 }
 
 class SearchResult extends React.PureComponent<SearchResultProps, {}> {

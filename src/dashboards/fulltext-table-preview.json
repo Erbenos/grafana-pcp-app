@@ -36,7 +36,7 @@
          "type": "table"
       }
    ],
-   "refresh": "1s",
+   "refresh": "5s",
    "rows": [ ],
    "schemaVersion": 14,
    "style": "dark",
@@ -85,8 +85,8 @@
       ]
    },
    "time": {
-      "from": "now-1m",
-      "to": "now+1m"
+      "from": "now-2m",
+      "to": "now"
    },
    "timepicker": {
       "refresh_intervals": [

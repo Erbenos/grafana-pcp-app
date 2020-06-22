@@ -6,7 +6,7 @@ import { asideContainer } from './styles';
 import { connect } from 'react-redux';
 import { RootState } from 'store/reducer';
 import { ViewState } from 'store/slices/search/slices/view/state';
-import { EntityType } from 'store/slices/search/shared/state';
+import { EntityType } from 'models/endpoints';
 
 const mapStateToProps = (state: RootState) => ({
   view: state.search.view,

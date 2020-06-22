@@ -2,7 +2,7 @@ import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { querySearchEndpoint } from 'mocks/endpoints';
 import { store } from 'store/store';
 import { loadMetric, loadMetricIndom, loadIndom } from '../slices/entity/actionCreators';
-import { SearchQuery, EntityType } from './state';
+import { SearchQuery } from './state';
 import { LoadResultAction } from '../slices/result/actions';
 import { HistoryAction } from '../slices/history/actions';
 import { SetQueryAction } from '../slices/query/actions';
@@ -14,6 +14,7 @@ import { ResultData } from '../slices/result/state';
 import { ADD_HISTORY } from '../slices/history/types';
 import { EntityAction } from '../slices/entity/actions';
 import { ViewAction, SetViewAction } from '../slices/view/actions';
+import { EntityType } from 'models/endpoints';
 
 export const querySearch = (
   query: SearchQuery

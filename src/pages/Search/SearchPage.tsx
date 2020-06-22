@@ -73,7 +73,7 @@ class SearchPage extends React.Component<SearchPageProps, {}> {
         if (data.items.length > 0) {
           return (
             <VerticalGroup spacing="lg">
-              <h4>Results:</h4>
+              <h4>Results for '{props.search.query.pattern}':</h4>
               <VerticalGroup spacing="lg">
                 {data.items.map((x, i) => (
                   <SearchResult item={x} openDetail={entity => onDetailClick(entity)} />
@@ -87,7 +87,7 @@ class SearchPage extends React.Component<SearchPageProps, {}> {
         }
         return (
           <VerticalGroup spacing="lg">
-            <h4>Results:</h4>
+            <h4>Results for '{props.search.query.pattern}':</h4>
             <p>There are no results.</p>
           </VerticalGroup>
         );

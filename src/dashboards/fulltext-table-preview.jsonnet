@@ -9,9 +9,9 @@ dashboard.new(
   uid='grafana-pcp-app-table-preview',
   editable=false,
   tags=['grafana-pcp-up'],
-  time_from='now-1m',
-  time_to='now+1m',
-  refresh='1s',
+  time_from='now-2m',
+  time_to='now',
+  refresh='5s',
   timepicker=grafana.timepicker.new(
     refresh_intervals=['1s', '2s', '5s', '10s'],
   )

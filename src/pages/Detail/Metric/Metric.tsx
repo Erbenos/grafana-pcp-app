@@ -18,8 +18,9 @@ import { RootState } from 'store/reducer';
 import { connect } from 'react-redux';
 import LabelsTab from './LabelsTab/LabelsTab';
 import { MetricDetailState } from 'store/slices/search/slices/entity/state';
-import { EntityType, FetchStatus } from 'store/slices/search/shared/state';
 import Loader from 'components/Loader/Loader';
+import { EntityType } from 'models/endpoints';
+import { FetchStatus } from 'store/slices/search/shared/state';
 
 const mapStateToProps = (state: RootState) => ({
   metric: (state.search.entity as MetricDetailState).metric,

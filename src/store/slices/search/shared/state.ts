@@ -5,12 +5,6 @@ export enum FetchStatus {
   ERROR,
 }
 
-export enum EntityType {
-  Metric,
-  Instance,
-  InstanceDomain,
-}
-
 export enum SearchEntity {
   None = 0,
   Metrics = 1 << 0,

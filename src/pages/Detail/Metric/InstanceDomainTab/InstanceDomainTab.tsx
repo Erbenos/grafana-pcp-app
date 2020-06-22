@@ -4,11 +4,12 @@ import { RootState } from 'store/reducer';
 import { connect } from 'react-redux';
 import { detailPageDescription, instanceDomainContent, instanceDomainItemList, detailPageBtn } from '../../styles';
 import { MetricDetailState } from 'store/slices/search/slices/entity/state';
-import { FetchStatus, EntityType } from 'store/slices/search/shared/state';
+import { FetchStatus } from 'store/slices/search/shared/state';
 import Loader from 'components/Loader/Loader';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction, bindActionCreators } from 'redux';
 import { openDetail } from 'store/slices/search/shared/actionCreators';
+import { EntityType } from 'models/endpoints';
 
 const mapStateToProps = (state: RootState) => ({
   indom: (state.search.entity as MetricDetailState).indom,
