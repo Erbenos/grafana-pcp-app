@@ -2,18 +2,40 @@ import React from 'react';
 import { AppRootProps } from '@grafana/data';
 import { Provider } from 'react-redux';
 import App from './App';
-import { store, persistor } from './store/store';
 import { PersistGate } from 'redux-persist/integration/react';
 import Loader from 'components/Loader/Loader';
+import { initStore } from 'store/store';
+import { Store, AnyAction } from 'redux';
+import { Persistor } from 'redux-persist';
 
-class GrafanaAppPluginWrapper extends React.Component<AppRootProps, {}> {
+interface AppRootState {
+  store: Store<any, AnyAction> | null;
+  persistor: Persistor | null;
+  loading: boolean;
+}
+
+class GrafanaAppPluginWrapper extends React.Component<AppRootProps, AppRootState> {
+  state: AppRootState = {
+    store: null,
+    persistor: null,
+    loading: true,
+  };
+
   constructor(props: AppRootProps) {
     super(props);
   }
 
-  // Bloat for Grafana App plugin tabs, which we don't actually use in app itself, hence this wrapper
   componentDidMount() {
+    // Bloat for Grafana App plugin tabs, which we don't actually use in app itself, hence this wrapper
     this.updateNav();
+    // Initialize store
+    initStore()
+      .then(({ store, persistor }) => {
+        this.setState({ store, persistor, loading: false });
+      })
+      .catch(() => {
+        this.setState({ loading: false });
+      });
   }
 
   componentDidUpdate(prevProps: AppRootProps) {
@@ -40,6 +62,13 @@ class GrafanaAppPluginWrapper extends React.Component<AppRootProps, {}> {
 
   // Render main App component without above bloat
   render() {
+    const { store, loading, persistor } = this.state;
+    if (loading) {
+      return <Loader loaded={false} />;
+    }
+    if (store === null) {
+      return <p>Error initializing state.</p>;
+    }
     return (
       <Provider store={store}>
         {/* Seems like redux-persist has really buggy typings 

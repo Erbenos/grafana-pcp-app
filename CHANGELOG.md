@@ -61,3 +61,7 @@ Added support for entity (currently metric only) preview - graph for numeric typ
 ### 22.06.2020
 
 Moved some type defs around, little boilerplate in preparation for backend calls. Today did some tinkering with other PCP related stuff/issues and was figuring out stuff for upcoming days.
+
+### 23.06.2020
+
+Some boilerplate in preparation for querying real endpoints provided by pmwebapi. Needed to figure out how to share initializable services in whole application, in the end made do with services being accessible in Redux action creators scope. Feels like service related structure is not ideal but will work for now.

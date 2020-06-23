@@ -1,6 +1,4 @@
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
-import { querySearchEndpoint } from 'mocks/endpoints';
-import { store } from 'store/store';
 import { loadMetric, loadMetricIndom, loadIndom } from '../slices/entity/actionCreators';
 import { SearchQuery } from './state';
 import { LoadResultAction } from '../slices/result/actions';
@@ -15,11 +13,18 @@ import { ADD_HISTORY } from '../slices/history/types';
 import { EntityAction } from '../slices/entity/actions';
 import { ViewAction, SetViewAction } from '../slices/view/actions';
 import { EntityType } from 'models/endpoints';
+import { RootState } from 'store/reducer';
+import { DispatchExtras } from 'store/store';
+import { querySearchEndpoint } from 'mocks/endpoints';
+
+type QuerySearchAction = LoadResultAction | SetViewAction | HistoryAction | SetQueryAction;
 
 export const querySearch = (
   query: SearchQuery
-): ThunkAction<Promise<void>, {}, {}, LoadResultAction | SetViewAction | HistoryAction | SetQueryAction> => async (
-  dispatch: ThunkDispatch<{}, {}, LoadResultAction | SetViewAction | HistoryAction | SetQueryAction>
+): ThunkAction<Promise<void>, RootState, DispatchExtras, QuerySearchAction> => async (
+  dispatch: ThunkDispatch<{}, {}, QuerySearchAction>,
+  getState,
+  { searchService }
 ): Promise<void> => {
   dispatch({
     type: SET_VIEW,
@@ -59,7 +64,7 @@ export const querySearch = (
 
   // Now check if we should update search history
   if (query.pageNum === 1) {
-    const { history } = store.getState().search;
+    const { history } = getState().search;
     if (!history.some(record => record.pattern === query.pattern && record.entityFlags === query.entityFlags)) {
       dispatch({
         type: ADD_HISTORY,
@@ -69,11 +74,15 @@ export const querySearch = (
   }
 };
 
+type OpenDetailAction = EntityAction | ViewAction;
+
 export const openDetail = (
   id: string,
   type: EntityType
-): ThunkAction<Promise<void>, {}, {}, EntityAction | ViewAction> => async (
-  dispatch: ThunkDispatch<{}, {}, EntityAction | ViewAction>
+): ThunkAction<Promise<void>, {}, DispatchExtras, OpenDetailAction> => async (
+  dispatch: ThunkDispatch<{}, DispatchExtras, OpenDetailAction>,
+  {},
+  extras
 ): Promise<void> => {
   dispatch({
     type: SET_VIEW,

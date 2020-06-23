@@ -1,20 +1,14 @@
-import {
-  searchEntities,
-  detailEntities,
-  PmApiMetricMetricResponse,
-  PmApiIndomEndpointResponse,
-  indomEntities,
-  PmApiSearchResponse,
-} from './responses';
 import { SearchEntity } from 'store/slices/search/shared/state';
+import { TextResponse, PmApiMetricMetricResponse, PmApiIndomEndpointResponse } from 'models/endpoints';
+import { searchEntities, detailEntities, indomEntities } from './responses';
 
 export const querySearchEndpoint = (
   pattern: string,
   entityFlags: SearchEntity,
   limit: number,
   offset: number
-): Promise<PmApiSearchResponse> => {
-  return new Promise<PmApiSearchResponse>((resolve, reject) => {
+): Promise<TextResponse> => {
+  return new Promise<TextResponse>((resolve, reject) => {
     setTimeout(() => {
       resolve({
         items: searchEntities.slice(0, limit),

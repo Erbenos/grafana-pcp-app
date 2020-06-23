@@ -1,5 +1,4 @@
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
-import { PmApiMetricMetricResponse, PmApiIndomEndpointResponse } from 'mocks/responses';
 import { LoadMetricAction, LoadMetricIndomAction, LoadIndomAction } from './actions';
 import { metricFetchEndpoint, indomFetchEndpoint } from 'mocks/endpoints';
 import {
@@ -16,11 +15,15 @@ import {
   LOAD_INDOM_SUCCESS,
   LOAD_INDOM_ERROR,
 } from './types';
+import { PmApiIndomEndpointResponse, PmApiMetricMetricResponse } from 'models/endpoints';
+import { DispatchExtras } from 'store/store';
 
 export const loadMetric = (
   id: string
-): ThunkAction<Promise<PmApiMetricMetricResponse | null>, {}, {}, LoadMetricAction> => async (
-  dispatch: ThunkDispatch<{}, {}, LoadMetricAction>
+): ThunkAction<Promise<PmApiMetricMetricResponse | null>, {}, DispatchExtras, LoadMetricAction> => async (
+  dispatch: ThunkDispatch<{}, {}, LoadMetricAction>,
+  {},
+  { seriesService, searchService }
 ): Promise<PmApiMetricMetricResponse | null> => {
   dispatch({ type: LOAD_METRIC_INIT });
   dispatch({ type: LOAD_METRIC_PENDING });
@@ -41,8 +44,10 @@ export const loadMetric = (
 
 export const loadMetricIndom = (
   id: string
-): ThunkAction<Promise<PmApiIndomEndpointResponse | null>, {}, {}, LoadMetricIndomAction> => async (
-  dispatch: ThunkDispatch<{}, {}, LoadMetricIndomAction>
+): ThunkAction<Promise<PmApiIndomEndpointResponse | null>, {}, DispatchExtras, LoadMetricIndomAction> => async (
+  dispatch: ThunkDispatch<{}, {}, LoadMetricIndomAction>,
+  {},
+  { seriesService, searchService }
 ): Promise<PmApiIndomEndpointResponse | null> => {
   dispatch({ type: LOAD_METRIC_INDOM_INIT });
   dispatch({ type: LOAD_METRIC_INDOM_PENDING });
@@ -63,8 +68,10 @@ export const loadMetricIndom = (
 
 export const loadIndom = (
   id: string
-): ThunkAction<Promise<PmApiIndomEndpointResponse | null>, {}, {}, LoadIndomAction> => async (
-  dispatch: ThunkDispatch<{}, {}, LoadIndomAction>
+): ThunkAction<Promise<PmApiIndomEndpointResponse | null>, {}, DispatchExtras, LoadIndomAction> => async (
+  dispatch: ThunkDispatch<{}, {}, LoadIndomAction>,
+  {},
+  { seriesService, searchService }
 ): Promise<PmApiIndomEndpointResponse | null> => {
   dispatch({ type: LOAD_INDOM_INIT });
   dispatch({ type: LOAD_INDOM_PENDING });

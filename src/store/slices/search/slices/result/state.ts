@@ -1,8 +1,8 @@
 import { TrackableStatus, FetchStatus } from '../../shared/state';
-import { PmApiSearchResponse } from 'mocks/responses';
+import { TextResponse } from 'models/endpoints';
 
 export interface ResultData {
-  data: PmApiSearchResponse | null;
+  data: TextResponse | null;
 }
 
 export type ResultDataState = ResultData & TrackableStatus;

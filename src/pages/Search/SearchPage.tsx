@@ -9,7 +9,7 @@ import { paginationContainer } from './styles';
 import { SearchResult } from 'components/SearchResult/SearchResult';
 import { querySearch, openDetail } from 'store/slices/search/shared/actionCreators';
 import Loader from 'components/Loader/Loader';
-import { PmApiSearchItemResponse } from 'mocks/responses';
+import { TextItemResponse } from 'models/endpoints';
 
 const mapStateToProps = (state: RootState) => ({
   search: state.search,
@@ -49,7 +49,7 @@ class SearchPage extends React.Component<SearchPageProps, {}> {
     this.props.querySearch({ ...search.query, pageNum });
   }
 
-  onDetailClick(entity: PmApiSearchItemResponse) {
+  onDetailClick(entity: TextItemResponse) {
     if (entity.name !== undefined && entity.type !== undefined) {
       this.props.openDetail(entity.name, entity.type);
     }

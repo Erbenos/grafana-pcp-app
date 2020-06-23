@@ -1,4 +1,4 @@
-import { EntityType } from '../../shared/state';
+import { EntityType } from 'models/endpoints';
 
 export interface BookmarkItem {
   // Is also human readable name
