@@ -5,7 +5,7 @@ import { persistStore } from 'redux-persist';
 import rootReducer from './reducer';
 import PmSearchApiService from 'services/PmSearchApiService';
 import PmSeriesApiService from 'services/PmSeriesApiService';
-import EntityDetailService from 'services/EntityDetailService';
+import EntityService from 'services/EntityDetailService';
 import { getBackendSrv } from '@grafana/runtime';
 import { getDatasourceSettings } from 'utils/utils';
 
@@ -14,7 +14,7 @@ const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ||
 export interface DispatchExtras {
   searchService: PmSearchApiService;
   seriesService: PmSeriesApiService;
-  entityService: EntityDetailService;
+  entityService: EntityService;
 }
 
 const getServices = async () => {
@@ -23,7 +23,7 @@ const getServices = async () => {
 
   const searchService = new PmSearchApiService(settings, backendSrv);
   const seriesService = new PmSeriesApiService(settings, backendSrv);
-  const entityService = new EntityDetailService(searchService, seriesService);
+  const entityService = new EntityService(searchService, seriesService);
   return { searchService, seriesService, entityService };
 };
 

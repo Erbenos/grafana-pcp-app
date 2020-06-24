@@ -42,7 +42,7 @@ export interface TextResponse {
 }
 
 export interface SeriesDescQueryParams {
-  series: string; // Comma-separated list of series identifiers
+  series: string[]; // list of series identifiers
   client?: string; // Request identifier sent back with response
 }
 
@@ -73,7 +73,7 @@ export interface SeriesQueryItemResponse {
 export type SeriesQueryResponse = string[] | SeriesQueryItemResponse[];
 
 export interface SeriesLabelsQueryParams {
-  series?: string; // Comma-separated list of series identifiers
+  series?: string[]; // Comma-separated list of series identifiers
   match?: string; // Glob pattern string to match on all labels
   name?: string; // Find all known label values for given name
   names?: string[]; // Comma-separated list of label names

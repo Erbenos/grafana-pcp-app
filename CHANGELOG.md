@@ -65,3 +65,7 @@ Moved some type defs around, little boilerplate in preparation for backend calls
 ### 23.06.2020
 
 Some boilerplate in preparation for querying real endpoints provided by pmwebapi. Needed to figure out how to share initializable services in whole application, in the end made do with services being accessible in Redux action creators scope. Feels like service related structure is not ideal but will work for now.
+
+### 24.06.2020
+
+Fetching metrics series directly from Redis datasource, new series-related UI and updated code of services. This commit broke details of some metrics, since now, I attempt to load data for metric details directly from Redis (by using configuration provided to 'PCP Redis' datasource in Grafana datasource settings) and not all mock metrics have series records. Help text is missing from series pmwebapi endpoints so I monkey patched it. Also now I am unable to decide which dashboard I should use to display metric preview since single metric can have series of variable types.

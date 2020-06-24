@@ -20,11 +20,11 @@ dashboard.new(
   template.datasource(
     name='datasource',
     // datasource ID
-    query='pcp-vector-datasource',
-    current='PCP Vector',
+    query='pcp-redis-datasource',
+    current='PCP Redis',
     hide='variable',
   ) + {
-    options: ['PCP Vector'],
+    options: ['PCP Redis'],
   },
 )
 .addTemplate(

@@ -47,16 +47,16 @@
       "list": [
          {
             "current": {
-               "text": "PCP Vector",
-               "value": "PCP Vector"
+               "text": "PCP Redis",
+               "value": "PCP Redis"
             },
             "hide": 2,
             "label": null,
             "name": "datasource",
             "options": [
-               "PCP Vector"
+               "PCP Redis"
             ],
-            "query": "pcp-vector-datasource",
+            "query": "pcp-redis-datasource",
             "refresh": 1,
             "regex": "",
             "type": "datasource"

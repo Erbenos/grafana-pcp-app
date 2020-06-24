@@ -10,9 +10,10 @@ import {
   detailPageItem,
   detailPageHeader,
   detailPageTitle,
-  detailPageFooter,
   detailPageBtn,
   instanceDomainItemList,
+  detailPageActions,
+  detailPageProperties,
 } from '../styles';
 import { EntityType } from 'models/endpoints';
 import { FetchStatus } from 'store/slices/search/shared/state';
@@ -88,7 +89,7 @@ class InstanceDomainDetailPage extends React.Component<InstanceDomainDetailPageP
     if (data['text-help']) {
       description = data['text-help'];
     }
-    return <div className={detailPageDescription}>{description && <p>{description}</p>}</div>;
+    return <p>{description}</p>;
   }
 
   renderBookmarkBtn() {
@@ -120,25 +121,27 @@ class InstanceDomainDetailPage extends React.Component<InstanceDomainDetailPageP
         <header className={detailPageHeader}>
           <h2 className={detailPageTitle}>{data.indom}</h2>
         </header>
-        <VerticalGroup spacing="md">
-          <div>
-            <p>{renderDesc()}</p>
-          </div>
-          <h4>Instances:</h4>
-          <ul className={instanceDomainItemList}>
-            {data.instances.map(instance => (
-              <li>
-                <strong>{instance.name}</strong> ({instance.instance})
-              </li>
-            ))}
-          </ul>
-          <p>Instance Count: {data.instances.length}</p>
-        </VerticalGroup>
-        <footer className={detailPageFooter}>
+        <div className={detailPageDescription}>
+          <p>{renderDesc()}</p>
+        </div>
+        <div className={detailPageActions}>
           <VerticalGroup spacing="lg">
             <HorizontalGroup spacing="lg">{renderBookmarkBtn()}</HorizontalGroup>
           </VerticalGroup>
-        </footer>
+        </div>
+        <div className={detailPageProperties}>
+          <VerticalGroup spacing="md">
+            <h4>Instances:</h4>
+            <ul className={instanceDomainItemList}>
+              {data.instances.map(instance => (
+                <li>
+                  <strong>{instance.name}</strong> ({instance.instance})
+                </li>
+              ))}
+            </ul>
+            <p>Instance Count: {data.instances.length}</p>
+          </VerticalGroup>
+        </div>
       </article>
     );
   }

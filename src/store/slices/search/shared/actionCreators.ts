@@ -1,5 +1,5 @@
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
-import { loadMetric, loadMetricIndom, loadIndom } from '../slices/entity/actionCreators';
+import { loadMetric, loadIndom } from '../slices/entity/actionCreators';
 import { SearchQuery } from './state';
 import { LoadResultAction } from '../slices/result/actions';
 import { HistoryAction } from '../slices/history/actions';
@@ -90,12 +90,13 @@ export const openDetail = (
   });
   switch (type) {
     case EntityType.Metric: {
-      dispatch(loadMetric(id)).then(metric => {
-        // TODO: maybe fetch only when tab is navigated to?
-        if (metric?.indom) {
-          dispatch(loadMetricIndom(metric.indom));
-        }
-      });
+      dispatch(loadMetric(id));
+      // .then(metric => {
+      //   // TODO: maybe fetch only when tab is navigated to?
+      //   if (metric?.indom) {
+      //     dispatch(loadMetricIndom(metric.indom));
+      //   }
+      // });
       return;
     }
     case EntityType.InstanceDomain: {

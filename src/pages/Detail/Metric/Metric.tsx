@@ -1,89 +1,46 @@
 import React from 'react';
-
-import { VerticalGroup, HorizontalGroup, Button, RadioButtonGroup, Themeable, withTheme } from '@grafana/ui';
+import { HorizontalGroup, Button } from '@grafana/ui';
 import {
   detailPageItem,
   detailPageHeader,
   detailPageTitle,
-  detailPageFooter,
   detailPageBtn,
-  radioBtnGroupContainer,
   detailPageDescription,
+  detailPageActions,
+  detailPageProperties,
 } from '../styles';
-import { SelectableValue } from '@grafana/data';
 import { DetailEntityPageProps, DetailPreviewType } from '../DetailPage';
-import InstanceDomainTab from './InstanceDomainTab/InstanceDomainTab';
-import OtherMetaTab from './OtherMetaTab/OtherMetaTab';
 import { RootState } from 'store/reducer';
 import { connect } from 'react-redux';
-import LabelsTab from './LabelsTab/LabelsTab';
 import { MetricDetailState } from 'store/slices/search/slices/entity/state';
 import Loader from 'components/Loader/Loader';
 import { EntityType } from 'models/endpoints';
 import { FetchStatus } from 'store/slices/search/shared/state';
+import Series from './Series/Series';
 
 const mapStateToProps = (state: RootState) => ({
   metric: (state.search.entity as MetricDetailState).metric,
   bookmarks: state.search.bookmarks,
 });
 
-type MetricDetailPageProps = ReturnType<typeof mapStateToProps> & DetailEntityPageProps & Themeable;
+type MetricDetailPageProps = ReturnType<typeof mapStateToProps> & DetailEntityPageProps;
 
-enum EntityTabOpt {
-  InstanceDomains = 'instance-domains',
-  Labels = 'labels',
-  OtherMeta = 'other-meta',
-}
-
-interface MetricDetailPageState {
-  selectedOption: EntityTabOpt;
-  options: Array<SelectableValue<EntityTabOpt>>;
-}
-
-class MetricDetailPage extends React.Component<MetricDetailPageProps, MetricDetailPageState> {
-  state: MetricDetailPageState = this.initialState;
-
-  get initialState() {
-    return {
-      selectedOption: EntityTabOpt.OtherMeta,
-      options: [
-        { label: 'Metric Metadata', value: EntityTabOpt.OtherMeta },
-        { label: 'Instance Domain', value: EntityTabOpt.InstanceDomains },
-        // TODO: will we even render Labels
-        // { label: 'Labels', value: EntityTabOpt.Labels },
-      ],
-    };
-  }
-
+class MetricDetailPage extends React.Component<MetricDetailPageProps, {}> {
   constructor(props: MetricDetailPageProps) {
     super(props);
     this.renderDetail = this.renderDetail.bind(this);
-    this.renderEntityInfoTab = this.renderEntityInfoTab.bind(this);
-    this.renderDesc = this.renderDesc.bind(this);
+    this.description = this.description.bind(this);
     this.renderMetric = this.renderMetric.bind(this);
     this.renderBookmarkBtn = this.renderBookmarkBtn.bind(this);
     this.renderPreviewBtn = this.renderPreviewBtn.bind(this);
     this.onPreview = this.onPreview.bind(this);
     this.onBookmark = this.onBookmark.bind(this);
     this.onUnbookmark = this.onUnbookmark.bind(this);
-    this.setSelected = this.setSelected.bind(this);
-  }
-
-  get hasInstanceDomain() {
-    const { metric } = this.props;
-    const { data } = metric;
-    return !!data?.indom;
   }
 
   get isBookmarked() {
     const { metric, bookmarks } = this.props;
     return bookmarks.some(bookmark => metric.data?.name === bookmark.id && bookmark.type === EntityType.Metric);
-  }
-
-  setSelected(selectedOption?: EntityTabOpt) {
-    if (selectedOption) {
-      this.setState({ selectedOption });
-    }
   }
 
   onBookmark() {
@@ -108,13 +65,14 @@ class MetricDetailPage extends React.Component<MetricDetailPageProps, MetricDeta
     if (!data) {
       return;
     }
-    switch (data.type) {
-      case 'string':
-        this.props.onPreview({ id: data.name, type: DetailPreviewType.Table });
-        return;
-      default:
-        this.props.onPreview({ id: data.name, type: DetailPreviewType.Graph });
-    }
+    // TODO:
+    // switch (data.type) {
+    //   case 'string':
+    //     this.props.onPreview({ id: data.name, type: DetailPreviewType.Table });
+    //     return;
+    //   default:
+    this.props.onPreview({ id: data.name, type: DetailPreviewType.Graph });
+    // }
   }
 
   renderDetail() {
@@ -139,17 +97,17 @@ class MetricDetailPage extends React.Component<MetricDetailPageProps, MetricDeta
     return;
   }
 
-  renderDesc() {
+  description() {
     const { metric } = this.props;
     const { data } = metric;
     if (!data) {
       return <p>Unable to render description.</p>;
     }
-    let description = data['text-oneline'];
-    if (data['text-help']) {
-      description = data['text-help'];
+    let description = data.oneline;
+    if (data.help) {
+      description = data.help;
     }
-    return <div className={detailPageDescription}>{description && <p>{description}</p>}</div>;
+    return description;
   }
 
   renderBookmarkBtn() {
@@ -184,16 +142,7 @@ class MetricDetailPage extends React.Component<MetricDetailPageProps, MetricDeta
   }
 
   renderMetric() {
-    const {
-      props,
-      state,
-      renderEntityInfoTab,
-      setSelected,
-      hasInstanceDomain,
-      renderDesc,
-      renderBookmarkBtn,
-      renderPreviewBtn,
-    } = this;
+    const { props, description, renderBookmarkBtn, renderPreviewBtn } = this;
     const { metric } = props;
     const { data } = metric;
     if (!data) {
@@ -204,56 +153,20 @@ class MetricDetailPage extends React.Component<MetricDetailPageProps, MetricDeta
         <header className={detailPageHeader}>
           <h2 className={detailPageTitle}>{data.name}</h2>
         </header>
-        {renderDesc()}
-        <footer className={detailPageFooter}>
-          <VerticalGroup spacing="lg">
-            <HorizontalGroup spacing="lg">
-              {renderBookmarkBtn()}
-              {renderPreviewBtn()}
-            </HorizontalGroup>
-            {hasInstanceDomain && (
-              <div className={radioBtnGroupContainer}>
-                <RadioButtonGroup
-                  options={state.options}
-                  disabled={false}
-                  value={state.selectedOption}
-                  onChange={setSelected}
-                  size="md"
-                  fullWidth
-                />
-              </div>
-            )}
-            {renderEntityInfoTab()}
-          </VerticalGroup>
-        </footer>
+        <div className={detailPageDescription}>{description()}</div>
+        <div className={detailPageActions}>
+          <HorizontalGroup spacing="lg">
+            {renderBookmarkBtn()}
+            {renderPreviewBtn()}
+          </HorizontalGroup>
+        </div>
+        <div className={detailPageProperties}>
+          {data.series.map(series => (
+            <Series series={series} />
+          ))}
+        </div>
       </article>
     );
-  }
-
-  renderEntityInfoTab() {
-    const { hasInstanceDomain, state, props } = this;
-    const { selectedOption } = state;
-    const { metric } = props;
-    const { data } = metric;
-    if (!data) {
-      return <p>Unable to render tab.</p>;
-    }
-    switch (selectedOption) {
-      case EntityTabOpt.InstanceDomains:
-        if (hasInstanceDomain) {
-          return <InstanceDomainTab />;
-        }
-        break;
-      case EntityTabOpt.Labels:
-        if (hasInstanceDomain) {
-          return <LabelsTab />;
-        }
-        break;
-      case EntityTabOpt.OtherMeta:
-        const { pmid, type, sem, units } = data;
-        return <OtherMetaTab pmid={pmid} type={type} sem={sem} units={units} />;
-    }
-    return;
   }
 
   render() {
@@ -263,5 +176,5 @@ class MetricDetailPage extends React.Component<MetricDetailPageProps, MetricDeta
   }
 }
 
-export default withTheme(connect(mapStateToProps, {})(MetricDetailPage));
+export default connect(mapStateToProps, {})(MetricDetailPage);
 export { MetricDetailPageProps };

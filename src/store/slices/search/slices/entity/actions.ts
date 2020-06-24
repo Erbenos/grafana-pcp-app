@@ -12,7 +12,7 @@ import {
   LOAD_INDOM_SUCCESS,
   LOAD_INDOM_ERROR,
 } from './types';
-import { MetricData, IndomData } from './state';
+import { IndomData, MetricData } from './state';
 
 export interface LoadMetricInitAction {
   type: typeof LOAD_METRIC_INIT;

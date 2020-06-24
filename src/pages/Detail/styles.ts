@@ -25,13 +25,19 @@ const detailPageDescription = css`
   }
 `;
 
-const detailPageFooter = css``;
+const detailPageActions = css`
+  margin-top: 16px;
+`;
+
+const detailPageProperties = css`
+  margin-top: 32px;
+`;
 
 const detailPageBtn = css`
   padding: 0;
 `;
 
-const otherMetaItemList = css`
+const gridList = css`
   display: flex;
   width: 100%;
   flex-wrap: wrap;
@@ -54,14 +60,14 @@ const otherMetaItemList = css`
   }
 `;
 
-const otherMetaItem = css``;
+const gridItem = css``;
 
-const otherMetaItemTitle = css`
+const gridTitle = css`
   display: block;
   font-weight: bold;
 `;
 
-const otherMetaItemValue = css`
+const gridValue = css`
   display: block;
 `;
 
@@ -82,12 +88,13 @@ export {
   detailPageHeader,
   detailPageTitle,
   detailPageDescription,
-  detailPageFooter,
+  detailPageActions,
+  detailPageProperties,
   detailPageBtn,
-  otherMetaItemList,
-  otherMetaItem,
-  otherMetaItemTitle,
-  otherMetaItemValue,
+  gridList,
+  gridItem,
+  gridTitle,
+  gridValue,
   radioBtnGroupContainer,
   instanceDomainContent,
   instanceDomainItemList,

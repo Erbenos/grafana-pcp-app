@@ -1,8 +1,9 @@
-import { PmApiMetricMetricResponse, PmApiIndomEndpointResponse, EntityType } from 'models/endpoints';
+import { PmApiIndomEndpointResponse, EntityType } from 'models/endpoints';
 import { TrackableStatus } from '../../shared/state';
+import { MetricEntity } from 'services/EntityDetailService';
 
 export interface MetricData {
-  data: PmApiMetricMetricResponse | null;
+  data: MetricEntity | null;
 }
 
 export interface IndomData {

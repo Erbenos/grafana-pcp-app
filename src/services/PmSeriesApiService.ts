@@ -33,15 +33,15 @@ class PmSeriesApiService {
     return (PmSeriesApiService.requestId++).toString();
   }
 
-  async desc(params: SeriesDescQueryParams) {
+  async descs(params: SeriesDescQueryParams) {
     const { baseUrl, getRequestId, headers, backendSrv } = this;
     const getParams = new URLSearchParams();
-    getParams.append('series', params.series);
+    getParams.append('series', params.series.join(','));
     if (params.client !== undefined) {
       getParams.append('client', params.toString());
     }
     const options = {
-      url: `${baseUrl}/series/desc?${getParams.toString()}`,
+      url: `${baseUrl}/series/descs?${getParams.toString()}`,
       methods: 'GET',
       showSuccessAlert: false,
       requestId: getRequestId(),
@@ -81,7 +81,7 @@ class PmSeriesApiService {
     const { baseUrl, getRequestId, headers, backendSrv } = this;
     const getParams = new URLSearchParams();
     if (params.series !== undefined) {
-      getParams.append('series', params.series);
+      getParams.append('series', params.series.join(','));
     }
     if (params.match !== undefined) {
       getParams.append('match', params.match);

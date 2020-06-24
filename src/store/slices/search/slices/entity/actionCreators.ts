@@ -1,6 +1,6 @@
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { LoadMetricAction, LoadMetricIndomAction, LoadIndomAction } from './actions';
-import { metricFetchEndpoint, indomFetchEndpoint } from 'mocks/endpoints';
+import { indomFetchEndpoint } from 'mocks/endpoints';
 import {
   LOAD_METRIC_INIT,
   LOAD_METRIC_PENDING,
@@ -15,27 +15,32 @@ import {
   LOAD_INDOM_SUCCESS,
   LOAD_INDOM_ERROR,
 } from './types';
-import { PmApiIndomEndpointResponse, PmApiMetricMetricResponse } from 'models/endpoints';
+import { PmApiIndomEndpointResponse } from 'models/endpoints';
 import { DispatchExtras } from 'store/store';
+import { MetricEntity } from 'services/EntityDetailService';
 
 export const loadMetric = (
   id: string
-): ThunkAction<Promise<PmApiMetricMetricResponse | null>, {}, DispatchExtras, LoadMetricAction> => async (
+): ThunkAction<Promise<MetricEntity | null>, {}, DispatchExtras, LoadMetricAction> => async (
   dispatch: ThunkDispatch<{}, {}, LoadMetricAction>,
   {},
-  { seriesService, searchService }
-): Promise<PmApiMetricMetricResponse | null> => {
+  { entityService }
+): Promise<MetricEntity | null> => {
   dispatch({ type: LOAD_METRIC_INIT });
   dispatch({ type: LOAD_METRIC_PENDING });
   try {
-    const metric = await metricFetchEndpoint(id);
-    dispatch({
-      type: LOAD_METRIC_SUCCESS,
-      payload: {
-        data: metric,
-      },
-    });
-    return metric;
+    const data = await entityService.metric(id);
+    if (data !== null) {
+      dispatch({
+        type: LOAD_METRIC_SUCCESS,
+        payload: {
+          data,
+        },
+      });
+    } else {
+      throw new Error();
+    }
+    return data;
   } catch {
     dispatch({ type: LOAD_METRIC_ERROR });
   }
