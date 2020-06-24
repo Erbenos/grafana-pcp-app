@@ -3,24 +3,32 @@ import thunk from 'redux-thunk';
 import { persistStore } from 'redux-persist';
 
 import rootReducer from './reducer';
-import PmSearchApiService, { initializeSearchService } from 'services/PmSearchApiService';
-import PmSeriesApiService, { initializeSeriesService } from 'services/PmSeriesApiService';
+import PmSearchApiService from 'services/PmSearchApiService';
+import PmSeriesApiService from 'services/PmSeriesApiService';
+import EntityDetailService from 'services/EntityDetailService';
+import { getBackendSrv } from '@grafana/runtime';
+import { getDatasourceSettings } from 'utils/utils';
 
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 export interface DispatchExtras {
-  searchService: ReturnType<typeof PmSearchApiService>;
-  seriesService: ReturnType<typeof PmSeriesApiService>;
+  searchService: PmSearchApiService;
+  seriesService: PmSeriesApiService;
+  entityService: EntityDetailService;
 }
 
-const initializeServices = async () => {
-  const searchService = await initializeSearchService();
-  const seriesService = await initializeSeriesService();
-  return { searchService, seriesService };
+const getServices = async () => {
+  const settings = await getDatasourceSettings('PCP Redis');
+  const backendSrv = getBackendSrv();
+
+  const searchService = new PmSearchApiService(settings, backendSrv);
+  const seriesService = new PmSeriesApiService(settings, backendSrv);
+  const entityService = new EntityDetailService(searchService, seriesService);
+  return { searchService, seriesService, entityService };
 };
 
 const initStore = async () => {
-  const services = await initializeServices();
+  const services = await getServices();
   const middleware = thunk.withExtraArgument(services);
   const store = createStore(rootReducer, {}, composeEnhancers(applyMiddleware(middleware)));
   const persistor = persistStore(store);

@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { getDataSourceSrv } from '@grafana/runtime';
 
 // TODO: only for dev
 const _genMatchingName = (pattern: string) => {
@@ -18,4 +19,14 @@ const _genMatchingName = (pattern: string) => {
   return `${_.sample(randomMetricNames)}_${pattern}`;
 };
 
-export { _genMatchingName };
+const getDatasourceSettings = async (name: string) => {
+  const datasource: any = await getDataSourceSrv().get(name);
+  const uid = datasource?.instanceSettings?.uid;
+  const settings = getDataSourceSrv().getDataSourceSettingsByUid(uid);
+  if (!settings) {
+    throw new Error('Unable to get datasource settings');
+  }
+  return settings;
+};
+
+export { _genMatchingName, getDatasourceSettings };
