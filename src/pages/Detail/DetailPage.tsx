@@ -9,7 +9,7 @@ import InstanceDomainDetailPage from './InstanceDomain/InstanceDomain';
 import { RootState } from 'store/reducer';
 import { BookmarkItem } from 'store/slices/search/slices/bookmarks/state';
 import { addBookmark, removeBookmark } from 'store/slices/search/slices/bookmarks/actionCreators';
-import { EntityType } from 'models/endpoints';
+import { EntityType } from 'models/endpoints/search';
 
 const mapStateToProps = (state: RootState) => ({
   entity: state.search.entity,

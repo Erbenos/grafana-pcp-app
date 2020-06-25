@@ -1,9 +1,5 @@
-import {
-  PmApiIndomEndpointResponse,
-  PmApiMetricEndpointResponse,
-  TextItemResponse,
-  EntityType,
-} from 'models/endpoints';
+import { TextItemResponse, EntityType } from 'models/endpoints/search';
+import { PmApiMetricEndpointResponse, PmApiIndomEndpointResponse } from 'models/endpoints/pmapi';
 
 export const searchEntities: TextItemResponse[] = [
   {

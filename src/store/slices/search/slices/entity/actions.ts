@@ -3,10 +3,6 @@ import {
   LOAD_METRIC_SUCCESS,
   LOAD_METRIC_ERROR,
   LOAD_METRIC_PENDING,
-  LOAD_METRIC_INDOM_INIT,
-  LOAD_METRIC_INDOM_PENDING,
-  LOAD_METRIC_INDOM_SUCCESS,
-  LOAD_METRIC_INDOM_ERROR,
   LOAD_INDOM_INIT,
   LOAD_INDOM_PENDING,
   LOAD_INDOM_SUCCESS,
@@ -37,29 +33,6 @@ export type LoadMetricAction =
   | LoadMetricSuccessAction
   | LoadMetricErrorAction;
 
-export interface LoadMetricIndomInitAction {
-  type: typeof LOAD_METRIC_INDOM_INIT;
-}
-
-export interface LoadMetricIndomPendingAction {
-  type: typeof LOAD_METRIC_INDOM_PENDING;
-}
-
-export interface LoadMetricIndomSuccessAction {
-  type: typeof LOAD_METRIC_INDOM_SUCCESS;
-  payload: IndomData;
-}
-
-export interface LoadMetricIndomErrorAction {
-  type: typeof LOAD_METRIC_INDOM_ERROR;
-}
-
-export type LoadMetricIndomAction =
-  | LoadMetricIndomInitAction
-  | LoadMetricIndomPendingAction
-  | LoadMetricIndomSuccessAction
-  | LoadMetricIndomErrorAction;
-
 export interface LoadIndomInitAction {
   type: typeof LOAD_INDOM_INIT;
 }
@@ -83,4 +56,4 @@ export type LoadIndomAction =
   | LoadIndomSuccessAction
   | LoadIndomErrorAction;
 
-export type EntityAction = LoadMetricAction | LoadMetricIndomAction | LoadIndomAction;
+export type EntityAction = LoadMetricAction | LoadIndomAction;

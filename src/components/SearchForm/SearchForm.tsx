@@ -7,7 +7,7 @@ import { bindActionCreators, AnyAction } from 'redux';
 import { searchContainer, searchFormGroup, searchBlock, searchSubmitBtn } from './styles';
 import { querySearch } from 'store/slices/search/shared/actionCreators';
 import { RootState } from 'store/reducer';
-import { SearchEntity } from 'store/slices/search/shared/state';
+import { SearchEntity } from 'models/endpoints/search';
 
 const mapStateToProps = (state: RootState) => ({
   query: state.search.query,

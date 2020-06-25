@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { getDataSourceSrv } from '@grafana/runtime';
+import { TimeoutError } from 'models/communication/errors';
 
 // TODO: only for dev
 const _genMatchingName = (pattern: string) => {
@@ -29,4 +30,13 @@ const getDatasourceSettings = async (name: string) => {
   return settings;
 };
 
-export { _genMatchingName, getDatasourceSettings };
+const timeout = async function timeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return new Promise<T>(async (resolve, reject) => {
+    setTimeout(() => {
+      reject(new TimeoutError('timeout'));
+    }, ms);
+    resolve(await promise);
+  });
+};
+
+export { _genMatchingName, getDatasourceSettings, timeout };

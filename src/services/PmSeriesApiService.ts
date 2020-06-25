@@ -1,3 +1,6 @@
+import { BackendSrv } from '@grafana/runtime';
+import { DataSourceInstanceSettings } from '@grafana/data';
+import { timeout } from 'utils/utils';
 import {
   SeriesDescQueryParams,
   SeriesDescResponse,
@@ -5,9 +8,8 @@ import {
   SeriesQueryResponse,
   SeriesLabelsQueryParams,
   SeriesLabelsResponse,
-} from 'models/endpoints';
-import { BackendSrv } from '@grafana/runtime';
-import { DataSourceInstanceSettings } from '@grafana/data';
+} from 'models/endpoints/series';
+import Config from 'config/config';
 
 class PmSeriesApiService {
   private static requestId = 0;
@@ -48,10 +50,10 @@ class PmSeriesApiService {
       headers,
     };
     try {
-      const response: SeriesDescResponse = await backendSrv.request(options);
+      const response: SeriesDescResponse = await timeout(backendSrv.request(options), Config.REQUEST_TIMEOUT);
       return response;
-    } catch (error) {
-      throw new Error();
+    } catch {
+      return null;
     }
   }
 
@@ -70,10 +72,10 @@ class PmSeriesApiService {
       headers,
     };
     try {
-      const response: SeriesQueryResponse = await backendSrv.request(options);
+      const response: SeriesQueryResponse = await timeout(backendSrv.request(options), Config.REQUEST_TIMEOUT);
       return response;
-    } catch (error) {
-      throw new Error();
+    } catch {
+      return null;
     }
   }
 
@@ -103,10 +105,10 @@ class PmSeriesApiService {
       headers,
     };
     try {
-      const response: SeriesLabelsResponse = await backendSrv.request(options);
+      const response: SeriesLabelsResponse = await timeout(backendSrv.request(options), Config.REQUEST_TIMEOUT);
       return response;
-    } catch (error) {
-      throw new Error();
+    } catch {
+      return null;
     }
   }
 }

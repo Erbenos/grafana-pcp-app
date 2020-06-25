@@ -15,8 +15,8 @@ import {
   detailPageActions,
   detailPageProperties,
 } from '../styles';
-import { EntityType } from 'models/endpoints';
 import { FetchStatus } from 'store/slices/search/shared/state';
+import { EntityType } from 'models/endpoints/search';
 
 const mapStateToProps = (state: RootState) => ({
   indom: (state.search.entity as InstanceDomainDetailState).indom,

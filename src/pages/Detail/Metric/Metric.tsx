@@ -14,9 +14,9 @@ import { RootState } from 'store/reducer';
 import { connect } from 'react-redux';
 import { MetricDetailState } from 'store/slices/search/slices/entity/state';
 import Loader from 'components/Loader/Loader';
-import { EntityType } from 'models/endpoints';
 import { FetchStatus } from 'store/slices/search/shared/state';
 import Series from './Series/Series';
+import { EntityType } from 'models/endpoints/search';
 
 const mapStateToProps = (state: RootState) => ({
   metric: (state.search.entity as MetricDetailState).metric,

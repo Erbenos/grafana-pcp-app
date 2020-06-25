@@ -1,6 +1,8 @@
-import { TextQueryParams, TextResponse } from 'models/endpoints';
 import { BackendSrv } from '@grafana/runtime';
 import { DataSourceInstanceSettings } from '@grafana/data';
+import { timeout } from 'utils/utils';
+import { TextQueryParams, TextResponse } from 'models/endpoints/search';
+import Config from 'config/config';
 
 class PmSearchApiService {
   private static requestId = 0;
@@ -56,10 +58,10 @@ class PmSearchApiService {
       headers,
     };
     try {
-      const response: TextResponse = await backendSrv.request(options);
+      const response: TextResponse = await timeout(backendSrv.request(options), Config.REQUEST_TIMEOUT);
       return response;
-    } catch (error) {
-      throw new Error();
+    } catch {
+      return null;
     }
   }
 }

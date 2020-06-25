@@ -1,34 +1,8 @@
 import PmSearchApiService from './PmSearchApiService';
 import PmSeriesApiService from './PmSeriesApiService';
 import _ from 'lodash';
-import { SeriesDescResponse, SeriesLabelsItemResponse } from 'models/endpoints';
-
-export interface MetricEntityMeta {
-  indom: string;
-  pmid: string;
-  semantics: string;
-  type: string;
-  units: string;
-  source: string;
-}
-
-export interface MetricEntityLabels {
-  [key: string]: string | number | boolean;
-}
-
-export interface MetricEntitySeries {
-  series: string;
-  meta: MetricEntityMeta;
-  labels: MetricEntityLabels;
-}
-
-export interface MetricEntity {
-  name: string;
-  // These are monkey patched for now
-  oneline?: string;
-  help?: string;
-  series: MetricEntitySeries[];
-}
+import { SeriesLabelsItemResponse, SeriesDescResponse } from 'models/endpoints/series';
+import { MetricEntitySeries, MetricEntity } from 'models/entities/metric';
 
 type LabelsAndMeta = SeriesLabelsItemResponse[] & SeriesDescResponse;
 
@@ -41,18 +15,21 @@ class EntityService {
     this.seriesService = seriesService;
   }
 
-  async metric(metric: string): Promise<MetricEntity | null> {
+  async metric(metric: string) {
     if (metric === '') {
       return null;
     }
     const { seriesService } = this;
     const series = (await seriesService.query({ expr: `${metric}*` })) as string[];
-    if (series.length === 0) {
+    if (series === null || series.length === 0) {
       return null;
     }
     const [metadata, labels] = await Promise.all([seriesService.descs({ series }), seriesService.labels({ series })]);
     // Transform data
-    const entitySeries: _.Dictionary<LabelsAndMeta> = _.groupBy(_.merge(metadata, labels) as LabelsAndMeta, 'series');
+    const entitySeries: _.Dictionary<LabelsAndMeta> = _.groupBy(
+      _.merge(metadata ?? {}, labels ?? {}) as LabelsAndMeta,
+      'series'
+    );
     const entitySeriesTransformed: MetricEntitySeries[] = Object.keys(entitySeries).reduce<MetricEntitySeries[]>(
       (prev: MetricEntitySeries[], val: string) => {
         return [
@@ -75,7 +52,7 @@ class EntityService {
       series: entitySeriesTransformed,
       oneline: 'Monkey patch text-online',
       help: 'Monkey patch text-help',
-    };
+    } as MetricEntity;
   }
 
   async indom(indom: string) {}

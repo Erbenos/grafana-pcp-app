@@ -1,4 +1,5 @@
-import { SearchQuery, SearchEntity } from '../../shared/state';
+import { SearchQuery } from '../../shared/state';
+import { SearchEntity } from 'models/endpoints/search';
 
 export type QueryState = SearchQuery;
 

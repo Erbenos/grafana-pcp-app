@@ -12,10 +12,10 @@ import { ResultData } from '../slices/result/state';
 import { ADD_HISTORY } from '../slices/history/types';
 import { EntityAction } from '../slices/entity/actions';
 import { ViewAction, SetViewAction } from '../slices/view/actions';
-import { EntityType } from 'models/endpoints';
 import { RootState } from 'store/reducer';
 import { DispatchExtras } from 'store/store';
 import { querySearchEndpoint } from 'mocks/endpoints';
+import { EntityType } from 'models/endpoints/search';
 
 type QuerySearchAction = LoadResultAction | SetViewAction | HistoryAction | SetQueryAction;
 

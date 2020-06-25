@@ -6,17 +6,13 @@ import {
   LOAD_METRIC_PENDING,
   LOAD_METRIC_SUCCESS,
   LOAD_METRIC_ERROR,
-  LOAD_METRIC_INDOM_INIT,
-  LOAD_METRIC_INDOM_PENDING,
-  LOAD_METRIC_INDOM_SUCCESS,
-  LOAD_METRIC_INDOM_ERROR,
   LOAD_INDOM_INIT,
   LOAD_INDOM_PENDING,
   LOAD_INDOM_SUCCESS,
   LOAD_INDOM_ERROR,
 } from './types';
 import { FetchStatus } from '../../shared/state';
-import { EntityType } from 'models/endpoints';
+import { EntityType } from 'models/endpoints/search';
 
 const entityReducer: Reducer<EntityState, EntityAction> = (state, action) => {
   if (state === undefined) {
@@ -58,50 +54,6 @@ const entityReducer: Reducer<EntityState, EntityAction> = (state, action) => {
         return {
           ...state,
           metric: {
-            status: FetchStatus.ERROR,
-            data: null,
-          },
-        };
-      }
-      break;
-    case LOAD_METRIC_INDOM_INIT:
-      if (state?.type === EntityType.Metric) {
-        return {
-          ...state,
-          indom: {
-            status: FetchStatus.INIT,
-            data: null,
-          },
-        };
-      }
-      break;
-    case LOAD_METRIC_INDOM_PENDING:
-      if (state?.type === EntityType.Metric && state.indom) {
-        return {
-          ...state,
-          indom: {
-            ...state.indom,
-            status: FetchStatus.PENDING,
-          },
-        };
-      }
-      break;
-    case LOAD_METRIC_INDOM_SUCCESS:
-      if (state?.type === EntityType.Metric && state.indom) {
-        return {
-          ...state,
-          indom: {
-            status: FetchStatus.SUCCESS,
-            data: action.payload.data,
-          },
-        };
-      }
-      break;
-    case LOAD_METRIC_INDOM_ERROR:
-      if (state?.type === EntityType.Metric && state.indom) {
-        return {
-          ...state,
-          indom: {
             status: FetchStatus.ERROR,
             data: null,
           },
