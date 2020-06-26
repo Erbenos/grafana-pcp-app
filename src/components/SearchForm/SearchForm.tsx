@@ -4,10 +4,11 @@ import { connect } from 'react-redux';
 
 import { ThunkDispatch } from 'redux-thunk';
 import { bindActionCreators, AnyAction } from 'redux';
-import { searchContainer, searchFormGroup, searchBlock, searchSubmitBtn } from './styles';
+import { searchContainer, searchFormGroup, searchBlock, searchSubmitBtn, searchBlockWrapper } from './styles';
 import { querySearch } from 'store/slices/search/shared/actionCreators';
 import { RootState } from 'store/reducer';
 import { SearchEntity } from 'models/endpoints/search';
+import withServices, { WithServicesProps } from 'components/withServices/withServices';
 
 const mapStateToProps = (state: RootState) => ({
   query: state.search.query,
@@ -17,7 +18,7 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, null, AnyAction>) =>
   bindActionCreators({ querySearch }, dispatch);
 
-type SearchFormProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
+type SearchFormProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & WithServicesProps;
 
 interface SearchFormState {
   inputTouched: boolean;
@@ -42,6 +43,7 @@ class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
 
   constructor(props: SearchFormProps) {
     super(props);
+    console.log(props.services);
     if (props.query) {
       this.setState({ query: props.query });
     }
@@ -63,6 +65,7 @@ class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
       }
       this.props.querySearch({ ...this.state.query, pageNum: 1 });
     };
+
     if (this.state.inputTouched) {
       submitForm();
     } else {
@@ -128,18 +131,20 @@ class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
       <form className={searchContainer} onSubmit={onSubmit}>
         <VerticalGroup spacing="sm">
           <div className={searchFormGroup}>
-            <Field
-              className={searchBlock}
-              invalid={!isValidInput && isTouchedInput}
-              error={!isValidInput && isTouchedInput ? 'This input is required' : ''}
-            >
-              <Input
-                prefix={<Icon name="search" />}
-                value={pattern}
-                onChange={onInputChange}
-                placeholder="Search Phrase"
-              />
-            </Field>
+            <div className={searchBlockWrapper}>
+              <Field
+                className={searchBlock}
+                invalid={!isValidInput && isTouchedInput}
+                error={!isValidInput && isTouchedInput ? 'This input is required' : ''}
+              >
+                <Input
+                  prefix={<Icon name="search" />}
+                  value={pattern}
+                  onChange={onInputChange}
+                  placeholder="Search Phrase"
+                />
+              </Field>
+            </div>
             <Button className={searchSubmitBtn} variant="primary" size="md" type="submit">
               Search
             </Button>
@@ -165,5 +170,5 @@ class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SearchForm);
+export default withServices(connect(mapStateToProps, mapDispatchToProps)(SearchForm));
 export { SearchFormProps };

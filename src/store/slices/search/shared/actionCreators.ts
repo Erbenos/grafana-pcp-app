@@ -13,15 +13,15 @@ import { ADD_HISTORY } from '../slices/history/types';
 import { EntityAction } from '../slices/entity/actions';
 import { ViewAction, SetViewAction } from '../slices/view/actions';
 import { RootState } from 'store/reducer';
-import { DispatchExtras } from 'store/store';
 import { querySearchEndpoint } from 'mocks/endpoints';
 import { EntityType } from 'models/endpoints/search';
+import { Services } from 'services/services';
 
 type QuerySearchAction = LoadResultAction | SetViewAction | HistoryAction | SetQueryAction;
 
 export const querySearch = (
   query: SearchQuery
-): ThunkAction<Promise<void>, RootState, DispatchExtras, QuerySearchAction> => async (
+): ThunkAction<Promise<void>, RootState, Services, QuerySearchAction> => async (
   dispatch: ThunkDispatch<{}, {}, QuerySearchAction>,
   getState,
   { searchService }
@@ -79,10 +79,9 @@ type OpenDetailAction = EntityAction | ViewAction;
 export const openDetail = (
   id: string,
   type: EntityType
-): ThunkAction<Promise<void>, {}, DispatchExtras, OpenDetailAction> => async (
-  dispatch: ThunkDispatch<{}, DispatchExtras, OpenDetailAction>,
-  {},
-  extras
+): ThunkAction<Promise<void>, {}, Services, OpenDetailAction> => async (
+  dispatch: ThunkDispatch<{}, Services, OpenDetailAction>,
+  {}
 ): Promise<void> => {
   dispatch({
     type: SET_VIEW,
@@ -91,12 +90,6 @@ export const openDetail = (
   switch (type) {
     case EntityType.Metric: {
       dispatch(loadMetric(id));
-      // .then(metric => {
-      //   // TODO: maybe fetch only when tab is navigated to?
-      //   if (metric?.indom) {
-      //     dispatch(loadMetricIndom(metric.indom));
-      //   }
-      // });
       return;
     }
     case EntityType.InstanceDomain: {

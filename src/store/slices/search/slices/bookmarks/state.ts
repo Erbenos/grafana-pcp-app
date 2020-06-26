@@ -1,4 +1,4 @@
-import { EntityType } from 'models/endpoints';
+import { EntityType } from 'models/endpoints/search';
 
 export interface BookmarkItem {
   // Is also human readable name

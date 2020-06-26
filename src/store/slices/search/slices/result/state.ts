@@ -1,6 +1,5 @@
 import { TrackableStatus, FetchStatus } from '../../shared/state';
-import { TextResponse } from 'models/endpoints';
-
+import { TextResponse } from 'models/endpoints/search';
 export interface ResultData {
   data: TextResponse | null;
 }

@@ -11,52 +11,44 @@ import {
   LOAD_INDOM_SUCCESS,
   LOAD_INDOM_ERROR,
 } from './types';
-import { DispatchExtras } from 'store/store';
-import { MetricEntity } from 'models/entities/metric';
-import { IndomEntity } from 'models/entities/indom';
+import { Services } from 'services/services';
 
-export const loadMetric = (
-  id: string
-): ThunkAction<Promise<MetricEntity | null>, {}, DispatchExtras, LoadMetricAction> => async (
+export const loadMetric = (id: string): ThunkAction<Promise<void>, {}, Services, LoadMetricAction> => async (
   dispatch: ThunkDispatch<{}, {}, LoadMetricAction>,
   {},
   { entityService }
-): Promise<MetricEntity | null> => {
+): Promise<void> => {
   dispatch({ type: LOAD_METRIC_INIT });
   dispatch({ type: LOAD_METRIC_PENDING });
-  const data = await entityService.metric(id);
-  if (data === null) {
-    dispatch({ type: LOAD_METRIC_ERROR });
-  } else {
+  try {
+    const data = await entityService.metric(id);
     dispatch({
       type: LOAD_METRIC_SUCCESS,
       payload: {
         data,
       },
     });
+  } catch (e) {
+    dispatch({ type: LOAD_METRIC_ERROR });
   }
-  return data;
 };
 
-export const loadIndom = (
-  id: string
-): ThunkAction<Promise<IndomEntity | null>, {}, DispatchExtras, LoadIndomAction> => async (
+export const loadIndom = (id: string): ThunkAction<Promise<void>, {}, Services, LoadIndomAction> => async (
   dispatch: ThunkDispatch<{}, {}, LoadIndomAction>,
   {},
   {}
-): Promise<IndomEntity | null> => {
+): Promise<void> => {
   dispatch({ type: LOAD_INDOM_INIT });
   dispatch({ type: LOAD_INDOM_PENDING });
-  const indom = await indomFetchEndpoint(id);
-  if (indom === null) {
-    dispatch({ type: LOAD_INDOM_ERROR });
-  } else {
+  try {
+    const data = await indomFetchEndpoint(id);
     dispatch({
       type: LOAD_INDOM_SUCCESS,
       payload: {
-        data: indom,
+        data,
       },
     });
+  } catch {
+    dispatch({ type: LOAD_INDOM_ERROR });
   }
-  return indom;
 };

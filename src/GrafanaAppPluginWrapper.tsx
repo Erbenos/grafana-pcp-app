@@ -7,18 +7,24 @@ import Loader from 'components/Loader/Loader';
 import { initStore } from 'store/store';
 import { Store, AnyAction } from 'redux';
 import { Persistor } from 'redux-persist';
+import { initServices, Services } from 'services/services';
+import ServicesContext from 'contexts/services';
 
 interface AppRootState {
   store: Store<any, AnyAction> | null;
+  services: Services | null;
   persistor: Persistor | null;
   loading: boolean;
+  errorMsg: string;
 }
 
 class GrafanaAppPluginWrapper extends React.Component<AppRootProps, AppRootState> {
   state: AppRootState = {
     store: null,
+    services: null,
     persistor: null,
     loading: true,
+    errorMsg: '',
   };
 
   constructor(props: AppRootProps) {
@@ -28,13 +34,16 @@ class GrafanaAppPluginWrapper extends React.Component<AppRootProps, AppRootState
   componentDidMount() {
     // Bloat for Grafana App plugin tabs, which we don't actually use in app itself, hence this wrapper
     this.updateNav();
-    // Initialize store
-    initStore()
+    initServices()
+      .then(services => {
+        this.setState({ services });
+        return initStore(services);
+      })
       .then(({ store, persistor }) => {
         this.setState({ store, persistor, loading: false });
       })
-      .catch(() => {
-        this.setState({ loading: false });
+      .catch((err: Error) => {
+        this.setState({ loading: false, errorMsg: err.message });
       });
   }
 
@@ -62,12 +71,12 @@ class GrafanaAppPluginWrapper extends React.Component<AppRootProps, AppRootState
 
   // Render main App component without above bloat
   render() {
-    const { store, loading, persistor } = this.state;
+    const { store, loading, persistor, errorMsg, services } = this.state;
     if (loading) {
       return <Loader loaded={false} />;
     }
-    if (store === null) {
-      return <p>Error initializing state.</p>;
+    if (store === null || services === null) {
+      return <p>{errorMsg}</p>;
     }
     return (
       <Provider store={store}>
@@ -76,7 +85,9 @@ class GrafanaAppPluginWrapper extends React.Component<AppRootProps, AppRootState
         <PersistGate persistor={persistor}>
           {loaded => (
             <Loader loaded={loaded}>
-              <App {...this.props} />
+              <ServicesContext.Provider value={services}>
+                <App {...this.props} />
+              </ServicesContext.Provider>
             </Loader>
           )}
         </PersistGate>

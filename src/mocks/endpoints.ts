@@ -1,6 +1,6 @@
-import { SearchEntity } from 'store/slices/search/shared/state';
-import { TextResponse, PmApiMetricMetricResponse, PmApiIndomEndpointResponse } from 'models/endpoints';
 import { searchEntities, detailEntities, indomEntities } from './responses';
+import { SearchEntity, TextResponse } from 'models/endpoints/search';
+import { PmApiMetricMetricResponse, PmApiIndomEndpointResponse } from 'models/endpoints/pmapi';
 
 export const querySearchEndpoint = (
   pattern: string,

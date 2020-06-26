@@ -8,6 +8,11 @@ import {
   SeriesQueryResponse,
   SeriesLabelsQueryParams,
   SeriesLabelsResponse,
+  SeriesDescMaybeResponse,
+  SeriesNoRecordResponse,
+  SeriesQueryMaybeResponse,
+  SeriesLabelsMaybeResponse,
+  SeriesMaybeResponse,
 } from 'models/endpoints/series';
 import Config from 'config/config';
 
@@ -35,10 +40,24 @@ class PmSeriesApiService {
     return (PmSeriesApiService.requestId++).toString();
   }
 
-  async descs(params: SeriesDescQueryParams) {
+  static isNoRecordResponse(response: SeriesMaybeResponse) {
+    if (
+      typeof response === 'object' &&
+      (response as { [key: string]: any }).success !== undefined &&
+      Object.keys(response).length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  async descs(params: SeriesDescQueryParams): Promise<SeriesDescResponse> {
     const { baseUrl, getRequestId, headers, backendSrv } = this;
     const getParams = new URLSearchParams();
     getParams.append('series', params.series.join(','));
+    if (getParams.get('series')?.length === 0) {
+      return [];
+    }
     if (params.client !== undefined) {
       getParams.append('client', params.toString());
     }
@@ -50,14 +69,17 @@ class PmSeriesApiService {
       headers,
     };
     try {
-      const response: SeriesDescResponse = await timeout(backendSrv.request(options), Config.REQUEST_TIMEOUT);
-      return response;
+      const response: SeriesDescMaybeResponse = await timeout(backendSrv.request(options), Config.REQUEST_TIMEOUT);
+      if (PmSeriesApiService.isNoRecordResponse(response)) {
+        return [];
+      }
+      return response as Exclude<SeriesDescMaybeResponse, SeriesNoRecordResponse>;
     } catch {
-      return null;
+      return [];
     }
   }
 
-  async query(params: SeriesQueryQueryParams) {
+  async query(params: SeriesQueryQueryParams): Promise<SeriesQueryResponse> {
     const { baseUrl, getRequestId, headers, backendSrv } = this;
     const getParams = new URLSearchParams();
     getParams.append('expr', params.expr);
@@ -72,14 +94,17 @@ class PmSeriesApiService {
       headers,
     };
     try {
-      const response: SeriesQueryResponse = await timeout(backendSrv.request(options), Config.REQUEST_TIMEOUT);
-      return response;
+      const response: SeriesQueryMaybeResponse = await timeout(backendSrv.request(options), Config.REQUEST_TIMEOUT);
+      if (PmSeriesApiService.isNoRecordResponse(response)) {
+        return [];
+      }
+      return response as Exclude<SeriesQueryMaybeResponse, SeriesNoRecordResponse>;
     } catch {
-      return null;
+      return [];
     }
   }
 
-  async labels(params: SeriesLabelsQueryParams) {
+  async labels(params: SeriesLabelsQueryParams): Promise<SeriesLabelsResponse> {
     const { baseUrl, getRequestId, headers, backendSrv } = this;
     const getParams = new URLSearchParams();
     if (params.series !== undefined) {
@@ -105,10 +130,13 @@ class PmSeriesApiService {
       headers,
     };
     try {
-      const response: SeriesLabelsResponse = await timeout(backendSrv.request(options), Config.REQUEST_TIMEOUT);
-      return response;
+      const response: SeriesLabelsMaybeResponse = await timeout(backendSrv.request(options), Config.REQUEST_TIMEOUT);
+      if (PmSeriesApiService.isNoRecordResponse(response)) {
+        return {};
+      }
+      return response as Exclude<SeriesLabelsResponse, SeriesNoRecordResponse>;
     } catch {
-      return null;
+      return {};
     }
   }
 }

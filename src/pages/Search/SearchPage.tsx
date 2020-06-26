@@ -9,7 +9,7 @@ import { paginationContainer } from './styles';
 import { SearchResult } from 'components/SearchResult/SearchResult';
 import { querySearch, openDetail } from 'store/slices/search/shared/actionCreators';
 import Loader from 'components/Loader/Loader';
-import { TextItemResponse } from 'models/endpoints';
+import { TextItemResponse } from 'models/endpoints/search';
 
 const mapStateToProps = (state: RootState) => ({
   search: state.search,

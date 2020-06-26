@@ -1,10 +1,10 @@
 import React from 'react';
-import { MetricEntitySeries } from 'services/EntityDetailService';
 import { SelectableValue } from '@grafana/data';
 import Labels from '../Labels/Labels';
 import Meta from '../Meta/Meta';
 import { VerticalGroup, RadioButtonGroup } from '@grafana/ui';
 import { radioBtnGroupContainer } from 'pages/Detail/styles';
+import { MetricEntitySeries } from 'models/entities/metric';
 
 interface SeriesProps {
   series: MetricEntitySeries;

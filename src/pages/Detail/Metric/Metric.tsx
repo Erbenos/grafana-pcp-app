@@ -62,17 +62,20 @@ class MetricDetailPage extends React.Component<MetricDetailPageProps, {}> {
   onPreview() {
     const { metric } = this.props;
     const { data } = metric;
-    if (!data) {
+    // either no data or no series
+    if (!data || data.series.length === 0) {
       return;
     }
-    // TODO:
-    // switch (data.type) {
-    //   case 'string':
-    //     this.props.onPreview({ id: data.name, type: DetailPreviewType.Table });
-    //     return;
-    //   default:
-    this.props.onPreview({ id: data.name, type: DetailPreviewType.Graph });
-    // }
+    // lets just assume that all series have same type of value
+    const { meta } = data.series[0];
+    switch (meta.type) {
+      case 'string':
+        this.props.onPreview({ id: data.name, type: DetailPreviewType.Table });
+        return;
+      default:
+        this.props.onPreview({ id: data.name, type: DetailPreviewType.Graph });
+        return;
+    }
   }
 
   renderDetail() {
@@ -103,7 +106,7 @@ class MetricDetailPage extends React.Component<MetricDetailPageProps, {}> {
     if (!data) {
       return <p>Unable to render description.</p>;
     }
-    let description = data.oneline;
+    let description = data.oneline ?? 'No help available.';
     if (data.help) {
       description = data.help;
     }

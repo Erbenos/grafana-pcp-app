@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { getDataSourceSrv } from '@grafana/runtime';
-import { TimeoutError } from 'models/communication/errors';
+import { TimeoutError } from 'models/errors/errors';
 
 // TODO: only for dev
 const _genMatchingName = (pattern: string) => {
@@ -32,10 +32,16 @@ const getDatasourceSettings = async (name: string) => {
 
 const timeout = async function timeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   return new Promise<T>(async (resolve, reject) => {
+    // This produces uncatchable error for some reason.
     setTimeout(() => {
-      reject(new TimeoutError('timeout'));
+      reject(new TimeoutError('Request timeout'));
     }, ms);
-    resolve(await promise);
+    try {
+      const result = await promise;
+      resolve(result);
+    } catch (e) {
+      reject(e);
+    }
   });
 };
 

@@ -73,3 +73,9 @@ Fetching metrics series directly from Redis datasource, new series-related UI an
 ### 25.06.2020
 
 Added timeouthandling for all service related request making methods, abstracted away some typedefs into separate files and abstracted possible app configuration settings into separate file.
+
+### 26.06.2020
+
+Cleaned up some service code to return better results when a) params are wrong, b) response payloads are not what expected. I wanted to create autocomplete integration at least on frontend but situation is a bit unfortunate: Grafana distributed Input components dont support autocomplete, only Query component does. But query component is not fitting for single line inputs and doesnt handle validation state very well. So I can either a) somehow add autocomplete support to Input, b) modify behavior of Query and add better validation integration, c) use 3rd party library, which misses all Grafana styling and validation integration. Thinking about autocomplete got me to a point when I needed to have services inside a component (as opposed to just Redux action creators as is now) - so I got into research for possible solution to that problem, unsuccesfully so far. There is React context - but that is used to share state not functions (I could live with that tho), futher such context is accessible in consumers only in render or lifecycle methods while I would like it to be accessible in event handlers, without need of explicit passing from render, as well. There are Higher-Order Components - but I have yet to find an example of asynchronously creating such component and it having reference to shared piece of data in each instance. There are some 3rd party libs for dependency injection - which seems like an overkill. Real issue is that the services I have need to be asynchronously initialized.
+
+In the end I get the service via use of Context.

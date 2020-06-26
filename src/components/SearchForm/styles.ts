@@ -14,8 +14,12 @@ const searchFormGroup = css`
   width: 100%;
 `;
 
+const searchBlockWrapper = css`
+  width: 100%;
+`;
+
 const searchBlock = css`
   width: 100%;
 `;
 
-export { searchContainer, searchSubmitBtn, searchFormGroup, searchBlock };
+export { searchContainer, searchSubmitBtn, searchFormGroup, searchBlock, searchBlockWrapper };

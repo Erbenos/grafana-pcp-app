@@ -28,7 +28,9 @@ class PmSearchApiService {
     return (PmSearchApiService.requestId++).toString();
   }
 
-  async text(params: TextQueryParams) {
+  async autocomplete(params: any) {}
+
+  async text(params: TextQueryParams): Promise<TextResponse | null> {
     const { headers, getRequestId, baseUrl, backendSrv } = this;
     const getParams = new URLSearchParams();
     getParams.append('query', params.query);

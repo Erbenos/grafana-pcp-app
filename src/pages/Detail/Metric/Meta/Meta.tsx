@@ -1,6 +1,6 @@
 import React from 'react';
 import { gridList, gridTitle, gridValue, gridItem } from '../../styles';
-import { MetricEntityMeta } from 'services/EntityDetailService';
+import { MetricEntityMeta } from 'models/entities/metric';
 
 interface MetaProps {
   meta: MetricEntityMeta;

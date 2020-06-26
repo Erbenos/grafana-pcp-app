@@ -15,21 +15,15 @@ class EntityService {
     this.seriesService = seriesService;
   }
 
-  async metric(metric: string) {
+  async metric(metric: string): Promise<MetricEntity> {
     if (metric === '') {
-      return null;
+      throw Error('Metric identifier cannot be empty.');
     }
     const { seriesService } = this;
-    const series = (await seriesService.query({ expr: `${metric}*` })) as string[];
-    if (series === null || series.length === 0) {
-      return null;
-    }
+    const series: string[] = (await seriesService.query({ expr: `${metric}*` })) as string[];
     const [metadata, labels] = await Promise.all([seriesService.descs({ series }), seriesService.labels({ series })]);
     // Transform data
-    const entitySeries: _.Dictionary<LabelsAndMeta> = _.groupBy(
-      _.merge(metadata ?? {}, labels ?? {}) as LabelsAndMeta,
-      'series'
-    );
+    const entitySeries: _.Dictionary<LabelsAndMeta> = _.groupBy(_.merge(metadata, labels) as LabelsAndMeta, 'series');
     const entitySeriesTransformed: MetricEntitySeries[] = Object.keys(entitySeries).reduce<MetricEntitySeries[]>(
       (prev: MetricEntitySeries[], val: string) => {
         return [
@@ -50,9 +44,7 @@ class EntityService {
     return {
       name: metric,
       series: entitySeriesTransformed,
-      oneline: 'Monkey patch text-online',
-      help: 'Monkey patch text-help',
-    } as MetricEntity;
+    };
   }
 
   async indom(indom: string) {}
