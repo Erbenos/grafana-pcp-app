@@ -47,7 +47,6 @@
     }
   ],
   "dependencies": {
-    "grafanaVersion": "7.0.x",
-    "plugins": ["grafana-pcp"]
+    "grafanaVersion": "7.0.x"
   }
 }
