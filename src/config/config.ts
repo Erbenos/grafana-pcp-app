@@ -2,6 +2,7 @@ const Config = Object.freeze({
   // Maximum search shortcuts available from index
   MAX_SEARCH_SHORTCUTS: 20,
   REQUEST_TIMEOUT: 2500,
+  ALLOW_SEARCH_SUGGESTIONS: true,
 });
 
 export default Config;

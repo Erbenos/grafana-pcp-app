@@ -1,14 +1,41 @@
 import React from 'react';
-import { VerticalGroup, Input, Icon, Button, HorizontalGroup, Checkbox, Field } from '@grafana/ui';
+import Autosuggest, {
+  SuggestionsFetchRequestedParams,
+  RenderSuggestionParams,
+  SuggestionSelectedEventData,
+  Theme,
+} from 'react-autosuggest';
+import { VerticalGroup, Button, HorizontalGroup, Checkbox, withTheme, Themeable } from '@grafana/ui';
+import config from 'config/config';
 import { connect } from 'react-redux';
 
 import { ThunkDispatch } from 'redux-thunk';
 import { bindActionCreators, AnyAction } from 'redux';
-import { searchContainer, searchFormGroup, searchBlock, searchSubmitBtn, searchBlockWrapper } from './styles';
-import { querySearch } from 'store/slices/search/shared/actionCreators';
+import {
+  searchContainer,
+  searchFormGroup,
+  searchSubmitBtn,
+  searchBlockWrapper,
+  autosuggestContainerOpen,
+  autosuggestContainer,
+  autosuggestInput,
+  autosuggestInputOpen,
+  autosuggestSuggestionsContainer,
+  autosuggestSuggestionsContainerOpen,
+  autosuggestInputFocused,
+  autosuggestSuggestionsList,
+  autosuggestSuggestion,
+  autosuggestSuggestionFirst,
+  autosuggestSuggestionHighlighted,
+  autosuggestSectionContainer,
+  autosuggestSectionContainerFirst,
+  autosuggestSectionTitle,
+} from './styles';
+import { querySearch, clearSearch } from 'store/slices/search/shared/actionCreators';
 import { RootState } from 'store/reducer';
-import { SearchEntity } from 'models/endpoints/search';
+import { SearchEntity, AutocompleteSuggestion } from 'models/endpoints/search';
 import withServices, { WithServicesProps } from 'components/withServices/withServices';
+import { autocompleteFetchEndpoint } from 'mocks/endpoints';
 
 const mapStateToProps = (state: RootState) => ({
   query: state.search.query,
@@ -16,73 +43,33 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, null, AnyAction>) =>
-  bindActionCreators({ querySearch }, dispatch);
+  bindActionCreators({ querySearch, clearSearch }, dispatch);
 
-type SearchFormProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & WithServicesProps;
+type SearchFormProps = ReturnType<typeof mapStateToProps> &
+  ReturnType<typeof mapDispatchToProps> &
+  WithServicesProps &
+  Themeable;
 
 interface SearchFormState {
-  inputTouched: boolean;
   query: {
     pattern: string;
     entityFlags: SearchEntity;
   };
+  suggestions: AutocompleteSuggestion[];
 }
 
 class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
   state: SearchFormState = this.initialState;
+  autosuggestTheme: Theme;
 
   get initialState() {
     return {
-      inputTouched: false,
       query: {
         pattern: '',
         entityFlags: SearchEntity.All,
       },
+      suggestions: [],
     };
-  }
-
-  constructor(props: SearchFormProps) {
-    super(props);
-    console.log(props.services);
-    if (props.query) {
-      this.setState({ query: props.query });
-    }
-    this.onSubmit = this.onSubmit.bind(this);
-    this.onInputChange = this.onInputChange.bind(this);
-    this.setEntityFlag = this.setEntityFlag.bind(this);
-  }
-
-  componentWillReceiveProps(props: SearchFormProps) {
-    this.setState({ query: props.query, inputTouched: false });
-  }
-
-  onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    const submitForm = () => {
-      if (!(this.state.inputTouched && this.isValidInput)) {
-        return;
-      }
-      this.props.querySearch({ ...this.state.query, pageNum: 1 });
-    };
-
-    if (this.state.inputTouched) {
-      submitForm();
-    } else {
-      this.setState({ inputTouched: true }, () => {
-        submitForm();
-      });
-    }
-  }
-
-  onInputChange(e: React.FormEvent<HTMLInputElement>) {
-    this.setState({ inputTouched: true });
-    this.setState({
-      query: {
-        ...this.state.query,
-        pattern: e.currentTarget.value,
-      },
-    });
   }
 
   get metricFlag(): boolean {
@@ -97,12 +84,41 @@ class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
     return (this.state.query.entityFlags & (1 << 2)) > 0;
   }
 
-  get isValidInput(): boolean {
-    return this.state.query.pattern.trim() !== '';
+  constructor(props: SearchFormProps) {
+    super(props);
+    if (props.query) {
+      this.setState({ query: props.query });
+    }
+    this.autosuggestTheme = {
+      container: autosuggestContainer(props.theme),
+      containerOpen: autosuggestContainerOpen,
+      input: autosuggestInput(props.theme),
+      inputOpen: autosuggestInputOpen,
+      inputFocused: autosuggestInputFocused,
+      suggestionsContainer: autosuggestSuggestionsContainer(props.theme),
+      suggestionsContainerOpen: autosuggestSuggestionsContainerOpen,
+      suggestionsList: autosuggestSuggestionsList,
+      suggestion: autosuggestSuggestion(props.theme),
+      suggestionFirst: autosuggestSuggestionFirst,
+      suggestionHighlighted: autosuggestSuggestionHighlighted(props.theme),
+      sectionContainer: autosuggestSectionContainer,
+      sectionContainerFirst: autosuggestSectionContainerFirst,
+      sectionTitle: autosuggestSectionTitle,
+    };
+    this.onSubmit = this.onSubmit.bind(this);
+    this.onInputChange = this.onInputChange.bind(this);
+    this.onSuggestionsClearRequested = this.onSuggestionsClearRequested.bind(this);
+    this.onSuggestionsFetchRequested = this.onSuggestionsFetchRequested.bind(this);
+    this.getSuggestionValue = this.getSuggestionValue.bind(this);
+    this.onSuggestionSelected = this.onSuggestionSelected.bind(this);
+    this.allowSuggestions = this.allowSuggestions.bind(this);
+    this.renderSuggestion = this.renderSuggestion.bind(this);
+    this.renderSearchInput = this.renderSearchInput.bind(this);
+    this.setEntityFlag = this.setEntityFlag.bind(this);
   }
 
-  get isTouchedInput(): boolean {
-    return this.state.inputTouched;
+  componentWillReceiveProps(props: SearchFormProps) {
+    this.setState({ query: props.query });
   }
 
   setEntityFlag(entity: SearchEntity) {
@@ -114,37 +130,104 @@ class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
     });
   }
 
-  render() {
+  onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    if (this.state.query.pattern.trim().length) {
+      this.props.querySearch({ ...this.state.query, pageNum: 1 });
+    } else {
+      this.props.clearSearch();
+    }
+  }
+
+  onInputChange(e: React.FormEvent<HTMLInputElement>) {
+    this.setState({
+      query: {
+        ...this.state.query,
+        pattern: e.currentTarget.value,
+      },
+    });
+  }
+
+  onSuggestionsFetchRequested(request: SuggestionsFetchRequestedParams): void {
+    autocompleteFetchEndpoint(request.value).then(result => {
+      this.setState({
+        suggestions: result,
+      });
+    });
+  }
+
+  onSuggestionsClearRequested(): void {
+    this.setState({
+      suggestions: [],
+    });
+  }
+
+  onSuggestionSelected(event: React.FormEvent<any>, data: SuggestionSelectedEventData<AutocompleteSuggestion>) {
+    this.setState({
+      query: {
+        ...this.state.query,
+        pattern: data.suggestionValue,
+      },
+    });
+  }
+
+  allowSuggestions(value: string): boolean {
+    if (config.ALLOW_SEARCH_SUGGESTIONS) {
+      return value.length > 2;
+    }
+    return false;
+  }
+
+  getSuggestionValue(suggestion: AutocompleteSuggestion): string {
+    return suggestion;
+  }
+
+  renderSuggestion(suggestion: AutocompleteSuggestion, params: RenderSuggestionParams): React.ReactNode {
+    return <div>{suggestion}</div>;
+  }
+
+  renderSearchInput() {
     const {
-      onSubmit,
+      onSuggestionsClearRequested,
+      onSuggestionsFetchRequested,
+      onSuggestionSelected,
+      getSuggestionValue,
+      renderSuggestion,
+      allowSuggestions,
       onInputChange,
       state,
-      metricFlag,
-      instancesFlag,
-      instanceDomainsFlag,
-      setEntityFlag,
-      isValidInput,
-      isTouchedInput,
+      autosuggestTheme,
     } = this;
-    const { pattern } = state.query;
+    const { suggestions, query } = state;
+    const searchInputProps = {
+      placeholder: 'Search Phrase',
+      value: query.pattern,
+      onChange: onInputChange,
+    };
+    return (
+      <Autosuggest
+        theme={autosuggestTheme}
+        suggestions={suggestions}
+        onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+        onSuggestionsClearRequested={onSuggestionsClearRequested}
+        onSuggestionSelected={onSuggestionSelected}
+        getSuggestionValue={getSuggestionValue}
+        renderSuggestion={renderSuggestion}
+        // Actually disables suggestions completely
+        shouldRenderSuggestions={allowSuggestions}
+        inputProps={searchInputProps}
+      ></Autosuggest>
+    );
+  }
+
+  render() {
+    const { onSubmit, metricFlag, instancesFlag, instanceDomainsFlag, setEntityFlag, renderSearchInput } = this;
     return (
       <form className={searchContainer} onSubmit={onSubmit}>
         <VerticalGroup spacing="sm">
           <div className={searchFormGroup}>
-            <div className={searchBlockWrapper}>
-              <Field
-                className={searchBlock}
-                invalid={!isValidInput && isTouchedInput}
-                error={!isValidInput && isTouchedInput ? 'This input is required' : ''}
-              >
-                <Input
-                  prefix={<Icon name="search" />}
-                  value={pattern}
-                  onChange={onInputChange}
-                  placeholder="Search Phrase"
-                />
-              </Field>
-            </div>
+            <div className={searchBlockWrapper}>{renderSearchInput()}</div>
             <Button className={searchSubmitBtn} variant="primary" size="md" type="submit">
               Search
             </Button>
@@ -170,5 +253,5 @@ class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
   }
 }
 
-export default withServices(connect(mapStateToProps, mapDispatchToProps)(SearchForm));
+export default withTheme(withServices(connect(mapStateToProps, mapDispatchToProps)(SearchForm)));
 export { SearchFormProps };

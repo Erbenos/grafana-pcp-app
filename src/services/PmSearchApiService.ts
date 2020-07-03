@@ -1,7 +1,7 @@
 import { BackendSrv } from '@grafana/runtime';
 import { DataSourceInstanceSettings } from '@grafana/data';
 import { timeout } from 'utils/utils';
-import { TextQueryParams, TextResponse } from 'models/endpoints/search';
+import { TextQueryParams, TextResponse, AutocompleteQueryParams, AutocompleteResponse } from 'models/endpoints/search';
 import Config from 'config/config';
 
 class PmSearchApiService {
@@ -28,7 +28,24 @@ class PmSearchApiService {
     return (PmSearchApiService.requestId++).toString();
   }
 
-  async autocomplete(params: any) {}
+  async autocomplete(params: AutocompleteQueryParams): Promise<AutocompleteResponse | null> {
+    const { headers, getRequestId, baseUrl, backendSrv } = this;
+    const getParams = new URLSearchParams();
+    getParams.append('query', params.query);
+    const options = {
+      url: `${baseUrl}/search/autocomplete?${getParams.toString()}`,
+      methods: 'GET',
+      showSuccessAlert: false,
+      requestId: getRequestId(),
+      headers,
+    };
+    try {
+      const response: AutocompleteResponse = await timeout(backendSrv.request(options), Config.REQUEST_TIMEOUT);
+      return response;
+    } catch {
+      return null;
+    }
+  }
 
   async text(params: TextQueryParams): Promise<TextResponse | null> {
     const { headers, getRequestId, baseUrl, backendSrv } = this;
@@ -53,7 +70,7 @@ class PmSearchApiService {
       getParams.append('type', params.type.toString());
     }
     const options = {
-      url: `${baseUrl}/query/text?${getParams.toString()}`,
+      url: `${baseUrl}/search/text?${getParams.toString()}`,
       methods: 'GET',
       showSuccessAlert: false,
       requestId: getRequestId(),

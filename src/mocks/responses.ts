@@ -3,7 +3,9 @@ import { PmApiMetricEndpointResponse, PmApiIndomEndpointResponse } from 'models/
 
 export const searchEntities: TextItemResponse[] = [
   {
-    id: '489dbe44c0fd4746fed850433b9eab1af5bee1b5',
+    docid: '489dbe44c0fd4746fed850433b9eab1af5bee1b5',
+    count: 1,
+    score: 0,
     name: 'kernel.uname.distro',
     type: EntityType.Metric,
     indom: 'PM_INDOM_NULL',
@@ -14,7 +16,9 @@ For example:
 + on RedHat, the contents of /etc/redhat-release`,
   },
   {
-    id: '0dce1bdbfc415b485ef04c1dedf0c09a3663e25d',
+    docid: '0dce1bdbfc415b485ef04c1dedf0c09a3663e25d',
+    count: 1,
+    score: 0,
     name: 'kernel.uname.sysname',
     type: EntityType.Metric,
     indom: 'PM_INDOM_NULL',
@@ -22,7 +26,9 @@ For example:
     helptext: `Name of the implementation of the <strong>running</strong> operating system as reported by the sysname[] value returned from uname(2) or uname -s. Usually "Linux".`,
   },
   {
-    id: '73e91dbd17f34634228b87c63bab8a4b90437512',
+    docid: '73e91dbd17f34634228b87c63bab8a4b90437512',
+    count: 1,
+    score: 0,
     name: 'kernel.all.uptime',
     type: EntityType.Metric,
     indom: 'PM_INDOM_NULL',
@@ -30,7 +36,9 @@ For example:
     helptext: 'time the current <strong>kernel</strong> has been running',
   },
   {
-    id: '77c80fa867cc066fca97a6a1e33d9579a3d48f65',
+    docid: '77c80fa867cc066fca97a6a1e33d9579a3d48f65',
+    count: 1,
+    score: 0,
     name: 'network.interface.speed',
     type: EntityType.Metric,
     indom: '60.3',
@@ -38,7 +46,9 @@ For example:
     helptext: `The linespeed on the network interface, as <strong>reported</strong> by the kernel, scaled from Megabits/second to Megabytes/second. See also network.interface.baudrate for the bytes/second value.`,
   },
   {
-    id: '946086f939d2db36941aa4cf3d7788e1a7b2790a',
+    docid: '946086f939d2db36941aa4cf3d7788e1a7b2790a',
+    count: 1,
+    score: 0,
     name: 'mem.freemem',
     type: EntityType.Metric,
     indom: 'PM_INDOM_NULL',
@@ -46,7 +56,9 @@ For example:
     helptext: 'free system memory metric from <strong>/proc/meminfo</strong>',
   },
   {
-    id: 'd95f683f17c9f1ee05edf25e59fc8deba376ba27',
+    docid: 'd95f683f17c9f1ee05edf25e59fc8deba376ba27',
+    count: 1,
+    score: 0,
     name: '60.3',
     type: EntityType.InstanceDomain,
     indom: '60.3',

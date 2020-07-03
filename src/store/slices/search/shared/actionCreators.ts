@@ -74,6 +74,26 @@ export const querySearch = (
   }
 };
 
+type ClearSearchAction = SetQueryAction | ViewAction;
+
+export const clearSearch = (): ThunkAction<void, RootState, {}, ClearSearchAction> => (
+  dispatch: ThunkDispatch<{}, {}, ClearSearchAction>,
+  getState
+) => {
+  const currentState = getState();
+  dispatch({
+    type: SET_QUERY,
+    payload: {
+      ...currentState.search.query,
+      pattern: '',
+    },
+  });
+  dispatch({
+    type: SET_VIEW,
+    payload: ViewState.Index,
+  });
+};
+
 type OpenDetailAction = EntityAction | ViewAction;
 
 export const openDetail = (
