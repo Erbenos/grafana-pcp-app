@@ -60,4 +60,23 @@ export type SeriesLabelsResponse = string[] | SeriesLabelsItemResponse[] | Serie
 
 export type SeriesLabelsMaybeResponse = SeriesLabelsResponse | SeriesNoRecordResponse;
 
-export type SeriesMaybeResponse = SeriesDescMaybeResponse | SeriesQueryMaybeResponse | SeriesLabelsMaybeResponse;
+export interface SeriesMetricsQueryParams {
+  series?: string[];
+  match?: string;
+  client?: string;
+}
+
+export interface SeriesMetricsItemResponse {
+  series: string;
+  name: string;
+}
+
+export type SeriesMetricsResponse = string[] | SeriesMetricsItemResponse[];
+
+export type SeriesMetricsMaybeResponse = SeriesMetricsResponse | SeriesNoRecordResponse;
+
+export type SeriesMaybeResponse =
+  | SeriesDescMaybeResponse
+  | SeriesQueryMaybeResponse
+  | SeriesLabelsMaybeResponse
+  | SeriesMetricsMaybeResponse;

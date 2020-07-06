@@ -17,6 +17,8 @@ export interface MetricEntitySeries {
   labels: MetricEntityLabels;
 }
 
+export type MetricSiblingsEntity = string[];
+
 export interface MetricEntity {
   name: string;
   // These are monkey patched for now

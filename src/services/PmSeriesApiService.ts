@@ -13,6 +13,9 @@ import {
   SeriesQueryMaybeResponse,
   SeriesLabelsMaybeResponse,
   SeriesMaybeResponse,
+  SeriesMetricsQueryParams,
+  SeriesMetricsResponse,
+  SeriesMetricsMaybeResponse,
 } from 'models/endpoints/series';
 import Config from 'config/config';
 
@@ -99,6 +102,36 @@ class PmSeriesApiService {
         return [];
       }
       return response as Exclude<SeriesQueryMaybeResponse, SeriesNoRecordResponse>;
+    } catch {
+      return [];
+    }
+  }
+
+  async metrics(params: SeriesMetricsQueryParams): Promise<SeriesMetricsResponse> {
+    const { baseUrl, getRequestId, headers, backendSrv } = this;
+    const getParams = new URLSearchParams();
+    if (params.series !== undefined) {
+      getParams.append('series', params.series.join(','));
+    }
+    if (params.match !== undefined) {
+      getParams.append('match', params.match);
+    }
+    if (params.client !== undefined) {
+      getParams.append('client', params.client);
+    }
+    const options = {
+      url: `${baseUrl}/series/metrics?${getParams.toString()}`,
+      methods: 'GET',
+      showSuccessAlert: false,
+      requestId: getRequestId(),
+      headers,
+    };
+    try {
+      const response: SeriesMetricsMaybeResponse = await timeout(backendSrv.request(options), Config.REQUEST_TIMEOUT);
+      if (PmSeriesApiService.isNoRecordResponse(response)) {
+        return [];
+      }
+      return response as Exclude<SeriesMetricsMaybeResponse, SeriesNoRecordResponse>;
     } catch {
       return [];
     }

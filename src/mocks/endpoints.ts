@@ -11,6 +11,7 @@ export const querySearchEndpoint = (
   return new Promise<TextResponse>((resolve, reject) => {
     setTimeout(() => {
       resolve({
+        elapsed: 0,
         results: searchEntities.slice(0, limit),
         limit,
         offset,

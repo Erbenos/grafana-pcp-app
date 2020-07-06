@@ -87,3 +87,7 @@ After taking some time of for a little personal holiday of mine, got around to w
 ### 03.07.2020
 
 Back to autocomplete... prepared UI and logic for autocomplete feature. Implemented [moroshko/react-autosuggest](https://github.com/moroshko/react-autosuggest) with basic look and feel based on Grafana Input component - contains some mock data for now. Can be turned off in config file. Also, now instead of validating user input, I just redirect him to Index page, should he enter empty string.
+
+### 06.07.2020
+
+Was mostly tinkering with RediSearch today trying to get to the bottom of pmwebapi /search/text responses returning score 0 to no avail. Did some simple boilerplate for man pages related to fulltext and code that will query /series/metrics endpoint which will provide list of links to siblings of currently opened metric detail.

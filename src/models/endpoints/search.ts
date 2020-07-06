@@ -51,8 +51,10 @@ export interface TextItemResponse {
 }
 
 export interface TextResponse {
+  elapsed: number;
   results: TextItemResponse[];
+  total: number; // Redisearch returns total number of matching records even if results themselves are limited
+  // TODO: make sure that they are included in the response
   limit: number;
   offset: number;
-  total: number; // Redisearch returns total number of matching records even if results themselves are limited
 }
