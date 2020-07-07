@@ -24,14 +24,6 @@ class SearchResult extends React.PureComponent<SearchResultProps, {}> {
     this.renderFooter = this.renderFooter.bind(this);
   }
 
-  get hasInstanceDomains() {
-    return this.props.item.indom !== 'PM_INDOM_NULL';
-  }
-
-  get isMetric() {
-    return this.props.item.type === EntityType.Metric;
-  }
-
   renderDesc() {
     const { item } = this.props;
     let description;
@@ -50,41 +42,19 @@ class SearchResult extends React.PureComponent<SearchResultProps, {}> {
   }
 
   renderFooter() {
-    const { props, hasInstanceDomains, isMetric } = this;
+    const { props } = this;
     return (
       <footer className={searchResultFooter}>
         <HorizontalGroup spacing="lg" justify="space-between">
           <Button
             variant="link"
             size="md"
-            icon="eye"
+            icon="arrow-right"
             className={searchResultBtnWithNoSpacing}
             onClick={() => props.openDetail(props.item)}
           >
             Read More
           </Button>
-          <HorizontalGroup spacing="md">
-            {hasInstanceDomains && isMetric && (
-              <Button
-                variant="link"
-                size="md"
-                className={searchResultBtnWithNoSpacing}
-                onClick={() => props.openDetail(props.item)}
-              >
-                Instance Domain
-              </Button>
-            )}
-            {hasInstanceDomains && isMetric && (
-              <Button
-                variant="link"
-                size="md"
-                className={searchResultBtnWithNoSpacing}
-                onClick={() => props.openDetail(props.item)}
-              >
-                Labels
-              </Button>
-            )}
-          </HorizontalGroup>
         </HorizontalGroup>
       </footer>
     );
@@ -92,14 +62,7 @@ class SearchResult extends React.PureComponent<SearchResultProps, {}> {
 
   renderName() {
     const { item } = this.props;
-    switch (item.type) {
-      case EntityType.Metric:
-        return item.name;
-      case EntityType.InstanceDomain:
-        return item.indom;
-      default:
-        return 'no name';
-    }
+    return item.name;
   }
 
   render() {

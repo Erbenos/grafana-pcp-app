@@ -14,6 +14,7 @@ export enum EntityType {
 
 export interface AutocompleteQueryParams {
   query: string;
+  limit?: number;
 }
 
 export type AutocompleteSuggestion = string;

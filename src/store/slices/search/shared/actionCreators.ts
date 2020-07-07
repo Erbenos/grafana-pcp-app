@@ -13,9 +13,9 @@ import { ADD_HISTORY } from '../slices/history/types';
 import { EntityAction } from '../slices/entity/actions';
 import { ViewAction, SetViewAction } from '../slices/view/actions';
 import { RootState } from 'store/reducer';
-import { querySearchEndpoint } from 'mocks/endpoints';
 import { EntityType } from 'models/endpoints/search';
 import { Services } from 'services/services';
+import Config from 'config/config';
 
 type QuerySearchAction = LoadResultAction | SetViewAction | HistoryAction | SetQueryAction;
 
@@ -34,7 +34,7 @@ export const querySearch = (
     type: LOAD_RESULT_INIT,
   });
 
-  const limit = 6;
+  const limit = Config.RESULTS_PER_PAGE;
   const offset = (query.pageNum - 1) * limit;
 
   dispatch({
@@ -47,7 +47,7 @@ export const querySearch = (
       type: LOAD_RESULT_PENDING,
     });
     const { pattern, entityFlags } = query;
-    const response = await querySearchEndpoint(pattern, entityFlags, limit, offset);
+    const response = await searchService.text({ query: pattern, type: entityFlags, limit, offset });
     const result: ResultData = {
       data: response,
     };

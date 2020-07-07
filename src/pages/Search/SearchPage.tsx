@@ -1,11 +1,11 @@
 import React from 'react';
-import { VerticalGroup, Pagination, withTheme, Themeable } from '@grafana/ui';
+import { VerticalGroup, Pagination, withTheme, Themeable, HorizontalGroup } from '@grafana/ui';
 import { connect } from 'react-redux';
 import { AnyAction, bindActionCreators } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { RootState } from 'store/reducer';
 import { FetchStatus } from 'store/slices/search/shared/state';
-import { paginationContainer } from './styles';
+import { paginationContainer, searchPageElapsed, searchPageMatchesDesc } from './styles';
 import { SearchResult } from 'components/SearchResult/SearchResult';
 import { querySearch, openDetail } from 'store/slices/search/shared/actionCreators';
 import Loader from 'components/Loader/Loader';
@@ -26,6 +26,8 @@ class SearchPage extends React.Component<SearchPageProps, {}> {
     this.onPaginationClick = this.onPaginationClick.bind(this);
     this.onDetailClick = this.onDetailClick.bind(this);
     this.renderResults = this.renderResults.bind(this);
+    this.renderMatchesDesc = this.renderMatchesDesc.bind(this);
+    this.renderSearchElapsedTime = this.renderSearchElapsedTime.bind(this);
   }
 
   get pagesCount() {
@@ -55,27 +57,64 @@ class SearchPage extends React.Component<SearchPageProps, {}> {
     }
   }
 
+  renderMatchesDesc() {
+    const { theme, search } = this.props;
+    const { result } = search;
+    if (!result?.data) {
+      return;
+    }
+    return (
+      <div className={searchPageMatchesDesc(theme)}>
+        <strong>{result.data.total}</strong> results
+      </div>
+    );
+  }
+
+  renderSearchElapsedTime() {
+    const { theme, search } = this.props;
+    const { result } = search;
+    if (!result?.data) {
+      return;
+    }
+    return (
+      <div className={searchPageElapsed(theme)}>
+        Elapsed: <strong>{result.data.elapsed}s</strong>
+      </div>
+    );
+  }
+
   renderResults() {
-    const { props, onPaginationClick, onDetailClick, pagesCount, currentPage } = this;
+    const {
+      props,
+      onPaginationClick,
+      onDetailClick,
+      pagesCount,
+      currentPage,
+      renderMatchesDesc,
+      renderSearchElapsedTime,
+    } = this;
     if (!props.search.result) {
       return <p>No result data.</p>;
     }
     const { data, status } = props.search.result;
     switch (status) {
       case FetchStatus.PENDING:
-      case FetchStatus.SUCCESS: {
-        if (status === FetchStatus.PENDING) {
+        if (!data) {
           return <p>Searching&hellip;</p>;
         }
+      case FetchStatus.SUCCESS: {
         if (!data) {
           return <p>Incorrect server response.</p>;
         }
         if (data.results.length > 0) {
           return (
             <VerticalGroup spacing="lg">
-              <h4>Results for '{props.search.query.pattern}':</h4>
+              <HorizontalGroup justify="space-between" spacing="md">
+                {renderMatchesDesc()}
+                {renderSearchElapsedTime()}
+              </HorizontalGroup>
               <VerticalGroup spacing="lg">
-                {data.results.map((x, i) => (
+                {data.results.map(x => (
                   <SearchResult item={x} openDetail={entity => onDetailClick(entity)} />
                 ))}
               </VerticalGroup>

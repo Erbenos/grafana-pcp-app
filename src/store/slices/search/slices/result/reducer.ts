@@ -10,9 +10,10 @@ const resultReducer: Reducer<ResultState, ResultAction> = (state, action) => {
   }
   switch (action.type) {
     case LOAD_RESULT_INIT:
+      // Preserve old results while new results started fetching
       return {
+        ...(state ?? { data: null }),
         status: FetchStatus.INIT,
-        data: null,
       };
     case LOAD_RESULT_PENDING:
       if (state) {

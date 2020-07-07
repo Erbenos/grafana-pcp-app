@@ -32,8 +32,11 @@ class PmSearchApiService {
     const { headers, getRequestId, baseUrl, backendSrv } = this;
     const getParams = new URLSearchParams();
     getParams.append('query', params.query);
+    if (params.limit !== undefined) {
+      getParams.append('limit', params.limit.toString());
+    }
     const options = {
-      url: `${baseUrl}/search/autocomplete?${getParams.toString()}`,
+      url: `${baseUrl}/search/suggest?${getParams.toString()}`,
       methods: 'GET',
       showSuccessAlert: false,
       requestId: getRequestId(),
@@ -77,8 +80,16 @@ class PmSearchApiService {
       headers,
     };
     try {
-      const response: TextResponse = await timeout(backendSrv.request(options), Config.REQUEST_TIMEOUT);
-      return response;
+      // TODO: replace monkey patched limit/offset
+      const response: Omit<TextResponse, 'limit' | 'offset'> = await timeout(
+        backendSrv.request(options),
+        Config.REQUEST_TIMEOUT
+      );
+      return {
+        ...response,
+        limit: params.limit ? params.limit : 0,
+        offset: params.offset ? params.offset : 0,
+      };
     } catch {
       return null;
     }

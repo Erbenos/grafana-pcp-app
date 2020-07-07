@@ -1,5 +1,5 @@
 import React from 'react';
-import { HorizontalGroup, Button } from '@grafana/ui';
+import { HorizontalGroup, Button, VerticalGroup } from '@grafana/ui';
 import {
   detailPageItem,
   detailPageHeader,
@@ -164,9 +164,11 @@ class MetricDetailPage extends React.Component<MetricDetailPageProps, {}> {
           </HorizontalGroup>
         </div>
         <div className={detailPageProperties}>
-          {data.series.map(series => (
-            <Series series={series} />
-          ))}
+          <VerticalGroup spacing="lg">
+            {data.series.map(series => (
+              <Series series={series} />
+            ))}
+          </VerticalGroup>
         </div>
       </article>
     );

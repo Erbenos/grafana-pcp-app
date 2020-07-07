@@ -42,6 +42,9 @@ class Aside extends React.Component<AsideProps, {}> {
     if (!siblings) {
       return <p>Unable to fetch metric siblings.</p>;
     }
+    if (siblings.data?.length === 0) {
+      return;
+    }
     return (
       <VerticalGroup spacing="lg">
         <h4>Similar Metrics</h4>
@@ -50,6 +53,7 @@ class Aside extends React.Component<AsideProps, {}> {
             {siblings.data?.map(metric => (
               <Button
                 onClick={() => onMetricClick(metric)}
+                icon="arrow-right"
                 variant="link"
                 className={css`
                   padding-left: 0;
