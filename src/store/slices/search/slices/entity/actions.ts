@@ -3,12 +3,16 @@ import {
   LOAD_METRIC_SUCCESS,
   LOAD_METRIC_ERROR,
   LOAD_METRIC_PENDING,
+  LOAD_METRIC_SIBLINGS_INIT,
+  LOAD_METRIC_SIBLINGS_PENDING,
+  LOAD_METRIC_SIBLINGS_SUCCESS,
+  LOAD_METRIC_SIBLINGS_ERROR,
   LOAD_INDOM_INIT,
   LOAD_INDOM_PENDING,
   LOAD_INDOM_SUCCESS,
   LOAD_INDOM_ERROR,
 } from './types';
-import { IndomData, MetricData } from './state';
+import { IndomData, MetricData, MetricSiblingsData } from './state';
 
 export interface LoadMetricInitAction {
   type: typeof LOAD_METRIC_INIT;
@@ -33,6 +37,29 @@ export type LoadMetricAction =
   | LoadMetricSuccessAction
   | LoadMetricErrorAction;
 
+export interface LoadMetricSiblingsInitAction {
+  type: typeof LOAD_METRIC_SIBLINGS_INIT;
+}
+
+export interface LoadMetricSiblingsPendingAction {
+  type: typeof LOAD_METRIC_SIBLINGS_PENDING;
+}
+
+export interface LoadMetricSiblingsSuccessAction {
+  type: typeof LOAD_METRIC_SIBLINGS_SUCCESS;
+  payload: MetricSiblingsData;
+}
+
+export interface LoadMetricSiblingsErrorAction {
+  type: typeof LOAD_METRIC_SIBLINGS_ERROR;
+}
+
+export type LoadMetricSiblingsAction =
+  | LoadMetricSiblingsInitAction
+  | LoadMetricSiblingsPendingAction
+  | LoadMetricSiblingsSuccessAction
+  | LoadMetricSiblingsErrorAction;
+
 export interface LoadIndomInitAction {
   type: typeof LOAD_INDOM_INIT;
 }
@@ -56,4 +83,4 @@ export type LoadIndomAction =
   | LoadIndomSuccessAction
   | LoadIndomErrorAction;
 
-export type EntityAction = LoadMetricAction | LoadIndomAction;
+export type EntityAction = LoadMetricAction | LoadMetricSiblingsAction | LoadIndomAction;

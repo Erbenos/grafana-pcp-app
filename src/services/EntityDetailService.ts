@@ -21,6 +21,7 @@ class EntityService {
     }
     const { seriesService } = this;
     const series: string[] = (await seriesService.query({ expr: `${metric}*` })) as string[];
+    // TODO: why does labels sometimes return just { success: true }
     const [metadata, labels] = await Promise.all([seriesService.descs({ series }), seriesService.labels({ series })]);
     // Transform data
     const entitySeries: _.Dictionary<LabelsAndMeta> = _.groupBy(_.merge(metadata, labels) as LabelsAndMeta, 'series');

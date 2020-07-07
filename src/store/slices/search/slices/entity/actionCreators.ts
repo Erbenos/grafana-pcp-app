@@ -1,5 +1,5 @@
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
-import { LoadMetricAction, LoadIndomAction } from './actions';
+import { LoadMetricAction, LoadIndomAction, LoadMetricSiblingsAction } from './actions';
 import { indomFetchEndpoint } from 'mocks/endpoints';
 import {
   LOAD_METRIC_INIT,
@@ -10,14 +10,18 @@ import {
   LOAD_INDOM_PENDING,
   LOAD_INDOM_SUCCESS,
   LOAD_INDOM_ERROR,
+  LOAD_METRIC_SIBLINGS_INIT,
+  LOAD_METRIC_SIBLINGS_PENDING,
+  LOAD_METRIC_SIBLINGS_SUCCESS,
+  LOAD_METRIC_SIBLINGS_ERROR,
 } from './types';
 import { Services } from 'services/services';
 
-export const loadMetric = (id: string): ThunkAction<Promise<void>, {}, Services, LoadMetricAction> => async (
+export const loadMetric = (id: string): ThunkAction<Promise<string>, {}, Services, LoadMetricAction> => async (
   dispatch: ThunkDispatch<{}, {}, LoadMetricAction>,
   {},
   { entityService }
-): Promise<void> => {
+): Promise<string> => {
   dispatch({ type: LOAD_METRIC_INIT });
   dispatch({ type: LOAD_METRIC_PENDING });
   try {
@@ -28,8 +32,34 @@ export const loadMetric = (id: string): ThunkAction<Promise<void>, {}, Services,
         data,
       },
     });
+    return data.name;
   } catch (e) {
     dispatch({ type: LOAD_METRIC_ERROR });
+    throw e;
+  }
+};
+
+export const loadMetricSiblings = (
+  metricName: string
+): ThunkAction<Promise<void>, {}, Services, LoadMetricSiblingsAction> => async (
+  dispatch: ThunkDispatch<{}, {}, LoadMetricSiblingsAction>,
+  {},
+  { seriesService }
+): Promise<void> => {
+  dispatch({ type: LOAD_METRIC_SIBLINGS_INIT });
+  dispatch({ type: LOAD_METRIC_SIBLINGS_PENDING });
+  try {
+    const treeLevelPrefix = metricName.split('.').slice(0, -1).join('.');
+    const data = (await seriesService.metrics({ match: `${treeLevelPrefix}*` })) as string[];
+    dispatch({
+      type: LOAD_METRIC_SIBLINGS_SUCCESS,
+      payload: {
+        data: data.filter(metric => metric !== metricName).sort(),
+      },
+    });
+  } catch (e) {
+    dispatch({ type: LOAD_METRIC_SIBLINGS_ERROR });
+    throw e;
   }
 };
 

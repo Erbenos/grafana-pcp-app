@@ -1,5 +1,5 @@
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
-import { loadMetric, loadIndom } from '../slices/entity/actionCreators';
+import { loadMetric, loadIndom, loadMetricSiblings } from '../slices/entity/actionCreators';
 import { SearchQuery } from './state';
 import { LoadResultAction } from '../slices/result/actions';
 import { HistoryAction } from '../slices/history/actions';
@@ -109,7 +109,9 @@ export const openDetail = (
   });
   switch (type) {
     case EntityType.Metric: {
-      dispatch(loadMetric(id));
+      dispatch(loadMetric(id)).then(metricName => {
+        dispatch(loadMetricSiblings(metricName));
+      });
       return;
     }
     case EntityType.InstanceDomain: {

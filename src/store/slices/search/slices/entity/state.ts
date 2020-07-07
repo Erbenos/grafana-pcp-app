@@ -24,8 +24,8 @@ export type IndomDataState = IndomData & TrackableStatus;
 export interface MetricDetailState {
   type: EntityType.Metric;
   metric: MetricDataState;
-  // siblings: MetricSiblingsDataState;
-  indom?: IndomDataState;
+  siblings?: MetricSiblingsDataState;
+  // indom?: IndomDataState;
 }
 
 export interface InstanceDetailState {
