@@ -9,7 +9,7 @@ import {
   searchResultHeader,
   searchResultTitle,
 } from './styles';
-import { TextItemResponse, EntityType } from 'models/endpoints/search';
+import { TextItemResponse } from 'models/endpoints/search';
 
 interface SearchResultProps {
   item: TextItemResponse;

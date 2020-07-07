@@ -91,3 +91,7 @@ Back to autocomplete... prepared UI and logic for autocomplete feature. Implemen
 ### 06.07.2020
 
 Was mostly tinkering with RediSearch today trying to get to the bottom of pmwebapi /search/text responses returning score 0 to no avail. Did some simple boilerplate for man pages related to fulltext and code that will query /series/metrics endpoint which will provide list of links to siblings of currently opened metric detail.
+
+### 07.07.2020
+
+Now showing metrics with same prefix in pmns namespace (excluding final node indentifier, something like siblings with their children) in metric detail page. Handling case when metric series have no labels (not sure if that isnt error in pmwebapi). Added/Replaces some icons for nicer UI, removed child tab navigation - has no purpose in current design, was an artifact from wireframes. Handling cases when metric has no series (same as metric series have no labels). **Turned on /search/text querying**.

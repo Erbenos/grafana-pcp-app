@@ -49,8 +49,8 @@ export const loadMetricSiblings = (
   dispatch({ type: LOAD_METRIC_SIBLINGS_INIT });
   dispatch({ type: LOAD_METRIC_SIBLINGS_PENDING });
   try {
-    const treeLevelPrefix = metricName.split('.').slice(0, -1).join('.');
-    const data = (await seriesService.metrics({ match: `${treeLevelPrefix}*` })) as string[];
+    const parents = metricName.split('.').slice(0, -1);
+    const data = (await seriesService.metrics({ match: `${parents.join('.')}*` })) as string[];
     dispatch({
       type: LOAD_METRIC_SIBLINGS_SUCCESS,
       payload: {
