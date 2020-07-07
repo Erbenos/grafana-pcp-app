@@ -44,8 +44,12 @@ class Series extends React.Component<SeriesProps, SeriesState> {
     const { selectedOption } = state;
     const { series } = props;
     switch (selectedOption) {
-      case SeriesTabOpt.Labels:
-        return <Labels labels={series.labels} />;
+      case SeriesTabOpt.Labels: {
+        if (series.labels) {
+          return <Labels labels={series.labels} />;
+        }
+        return <p>Doesn't have labels.</p>;
+      }
       case SeriesTabOpt.Meta:
         return <Meta meta={series.meta} />;
       default:

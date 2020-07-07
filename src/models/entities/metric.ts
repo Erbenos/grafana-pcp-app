@@ -14,7 +14,7 @@ export interface MetricEntityLabels {
 export interface MetricEntitySeries {
   series: string;
   meta: MetricEntityMeta;
-  labels: MetricEntityLabels;
+  labels?: MetricEntityLabels;
 }
 
 export type MetricSiblingsEntity = string[];

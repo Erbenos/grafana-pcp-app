@@ -34,7 +34,7 @@ class EntityService {
                 {
                   series: val,
                   meta: _.omit(entitySeries[val][0], 'series', 'labels'),
-                  labels: entitySeries[val][0].labels,
+                  ...(entitySeries[val][0].labels ? { labels: entitySeries[val][0].labels } : {}),
                 },
               ]
             : {}),
