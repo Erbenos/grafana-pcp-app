@@ -30,7 +30,7 @@ const detailPageActions = css`
 `;
 
 const detailPageProperties = css`
-  margin-top: 32px;
+  width: 100%;
 `;
 
 const detailPageBtn = css`

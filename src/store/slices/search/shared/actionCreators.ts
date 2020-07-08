@@ -13,7 +13,7 @@ import { ADD_HISTORY } from '../slices/history/types';
 import { EntityAction } from '../slices/entity/actions';
 import { ViewAction, SetViewAction } from '../slices/view/actions';
 import { RootState } from 'store/reducer';
-import { EntityType } from 'models/endpoints/search';
+import { EntityType, TextItemResponseField } from 'models/endpoints/search';
 import { Services } from 'services/services';
 import Config from 'config/config';
 
@@ -47,7 +47,13 @@ export const querySearch = (
       type: LOAD_RESULT_PENDING,
     });
     const { pattern, entityFlags } = query;
-    const response = await searchService.text({ query: pattern, type: entityFlags, limit, offset });
+    const response = await searchService.text({
+      query: pattern,
+      type: entityFlags,
+      limit,
+      offset,
+      highlight: [TextItemResponseField.Oneline, TextItemResponseField.Helptext, TextItemResponseField.Name],
+    });
     const result: ResultData = {
       data: response,
     };

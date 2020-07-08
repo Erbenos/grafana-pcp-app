@@ -55,7 +55,7 @@ class PmSearchApiService {
     const getParams = new URLSearchParams();
     getParams.append('query', params.query);
     if (params.highlight !== undefined) {
-      getParams.append('highlight', params.highlight.valueOf().toString());
+      getParams.append('highlight', params.highlight.join(','));
     }
     if (params.offset !== undefined) {
       getParams.append('offset', params.offset.toString());

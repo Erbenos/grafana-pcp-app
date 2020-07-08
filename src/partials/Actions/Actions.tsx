@@ -57,7 +57,7 @@ class Actions extends React.Component<ActionsProps, {}> {
           <Button
             variant="link"
             size="md"
-            icon="list-ul"
+            icon="arrow-left"
             className={actionsBtnWithNoSpacing}
             onClick={queryLatestSearch}
           >

@@ -1,4 +1,5 @@
 import { css } from 'emotion';
+import { GrafanaTheme } from '@grafana/data';
 
 const searchResultItem = css`
   width: 100%;
@@ -27,6 +28,25 @@ const searchResultBtnWithNoSpacing = css`
   padding: 0;
 `;
 
+const searchResultEntityType = (theme: GrafanaTheme) => css`
+  padding: 0;
+  cursor: default;
+  pointer-events: none;
+  text-transform: capitalize;
+  color: ${theme.colors.text};
+`;
+
+const searchResultTitleLink = (theme: GrafanaTheme) => css`
+  padding: 0;
+  color: ${theme.colors.text};
+  font-size: ${theme.typography.heading.h4};
+  font-weight: normal;
+
+  &:hover {
+    color: ${theme.colors.linkExternal};
+  }
+`;
+
 export {
   searchResultItem,
   searchResultHeader,
@@ -34,4 +54,6 @@ export {
   searchResultDescription,
   searchResultFooter,
   searchResultBtnWithNoSpacing,
+  searchResultEntityType,
+  searchResultTitleLink,
 };

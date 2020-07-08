@@ -23,7 +23,7 @@ export type AutocompleteResponse = AutocompleteSuggestion[];
 
 export interface TextQueryParams {
   query: string;
-  highlight?: boolean;
+  highlight?: TextItemResponseField[];
   offset?: number;
   limit?: number;
   field?: TextItemResponseField[];
@@ -32,11 +32,11 @@ export interface TextQueryParams {
 }
 
 export enum TextItemResponseField {
-  type = 'type',
-  name = 'name',
-  indom = 'indom',
-  oneline = 'oneline',
-  helptext = 'helptext',
+  Type = 'type',
+  Name = 'name',
+  Indom = 'indom',
+  Oneline = 'oneline',
+  Helptext = 'helptext',
 }
 
 export interface TextItemResponse {

@@ -17,6 +17,7 @@ import {
 } from '../styles';
 import { FetchStatus } from 'store/slices/search/shared/state';
 import { EntityType } from 'models/endpoints/search';
+import Card from 'components/Card/Card';
 
 const mapStateToProps = (state: RootState) => ({
   indom: (state.search.entity as InstanceDomainDetailState).indom,
@@ -96,7 +97,7 @@ class InstanceDomainDetailPage extends React.Component<InstanceDomainDetailPageP
     const { isBookmarked, onBookmark, onUnbookmark } = this;
     if (!isBookmarked) {
       return (
-        <Button variant="link" size="md" icon="save" className={detailPageBtn} onClick={onBookmark}>
+        <Button variant="link" size="md" icon="star" className={detailPageBtn} onClick={onBookmark}>
           Bookmark This Result
         </Button>
       );
@@ -117,32 +118,38 @@ class InstanceDomainDetailPage extends React.Component<InstanceDomainDetailPageP
       return <p>No indom.</p>;
     }
     return (
-      <article className={detailPageItem}>
-        <header className={detailPageHeader}>
-          <h2 className={detailPageTitle}>{data.indom}</h2>
-        </header>
-        <div className={detailPageDescription}>
-          <p>{renderDesc()}</p>
-        </div>
-        <div className={detailPageActions}>
-          <VerticalGroup spacing="lg">
-            <HorizontalGroup spacing="lg">{renderBookmarkBtn()}</HorizontalGroup>
-          </VerticalGroup>
-        </div>
-        <div className={detailPageProperties}>
-          <VerticalGroup spacing="md">
-            <h4>Instances:</h4>
-            <ul className={instanceDomainItemList}>
-              {data.instances.map(instance => (
-                <li>
-                  <strong>{instance.name}</strong> ({instance.instance})
-                </li>
-              ))}
-            </ul>
-            <p>Instance Count: {data.instances.length}</p>
-          </VerticalGroup>
-        </div>
-      </article>
+      <VerticalGroup spacing="lg">
+        <Card background="strong">
+          <article className={detailPageItem}>
+            <header className={detailPageHeader}>
+              <h2 className={detailPageTitle}>{data.indom}</h2>
+            </header>
+            <div className={detailPageDescription}>
+              <p>{renderDesc()}</p>
+            </div>
+            <div className={detailPageActions}>
+              <VerticalGroup spacing="lg" justify="flex-end">
+                <HorizontalGroup spacing="lg">{renderBookmarkBtn()}</HorizontalGroup>
+              </VerticalGroup>
+            </div>
+          </article>
+        </Card>
+        <Card background="weak">
+          <div className={detailPageProperties}>
+            <VerticalGroup spacing="md">
+              <h4>Instances:</h4>
+              <ul className={instanceDomainItemList}>
+                {data.instances.map(instance => (
+                  <li>
+                    <strong>{instance.name}</strong> ({instance.instance})
+                  </li>
+                ))}
+              </ul>
+              <p>Instance Count: {data.instances.length}</p>
+            </VerticalGroup>
+          </div>
+        </Card>
+      </VerticalGroup>
     );
   }
 

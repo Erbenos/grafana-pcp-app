@@ -20,6 +20,13 @@ const _genMatchingName = (pattern: string) => {
   return `${_.sample(randomMetricNames)}_${pattern}`;
 };
 
+// Use only when you trust HTML source!
+const stripHtml = (html: string) => {
+  const el = document.createElement('div');
+  el.innerHTML = html;
+  return el.textContent || el.innerText || '';
+};
+
 const getDatasourceSettings = async (name: string) => {
   const datasource: any = await getDataSourceSrv().get(name);
   const uid = datasource?.instanceSettings?.uid;
@@ -45,4 +52,4 @@ const timeout = async function timeout<T>(promise: Promise<T>, ms: number): Prom
   });
 };
 
-export { _genMatchingName, getDatasourceSettings, timeout };
+export { _genMatchingName, getDatasourceSettings, timeout, stripHtml };

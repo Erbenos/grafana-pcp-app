@@ -17,6 +17,7 @@ import Loader from 'components/Loader/Loader';
 import { FetchStatus } from 'store/slices/search/shared/state';
 import Series from './Series/Series';
 import { EntityType } from 'models/endpoints/search';
+import Card from 'components/Card/Card';
 
 const mapStateToProps = (state: RootState) => ({
   metric: (state.search.entity as MetricDetailState).metric,
@@ -117,14 +118,14 @@ class MetricDetailPage extends React.Component<MetricDetailPageProps, {}> {
     const { isBookmarked, onBookmark, onUnbookmark } = this;
     if (!isBookmarked) {
       return (
-        <Button variant="link" size="md" icon="save" className={detailPageBtn} onClick={onBookmark}>
-          Bookmark This Result
+        <Button variant="link" size="md" icon="star" className={detailPageBtn} onClick={onBookmark}>
+          Bookmark
         </Button>
       );
     } else {
       return (
         <Button variant="destructive" size="md" icon="trash-alt" onClick={onUnbookmark}>
-          Unbookmark This Result
+          Unbookmark
         </Button>
       );
     }
@@ -152,25 +153,31 @@ class MetricDetailPage extends React.Component<MetricDetailPageProps, {}> {
       return <p>No metric.</p>;
     }
     return (
-      <article className={detailPageItem}>
-        <header className={detailPageHeader}>
-          <h2 className={detailPageTitle}>{data.name}</h2>
-        </header>
-        <div className={detailPageDescription}>{description()}</div>
-        <div className={detailPageActions}>
-          <HorizontalGroup spacing="lg">
-            {renderBookmarkBtn()}
-            {renderPreviewBtn()}
-          </HorizontalGroup>
-        </div>
+      <VerticalGroup spacing="lg">
+        <Card background="strong">
+          <article className={detailPageItem}>
+            <header className={detailPageHeader}>
+              <h2 className={detailPageTitle}>{data.name}</h2>
+            </header>
+            <div className={detailPageDescription}>{description()}</div>
+            <div className={detailPageActions}>
+              <HorizontalGroup spacing="lg" justify="space-between">
+                {renderPreviewBtn()}
+                {renderBookmarkBtn()}
+              </HorizontalGroup>
+            </div>
+          </article>
+        </Card>
         <div className={detailPageProperties}>
           <VerticalGroup spacing="lg">
             {data.series.map(series => (
-              <Series series={series} />
+              <Card background="weak">
+                <Series series={series} />
+              </Card>
             ))}
           </VerticalGroup>
         </div>
-      </article>
+      </VerticalGroup>
     );
   }
 

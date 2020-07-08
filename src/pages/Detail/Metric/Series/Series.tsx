@@ -67,7 +67,7 @@ class Series extends React.Component<SeriesProps, SeriesState> {
     const { state, renderTab, setSelected, props } = this;
     return (
       <VerticalGroup spacing="md">
-        <h3>Series: {props.series.series}</h3>
+        <h3 title="Series">{props.series.series}</h3>
         <div className={radioBtnGroupContainer}>
           <RadioButtonGroup
             options={state.options}

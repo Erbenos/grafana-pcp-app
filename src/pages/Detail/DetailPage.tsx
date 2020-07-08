@@ -102,12 +102,12 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
     switch (props.entity.type) {
       case EntityType.Metric:
         return <MetricDetailPage onBookmark={onBookmark} onUnbookmark={onUnbookmark} onPreview={onPreview} />;
-      // case EntityType.Instance:
-      //   return <InstanceDetailPage onBookmark={onBookmark} onPreview={onPreview} />;
+      case EntityType.Instance:
       case EntityType.InstanceDomain:
         return <InstanceDomainDetailPage onBookmark={onBookmark} onUnbookmark={onUnbookmark} onPreview={onPreview} />;
+      default:
+        return <p>Error rendering entity.</p>;
     }
-    return <p>Error rendering entity.</p>;
   }
 
   render() {

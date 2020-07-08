@@ -6,10 +6,10 @@ import DetailPage from 'pages/Detail/DetailPage';
 import SearchPage from 'pages/Search/SearchPage';
 import IndexPage from 'pages/Index/IndexPage';
 import { appLayout } from 'styles';
-import SearchForm from 'components/SearchForm/SearchForm';
-import Actions from 'components/Actions/Actions';
-import Aside from 'components/Aside/Aside';
+import Aside from 'partials/Aside/Aside';
 import { connect } from 'react-redux';
+import SearchForm from 'partials/SearchForm/SearchForm';
+import Actions from 'partials/Actions/Actions';
 
 const mapStateToProps = (state: RootState) => ({
   view: state.search.view,

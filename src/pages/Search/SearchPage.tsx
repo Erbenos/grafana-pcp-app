@@ -6,10 +6,11 @@ import { ThunkDispatch } from 'redux-thunk';
 import { RootState } from 'store/reducer';
 import { FetchStatus } from 'store/slices/search/shared/state';
 import { paginationContainer, searchPageElapsed, searchPageMatchesDesc } from './styles';
-import { SearchResult } from 'components/SearchResult/SearchResult';
 import { querySearch, openDetail } from 'store/slices/search/shared/actionCreators';
 import Loader from 'components/Loader/Loader';
 import { TextItemResponse } from 'models/endpoints/search';
+import SearchResult from 'components/SearchResult/SearchResult';
+import { stripHtml } from 'utils/utils';
 
 const mapStateToProps = (state: RootState) => ({
   search: state.search,
@@ -53,7 +54,7 @@ class SearchPage extends React.Component<SearchPageProps, {}> {
 
   onDetailClick(entity: TextItemResponse) {
     if (entity.name !== undefined && entity.type !== undefined) {
-      this.props.openDetail(entity.name, entity.type);
+      this.props.openDetail(stripHtml(entity.name), entity.type);
     }
   }
 
@@ -118,9 +119,11 @@ class SearchPage extends React.Component<SearchPageProps, {}> {
                   <SearchResult item={x} openDetail={entity => onDetailClick(entity)} />
                 ))}
               </VerticalGroup>
-              <div className={paginationContainer}>
-                <Pagination numberOfPages={pagesCount} currentPage={currentPage} onNavigate={onPaginationClick} />
-              </div>
+              {pagesCount > 1 && (
+                <div className={paginationContainer}>
+                  <Pagination numberOfPages={pagesCount} currentPage={currentPage} onNavigate={onPaginationClick} />
+                </div>
+              )}
             </VerticalGroup>
           );
         }

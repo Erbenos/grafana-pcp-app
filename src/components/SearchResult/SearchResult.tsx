@@ -1,5 +1,5 @@
 import React from 'react';
-import { HorizontalGroup, Button } from '@grafana/ui';
+import { HorizontalGroup, Button, withTheme, Themeable } from '@grafana/ui';
 
 import {
   searchResultDescription,
@@ -8,13 +8,16 @@ import {
   searchResultItem,
   searchResultHeader,
   searchResultTitle,
+  searchResultTitleLink,
+  searchResultEntityType,
 } from './styles';
 import { TextItemResponse } from 'models/endpoints/search';
+import Card from 'components/Card/Card';
 
-interface SearchResultProps {
+type SearchResultProps = Themeable & {
   item: TextItemResponse;
   openDetail: (entity: TextItemResponse) => void;
-}
+};
 
 class SearchResult extends React.PureComponent<SearchResultProps, {}> {
   constructor(props: SearchResultProps) {
@@ -46,6 +49,9 @@ class SearchResult extends React.PureComponent<SearchResultProps, {}> {
     return (
       <footer className={searchResultFooter}>
         <HorizontalGroup spacing="lg" justify="space-between">
+          <Button variant="link" size="md" icon="tag-alt" className={searchResultEntityType(props.theme)}>
+            {props.item.type}
+          </Button>
           <Button
             variant="link"
             size="md"
@@ -62,21 +68,32 @@ class SearchResult extends React.PureComponent<SearchResultProps, {}> {
 
   renderName() {
     const { item } = this.props;
-    return item.name;
+    return <span dangerouslySetInnerHTML={{ __html: item.name }}></span>;
   }
 
   render() {
-    const { renderDesc, renderFooter, renderName } = this;
+    const { renderDesc, renderFooter, renderName, props } = this;
     return (
-      <article className={searchResultItem}>
-        <header className={searchResultHeader}>
-          <h4 className={searchResultTitle}>{renderName()}</h4>
-        </header>
-        {renderDesc()}
-        {renderFooter()}
-      </article>
+      <Card background="strong">
+        <article className={searchResultItem}>
+          <header className={searchResultHeader}>
+            <h4 className={searchResultTitle}>
+              <Button
+                variant="link"
+                size="md"
+                className={searchResultTitleLink(props.theme)}
+                onClick={() => this.props.openDetail(props.item)}
+              >
+                {renderName()}
+              </Button>
+            </h4>
+          </header>
+          {renderDesc()}
+          {renderFooter()}
+        </article>
+      </Card>
     );
   }
 }
 
-export { SearchResult };
+export default withTheme(SearchResult);
