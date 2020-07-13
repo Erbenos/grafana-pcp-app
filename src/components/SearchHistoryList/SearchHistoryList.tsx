@@ -9,14 +9,19 @@ import {
 import { cx } from 'emotion';
 
 interface SearchHistoryListProps {
-  showClearBtn: boolean;
-  multiCol: boolean;
+  showClearBtn?: boolean;
+  multiCol?: boolean;
   searchHistory: SearchQuery[];
   onSearchHistoryClick: (query: SearchQuery) => void;
   onClearSearchHistoryClick: () => void;
 }
 
 class SearchHistoryList extends React.Component<SearchHistoryListProps, {}> {
+  static defaultProps: Required<Pick<SearchHistoryListProps, 'showClearBtn' | 'multiCol'>> = {
+    showClearBtn: true,
+    multiCol: true,
+  };
+
   constructor(props: SearchHistoryListProps) {
     super(props);
     this.onClearSearchHistoryClick = this.onClearSearchHistoryClick.bind(this);
@@ -49,6 +54,7 @@ class SearchHistoryList extends React.Component<SearchHistoryListProps, {}> {
                 ? cx(searchHistoryListContainer, searchHistoryListContainerMultiCol)
                 : searchHistoryListContainer
             }
+            data-test={props.multiCol ? 'multicol' : 'singlecol'}
           >
             {searchHistory.map((item, index) => (
               <Button
@@ -58,13 +64,20 @@ class SearchHistoryList extends React.Component<SearchHistoryListProps, {}> {
                 icon="search"
                 className={searchHistoryListBtnWithNoSpacing}
                 onClick={() => onSearchHistoryClick(item)}
+                data-test="search-history-go"
               >
                 {item.pattern}
               </Button>
             ))}
           </div>
           {props.showClearBtn && (
-            <Button variant="destructive" size="md" icon="trash-alt" onClick={onClearSearchHistoryClick}>
+            <Button
+              variant="destructive"
+              size="md"
+              icon="trash-alt"
+              onClick={onClearSearchHistoryClick}
+              data-test="search-history-reset"
+            >
               Clear History
             </Button>
           )}

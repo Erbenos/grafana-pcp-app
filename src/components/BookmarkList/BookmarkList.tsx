@@ -6,14 +6,19 @@ import { bookmarkListBtnWithNoSpacing, bookmarkListContainer, bookmarkListContai
 import { cx } from 'emotion';
 
 type BookmarkListProps = Themeable & {
-  showClearBtn: boolean;
-  multiCol: boolean;
+  showClearBtn?: boolean;
+  multiCol?: boolean;
   bookmarks: BookmarkItem[];
   onBookmarkClick: (item: string, type: EntityType) => void;
   onClearBookmarksClick: () => void;
 };
 
 class BookmarkList extends React.Component<BookmarkListProps, {}> {
+  static defaultProps: Required<Pick<BookmarkListProps, 'showClearBtn' | 'multiCol'>> = {
+    multiCol: true,
+    showClearBtn: true,
+  };
+
   constructor(props: BookmarkListProps) {
     super(props);
     this.onClearBookmarksClick = this.onClearBookmarksClick.bind(this);
@@ -44,6 +49,7 @@ class BookmarkList extends React.Component<BookmarkListProps, {}> {
             className={
               props.multiCol ? cx(bookmarkListContainer, bookmarkListContainerMultiCol) : bookmarkListContainer
             }
+            data-test={props.multiCol ? 'multicol' : 'singlecol'}
           >
             {bookmarks.map((item, index) => (
               <Button
@@ -53,13 +59,20 @@ class BookmarkList extends React.Component<BookmarkListProps, {}> {
                 icon="star"
                 className={bookmarkListBtnWithNoSpacing}
                 onClick={() => onBookmarkClick(item)}
+                data-test="bookmark-go"
               >
                 {item.id}
               </Button>
             ))}
           </div>
           {props.showClearBtn && (
-            <Button variant="destructive" size="md" icon="trash-alt" onClick={onClearBookmarksClick}>
+            <Button
+              variant="destructive"
+              size="md"
+              icon="trash-alt"
+              onClick={onClearBookmarksClick}
+              data-test="bookmark-reset"
+            >
               Clear Bookmarks
             </Button>
           )}

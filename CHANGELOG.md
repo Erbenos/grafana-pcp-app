@@ -99,3 +99,7 @@ Now showing metrics with same prefix in pmns namespace (excluding final node ind
 ### 08.07.2020
 
 Various UI improvements. Now fetching help text in Metric details via /search/text.
+
+### 13.07.2020
+
+Made a bunch of unit tests for components that are used across entire app. Partials next. Also setup Webpack so that it removes all `data-test` object properties - these are used as tag attributes by which I select various elements in components when running tests on them. As all object properties with such name removed, would a external library use any, bad luck.

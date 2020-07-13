@@ -38,7 +38,7 @@ class SearchResult extends React.PureComponent<SearchResultProps, {}> {
       description = 'No description.';
     }
     return (
-      <div className={searchResultDescription}>
+      <div className={searchResultDescription} data-test="description">
         <p dangerouslySetInnerHTML={{ __html: description }}></p>
       </div>
     );
@@ -58,6 +58,7 @@ class SearchResult extends React.PureComponent<SearchResultProps, {}> {
             icon="arrow-right"
             className={searchResultBtnWithNoSpacing}
             onClick={() => props.openDetail(props.item)}
+            data-test="read-more"
           >
             Read More
           </Button>
@@ -68,7 +69,7 @@ class SearchResult extends React.PureComponent<SearchResultProps, {}> {
 
   renderName() {
     const { item } = this.props;
-    return <span dangerouslySetInnerHTML={{ __html: item.name }}></span>;
+    return <span data-test="name" dangerouslySetInnerHTML={{ __html: item.name }}></span>;
   }
 
   render() {
