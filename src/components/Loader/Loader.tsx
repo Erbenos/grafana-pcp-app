@@ -25,10 +25,11 @@ class Loader extends React.Component<LoaderProps, {}> {
                 background-color: ${theme.colors.bg1}8f;
               `
             )}
+            data-test="spinner-container"
           >
             <Spinner size={40} />
           </div>
-          {this.props.children}
+          <div data-test="content-container">{this.props.children}</div>
         </div>
       </div>
     );

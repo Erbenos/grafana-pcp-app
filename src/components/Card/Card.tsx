@@ -3,11 +3,16 @@ import { withTheme, Themeable } from '@grafana/ui';
 import { cardContainer } from './styles';
 
 type CardProps = Themeable & {
-  background: 'weak' | 'strong';
+  background?: 'weak' | 'strong';
 };
 
 const Card: React.FC<CardProps> = props => {
-  return <div className={cardContainer(props.theme, props.background)}>{props.children}</div>;
+  const background = props.background ?? 'strong';
+  return (
+    <div className={cardContainer(props.theme, background)} data-test={background}>
+      {props.children}
+    </div>
+  );
 };
 
 export default withTheme(Card);
