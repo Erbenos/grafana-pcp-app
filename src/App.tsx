@@ -15,9 +15,11 @@ const mapStateToProps = (state: RootState) => ({
   view: state.search.view,
 });
 
-type AppProps = ReturnType<typeof mapStateToProps> & AppRootProps;
+export type AppReduxStateProps = ReturnType<typeof mapStateToProps>;
 
-class App extends React.Component<AppProps, {}> {
+export type AppProps = AppReduxStateProps & AppRootProps;
+
+export class App extends React.Component<AppProps, {}> {
   constructor(props: AppProps) {
     super(props);
   }

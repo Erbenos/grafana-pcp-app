@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import { EntityState, initialState } from './state';
+import { EntityState, initialEntity } from './state';
 import { EntityAction } from './actions';
 import {
   LOAD_METRIC_INIT,
@@ -20,7 +20,7 @@ import { EntityType } from 'models/endpoints/search';
 
 const entityReducer: Reducer<EntityState, EntityAction> = (state, action) => {
   if (state === undefined) {
-    return initialState;
+    return initialEntity();
   }
   switch (action.type) {
     case LOAD_METRIC_INIT:

@@ -19,9 +19,15 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, null, AnyAction>) =>
   bindActionCreators({ querySearch, openDetail }, dispatch);
 
-type SearchPageProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps> & Themeable;
+export type SearchPageReduxStateProps = ReturnType<typeof mapStateToProps>;
 
-class SearchPage extends React.Component<SearchPageProps, {}> {
+export type SearchPageReduxDispatchProps = ReturnType<typeof mapDispatchToProps>;
+
+export type SearchPageReduxProps = SearchPageReduxStateProps & SearchPageReduxDispatchProps;
+
+export type SearchPageProps = SearchPageReduxProps & Themeable;
+
+export class SearchPage extends React.Component<SearchPageProps, {}> {
   constructor(props: SearchPageProps) {
     super(props);
     this.onPaginationClick = this.onPaginationClick.bind(this);
@@ -148,4 +154,3 @@ class SearchPage extends React.Component<SearchPageProps, {}> {
 }
 
 export default withTheme(connect(mapStateToProps, mapDispatchToProps)(SearchPage));
-export { SearchPageProps };

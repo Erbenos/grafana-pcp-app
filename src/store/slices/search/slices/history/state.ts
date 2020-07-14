@@ -2,4 +2,4 @@ import { SearchQuery } from '../../shared/state';
 
 export type HistoryState = SearchQuery[];
 
-export const initialState: HistoryState = [];
+export const initialHistory = (): HistoryState => [];

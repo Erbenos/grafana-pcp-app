@@ -24,9 +24,13 @@ const mapStateToProps = (state: RootState) => ({
   bookmarks: state.search.bookmarks,
 });
 
-type MetricDetailPageProps = ReturnType<typeof mapStateToProps> & DetailEntityPageProps;
+export type MetricDetailPageReduxStateProps = ReturnType<typeof mapStateToProps>;
 
-class MetricDetailPage extends React.Component<MetricDetailPageProps, {}> {
+export type MetricDetailPageReduxProps = MetricDetailPageReduxStateProps;
+
+export type MetricDetailPageProps = MetricDetailPageReduxProps & DetailEntityPageProps;
+
+export class MetricDetailPage extends React.Component<MetricDetailPageProps, {}> {
   constructor(props: MetricDetailPageProps) {
     super(props);
     this.renderDetail = this.renderDetail.bind(this);
@@ -189,4 +193,3 @@ class MetricDetailPage extends React.Component<MetricDetailPageProps, {}> {
 }
 
 export default connect(mapStateToProps, {})(MetricDetailPage);
-export { MetricDetailPageProps };

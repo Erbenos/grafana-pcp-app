@@ -1,7 +1,8 @@
 import { css } from 'emotion';
 
 const spinnerOuter = css`
-  height: 100%;
+  height: 200px;
+  max-height: 100%;
 `;
 
 const spinnerContainer = css`

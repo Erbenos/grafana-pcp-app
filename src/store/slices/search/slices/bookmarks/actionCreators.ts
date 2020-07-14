@@ -16,6 +16,8 @@ export const removeBookmark = (item: BookmarkItem): RemoveBookmarkAction => {
   };
 };
 
-export const clearBookmarks = (): ClearBookmarksAction => {
+export type ClearBookmarksActionCreator = () => ClearBookmarksAction;
+
+export const clearBookmarks: ClearBookmarksActionCreator = () => {
   return { type: CLEAR_BOOKMARKS };
 };

@@ -39,4 +39,4 @@ export interface InstanceDomainDetailState {
 
 export type EntityState = MetricDetailState | InstanceDetailState | InstanceDomainDetailState | null;
 
-export const initialState: EntityState = null;
+export const initialEntity = (): EntityState => null;

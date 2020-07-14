@@ -2,11 +2,11 @@ import React from 'react';
 import { gridList, gridTitle, gridValue, gridItem } from '../../styles';
 import { MetricEntityMeta } from 'models/entities/metric';
 
-interface MetaProps {
+export interface MetaProps {
   meta: MetricEntityMeta;
 }
 
-class Meta extends React.Component<MetaProps, {}> {
+export class Meta extends React.Component<MetaProps, {}> {
   render() {
     const { pmid, type, semantics, units, indom, source } = this.props.meta;
     return (
@@ -41,4 +41,3 @@ class Meta extends React.Component<MetaProps, {}> {
 }
 
 export default Meta;
-export { MetaProps };

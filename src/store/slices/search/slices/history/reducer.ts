@@ -1,12 +1,12 @@
 import { Reducer } from 'redux';
-import { HistoryState, initialState } from './state';
+import { HistoryState, initialHistory } from './state';
 import { HistoryAction } from './actions';
 import { ADD_HISTORY, CLEAR_HISTORY } from './types';
 import Config from 'config/config';
 
 const historyReducer: Reducer<HistoryState, HistoryAction> = (state, action) => {
   if (state === undefined) {
-    return initialState;
+    return initialHistory();
   }
   switch (action.type) {
     case ADD_HISTORY: {

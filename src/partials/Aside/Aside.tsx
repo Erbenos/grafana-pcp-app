@@ -1,7 +1,7 @@
 import React from 'react';
-import { VerticalGroup, Button } from '@grafana/ui';
+import { VerticalGroup, Button, Themeable, withTheme } from '@grafana/ui';
 
-import { asideContainer } from './styles';
+import { asideContainer, asideButton, asideButtonInactive } from './styles';
 import { connect } from 'react-redux';
 import { RootState } from 'store/reducer';
 import { ViewState } from 'store/slices/search/slices/view/state';
@@ -9,7 +9,6 @@ import { EntityType } from 'models/endpoints/search';
 import { FetchStatus } from 'store/slices/search/shared/state';
 import Loader from 'components/Loader/Loader';
 import { MetricDetailState } from 'store/slices/search/slices/entity/state';
-import { css } from 'emotion';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction, bindActionCreators } from 'redux';
 import { openDetail, querySearch } from 'store/slices/search/shared/actionCreators';
@@ -17,6 +16,7 @@ import BookmarkList from 'components/BookmarkList/BookmarkList';
 import { clearSearchHistory } from 'store/slices/search/slices/history/actionCreators';
 import { clearBookmarks } from 'store/slices/search/slices/bookmarks/actionCreators';
 import SearchHistoryList from 'components/SearchHistoryList/SearchHistoryList';
+import { cx } from 'emotion';
 
 const mapStateToProps = (state: RootState) => ({
   view: state.search.view,
@@ -28,9 +28,15 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, null, AnyAction>) =>
   bindActionCreators({ openDetail, querySearch, clearBookmarks, clearSearchHistory }, dispatch);
 
-type AsideProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
+export type AsideReduxStateProps = ReturnType<typeof mapStateToProps>;
 
-class Aside extends React.Component<AsideProps, {}> {
+export type AsideReduxDispatchProps = ReturnType<typeof mapDispatchToProps>;
+
+export type AsideReduxProps = AsideReduxStateProps & AsideReduxDispatchProps;
+
+export type AsideProps = AsideReduxProps & Themeable;
+
+export class Aside extends React.Component<AsideProps, {}> {
   constructor(props: AsideProps) {
     super(props);
     this.renderContents = this.renderContents.bind(this);
@@ -42,42 +48,62 @@ class Aside extends React.Component<AsideProps, {}> {
     this.props.openDetail(metricName, EntityType.Metric);
   }
 
-  renderMetricSiblings(metric: MetricDetailState) {
-    const { onMetricClick } = this;
-    const { siblings } = metric;
-    if (siblings?.status === FetchStatus.PENDING) {
-      return (
-        <Loader loaded={false}>
-          <p>Loading metric siblings &hellip;</p>
-        </Loader>
-      );
+  renderMetricSiblings(metricDetail: MetricDetailState) {
+    const { onMetricClick, props } = this;
+    const { siblings, metric } = metricDetail;
+    switch (siblings?.status) {
+      case FetchStatus.INIT:
+        return;
+      case FetchStatus.PENDING:
+        return (
+          <Loader loaded={false} data-test="loader">
+            <p>Loading metric siblings &hellip;</p>
+          </Loader>
+        );
+      case FetchStatus.SUCCESS: {
+        if (!siblings) {
+          return <p>Incorrect response from server.</p>;
+        }
+        if (siblings.data?.length === 0) {
+          return;
+        }
+        return (
+          <VerticalGroup spacing="md">
+            <h4>Similar Metrics</h4>
+            <VerticalGroup spacing="xs">
+              {siblings.data?.map((m, i) =>
+                m === metric.data?.name ? (
+                  <Button
+                    key={i}
+                    icon="info-circle"
+                    variant="link"
+                    className={cx(asideButton, asideButtonInactive(props.theme))}
+                    data-test="sibling-link"
+                  >
+                    {m}
+                  </Button>
+                ) : (
+                  <Button
+                    key={i}
+                    onClick={() => onMetricClick(m)}
+                    icon="arrow-right"
+                    variant="link"
+                    className={asideButton}
+                    data-test="sibling-link"
+                  >
+                    {m}
+                  </Button>
+                )
+              )}
+            </VerticalGroup>
+          </VerticalGroup>
+        );
+      }
+      case FetchStatus.ERROR:
+        return <p data-test="error-loading">Unable to fetch metric siblings.</p>;
+      default:
+        return;
     }
-    if (!siblings) {
-      return <p>Unable to fetch metric siblings.</p>;
-    }
-    if (siblings.data?.length === 0) {
-      return;
-    }
-    return (
-      <VerticalGroup spacing="md">
-        <h4>Similar Metrics</h4>
-        <VerticalGroup spacing="xs">
-          {siblings.data?.map(metric => (
-            <Button
-              onClick={() => onMetricClick(metric)}
-              icon="arrow-right"
-              variant="link"
-              className={css`
-                padding-left: 0;
-                padding-right: 0;
-              `}
-            >
-              {metric}
-            </Button>
-          ))}
-        </VerticalGroup>
-      </VerticalGroup>
-    );
   }
 
   renderContents() {
@@ -105,6 +131,7 @@ class Aside extends React.Component<AsideProps, {}> {
               bookmarks={props.bookmarks}
               onBookmarkClick={props.openDetail}
               onClearBookmarksClick={props.clearBookmarks}
+              data-test="bookmark-list"
             />
             <SearchHistoryList
               showClearBtn={false}
@@ -112,6 +139,7 @@ class Aside extends React.Component<AsideProps, {}> {
               searchHistory={props.searchHistory}
               onSearchHistoryClick={props.querySearch}
               onClearSearchHistoryClick={props.clearSearchHistory}
+              data-test="search-history-list"
             />
           </VerticalGroup>
         );
@@ -127,4 +155,4 @@ class Aside extends React.Component<AsideProps, {}> {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Aside);
+export default withTheme(connect(mapStateToProps, mapDispatchToProps)(Aside));

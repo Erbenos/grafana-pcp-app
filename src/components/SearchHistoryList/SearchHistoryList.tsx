@@ -8,7 +8,7 @@ import {
 } from './styles';
 import { cx } from 'emotion';
 
-interface SearchHistoryListProps {
+export interface SearchHistoryListProps {
   showClearBtn?: boolean;
   multiCol?: boolean;
   searchHistory: SearchQuery[];
@@ -16,7 +16,7 @@ interface SearchHistoryListProps {
   onClearSearchHistoryClick: () => void;
 }
 
-class SearchHistoryList extends React.Component<SearchHistoryListProps, {}> {
+export class SearchHistoryList extends React.Component<SearchHistoryListProps, {}> {
   static defaultProps: Required<Pick<SearchHistoryListProps, 'showClearBtn' | 'multiCol'>> = {
     showClearBtn: true,
     multiCol: true,
@@ -88,4 +88,3 @@ class SearchHistoryList extends React.Component<SearchHistoryListProps, {}> {
 }
 
 export default SearchHistoryList;
-export { SearchHistoryListProps };

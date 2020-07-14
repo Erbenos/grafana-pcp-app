@@ -4,4 +4,4 @@ export enum ViewState {
   Index,
 }
 
-export const initialState: ViewState = ViewState.Index;
+export const initialView = () => ViewState.Index;

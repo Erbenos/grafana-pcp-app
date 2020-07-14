@@ -1,11 +1,11 @@
 import { Reducer } from 'redux';
-import { ViewState, initialState } from './state';
+import { ViewState, initialView } from './state';
 import { ViewAction } from './actions';
 import { SET_VIEW } from './types';
 
 const viewReducer: Reducer<ViewState, ViewAction> = (state, action) => {
   if (state === undefined) {
-    return initialState;
+    return initialView();
   }
   switch (action.type) {
     case SET_VIEW:

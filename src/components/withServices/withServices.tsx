@@ -2,7 +2,7 @@ import ServicesContext from 'contexts/services';
 import { Services } from 'services/services';
 import React from 'react';
 
-interface WithServicesProps {
+export interface WithServicesProps {
   services: Services;
 }
 
@@ -19,4 +19,3 @@ const withServices = <P extends WithServicesProps>(Component: React.ComponentTyp
 };
 
 export default withServices;
-export { WithServicesProps };

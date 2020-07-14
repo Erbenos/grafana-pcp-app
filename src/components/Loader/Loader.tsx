@@ -3,9 +3,14 @@ import { cx, css } from 'emotion';
 import { spinnerContainer, spinner, spinnerOuter } from './styles';
 import { Spinner, Themeable, withTheme } from '@grafana/ui';
 
-type LoaderProps = Themeable & { loaded: boolean; boundedContainer?: boolean };
+export interface LoaderBasicProps {
+  loaded: boolean;
+  boundedContainer?: boolean;
+}
 
-class Loader extends React.Component<LoaderProps, {}> {
+export type LoaderProps = Themeable & LoaderBasicProps;
+
+export class Loader extends React.Component<LoaderProps, {}> {
   constructor(props: LoaderProps) {
     super(props);
   }
@@ -37,4 +42,3 @@ class Loader extends React.Component<LoaderProps, {}> {
 }
 
 export default withTheme(Loader);
-export { LoaderProps };

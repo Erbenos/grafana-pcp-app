@@ -8,4 +8,4 @@ export interface BookmarkItem {
 
 export type BookmarksState = BookmarkItem[];
 
-export const initialState: BookmarksState = [];
+export const initialBookmarks = (): BookmarksState => [];

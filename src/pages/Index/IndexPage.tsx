@@ -20,9 +20,15 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, null, AnyAction>) =>
   bindActionCreators({ querySearch, openDetail, clearBookmarks, clearSearchHistory }, dispatch);
 
-type IndexPageProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
+export type IndexPageReduxStateProps = ReturnType<typeof mapStateToProps>;
 
-class IndexPage extends React.Component<IndexPageProps, {}> {
+export type IndexPageReduxDispatchProps = ReturnType<typeof mapDispatchToProps>;
+
+export type IndexPageReduxProps = IndexPageReduxStateProps & IndexPageReduxDispatchProps;
+
+export type IndexPageProps = IndexPageReduxProps;
+
+export class IndexPage extends React.Component<IndexPageProps, {}> {
   constructor(props: IndexPageProps) {
     super(props);
   }
@@ -57,4 +63,3 @@ class IndexPage extends React.Component<IndexPageProps, {}> {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(IndexPage);
-export { IndexPageProps };

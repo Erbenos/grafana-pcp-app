@@ -54,7 +54,7 @@ export const loadMetricSiblings = (
     dispatch({
       type: LOAD_METRIC_SIBLINGS_SUCCESS,
       payload: {
-        data: data.filter(metric => metric !== metricName).sort(),
+        data: data.sort(),
       },
     });
   } catch (e) {

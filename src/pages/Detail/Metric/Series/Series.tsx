@@ -6,7 +6,7 @@ import { VerticalGroup, RadioButtonGroup } from '@grafana/ui';
 import { radioBtnGroupContainer } from 'pages/Detail/styles';
 import { MetricEntitySeries } from 'models/entities/metric';
 
-interface SeriesProps {
+export interface SeriesProps {
   series: MetricEntitySeries;
 }
 
@@ -20,7 +20,7 @@ enum SeriesTabOpt {
   Meta = 'meta',
 }
 
-class Series extends React.Component<SeriesProps, SeriesState> {
+export class Series extends React.Component<SeriesProps, SeriesState> {
   state: SeriesState = this.initialState;
 
   constructor(props: SeriesProps) {
@@ -85,4 +85,3 @@ class Series extends React.Component<SeriesProps, SeriesState> {
 }
 
 export default Series;
-export { SeriesProps };

@@ -14,12 +14,12 @@ import {
 import { TextItemResponse } from 'models/endpoints/search';
 import Card from 'components/Card/Card';
 
-type SearchResultProps = Themeable & {
+export type SearchResultProps = Themeable & {
   item: TextItemResponse;
   openDetail: (entity: TextItemResponse) => void;
 };
 
-class SearchResult extends React.PureComponent<SearchResultProps, {}> {
+export class SearchResult extends React.PureComponent<SearchResultProps, {}> {
   constructor(props: SearchResultProps) {
     super(props);
     this.renderName = this.renderName.bind(this);

@@ -39,16 +39,18 @@ import { autocompleteFetchEndpoint } from 'mocks/endpoints';
 
 const mapStateToProps = (state: RootState) => ({
   query: state.search.query,
-  bookmarks: state.search.bookmarks,
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, null, AnyAction>) =>
   bindActionCreators({ querySearch, clearSearch }, dispatch);
 
-type SearchFormProps = ReturnType<typeof mapStateToProps> &
-  ReturnType<typeof mapDispatchToProps> &
-  WithServicesProps &
-  Themeable;
+export type SearchFormReduxStateProps = ReturnType<typeof mapStateToProps>;
+
+export type SearchFormReduxDispatchProps = ReturnType<typeof mapDispatchToProps>;
+
+export type SearchFormReduxProps = SearchFormReduxStateProps & SearchFormReduxDispatchProps;
+
+export type SearchFormProps = SearchFormReduxProps & WithServicesProps & Themeable;
 
 interface SearchFormState {
   query: {
@@ -58,7 +60,7 @@ interface SearchFormState {
   suggestions: AutocompleteSuggestion[];
 }
 
-class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
+export class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
   state: SearchFormState = this.initialState;
   autosuggestTheme: Theme;
 
@@ -115,10 +117,6 @@ class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
     this.renderSuggestion = this.renderSuggestion.bind(this);
     this.renderSearchInput = this.renderSearchInput.bind(this);
     this.setEntityFlag = this.setEntityFlag.bind(this);
-  }
-
-  componentWillReceiveProps(props: SearchFormProps) {
-    this.setState({ query: props.query });
   }
 
   setEntityFlag(entity: SearchEntity) {
@@ -234,16 +232,23 @@ class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
           </div>
           <div className={searchFormGroup}>
             <HorizontalGroup spacing="lg">
-              <Checkbox value={metricFlag} onChange={() => setEntityFlag(SearchEntity.Metrics)} label="Metrics" />
+              <Checkbox
+                value={metricFlag}
+                onChange={() => setEntityFlag(SearchEntity.Metrics)}
+                label="Metrics"
+                data-test="metrics-toggle"
+              />
               <Checkbox
                 value={instancesFlag}
                 onChange={() => setEntityFlag(SearchEntity.Instances)}
                 label="Instances"
+                data-test="instances-toggle"
               />
               <Checkbox
                 value={instanceDomainsFlag}
                 onChange={() => setEntityFlag(SearchEntity.InstanceDomains)}
                 label="Instance Domains"
+                data-test="indoms-toggle"
               />
             </HorizontalGroup>
           </div>
@@ -254,4 +259,3 @@ class SearchForm extends React.Component<SearchFormProps, SearchFormState> {
 }
 
 export default withTheme(withServices(connect(mapStateToProps, mapDispatchToProps)(SearchForm)));
-export { SearchFormProps };

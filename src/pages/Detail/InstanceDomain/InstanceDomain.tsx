@@ -24,9 +24,13 @@ const mapStateToProps = (state: RootState) => ({
   bookmarks: state.search.bookmarks,
 });
 
-type InstanceDomainDetailPageProps = ReturnType<typeof mapStateToProps> & DetailEntityPageProps & Themeable;
+export type InstanceDomainDetailPageReduxStateProps = ReturnType<typeof mapStateToProps>;
 
-class InstanceDomainDetailPage extends React.Component<InstanceDomainDetailPageProps, {}> {
+export type InstanceDomainDetailPageReduxProps = InstanceDomainDetailPageReduxStateProps;
+
+export type InstanceDomainDetailPageProps = InstanceDomainDetailPageReduxProps & DetailEntityPageProps & Themeable;
+
+export class InstanceDomainDetailPage extends React.Component<InstanceDomainDetailPageProps, {}> {
   constructor(props: InstanceDomainDetailPageProps) {
     super(props);
     this.renderDetail = this.renderDetail.bind(this);

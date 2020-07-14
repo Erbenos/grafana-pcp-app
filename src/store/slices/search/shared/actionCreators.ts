@@ -19,9 +19,11 @@ import Config from 'config/config';
 
 type QuerySearchAction = LoadResultAction | SetViewAction | HistoryAction | SetQueryAction;
 
-export const querySearch = (
+export type QuerySearchActionCreator = (
   query: SearchQuery
-): ThunkAction<Promise<void>, RootState, Services, QuerySearchAction> => async (
+) => ThunkAction<Promise<void>, RootState, Services, QuerySearchAction>;
+
+export const querySearch: QuerySearchActionCreator = query => async (
   dispatch: ThunkDispatch<{}, {}, QuerySearchAction>,
   getState,
   { searchService }
@@ -82,7 +84,9 @@ export const querySearch = (
 
 type ClearSearchAction = SetQueryAction | ViewAction;
 
-export const clearSearch = (): ThunkAction<void, RootState, {}, ClearSearchAction> => (
+export type ClearSearchActionCreator = () => ThunkAction<void, RootState, {}, ClearSearchAction>;
+
+export const clearSearch: ClearSearchActionCreator = () => (
   dispatch: ThunkDispatch<{}, {}, ClearSearchAction>,
   getState
 ) => {
@@ -102,10 +106,12 @@ export const clearSearch = (): ThunkAction<void, RootState, {}, ClearSearchActio
 
 type OpenDetailAction = EntityAction | ViewAction;
 
-export const openDetail = (
+export type OpenDetailActionCreator = (
   id: string,
   type: EntityType
-): ThunkAction<Promise<void>, {}, Services, OpenDetailAction> => async (
+) => ThunkAction<Promise<void>, {}, Services, OpenDetailAction>;
+
+export const openDetail: OpenDetailActionCreator = (id, type) => async (
   dispatch: ThunkDispatch<{}, Services, OpenDetailAction>,
   {}
 ): Promise<void> => {

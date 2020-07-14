@@ -5,15 +5,17 @@ import { EntityType } from 'models/endpoints/search';
 import { bookmarkListBtnWithNoSpacing, bookmarkListContainer, bookmarkListContainerMultiCol } from './styles';
 import { cx } from 'emotion';
 
-type BookmarkListProps = Themeable & {
+export interface BookmarkListBasicProps {
   showClearBtn?: boolean;
   multiCol?: boolean;
   bookmarks: BookmarkItem[];
   onBookmarkClick: (item: string, type: EntityType) => void;
   onClearBookmarksClick: () => void;
-};
+}
 
-class BookmarkList extends React.Component<BookmarkListProps, {}> {
+export type BookmarkListProps = Themeable & BookmarkListBasicProps;
+
+export class BookmarkList extends React.Component<BookmarkListProps, {}> {
   static defaultProps: Required<Pick<BookmarkListProps, 'showClearBtn' | 'multiCol'>> = {
     multiCol: true,
     showClearBtn: true,
@@ -83,4 +85,3 @@ class BookmarkList extends React.Component<BookmarkListProps, {}> {
 }
 
 export default withTheme(BookmarkList);
-export { BookmarkListProps };

@@ -103,3 +103,7 @@ Various UI improvements. Now fetching help text in Metric details via /search/te
 ### 13.07.2020
 
 Made a bunch of unit tests for components that are used across entire app. Partials next. Also setup Webpack so that it removes all `data-test` object properties - these are used as tag attributes by which I select various elements in components when running tests on them. As all object properties with such name removed, would a external library use any, bad luck.
+
+### 14.07.2020
+
+Made tests for most partials - not sure if SearchForm component should be tested at this point. Edited a lot of exports from all components so they are easier to test - having most props related interfaces proved handy. I made small tweak to displaying 'Similar metrics' - now even the metric that is currently opened will be shown. Tweaked passing Grafana theme in test files - I am just fetching the theme from Grafana itself, this saves me multiple Enzyme .dive() calls, no test is actually testing if components are themed according to current Grafana theme right now - there are other priorities.

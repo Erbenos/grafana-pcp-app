@@ -10,15 +10,22 @@ import { querySearch } from 'store/slices/search/shared/actionCreators';
 import { setView } from 'store/slices/search/slices/view/actionCreators';
 
 const mapStateToProps = (state: RootState) => ({
-  search: state.search,
+  query: state.search.query,
+  view: state.search.view,
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, null, AnyAction>) =>
   bindActionCreators({ querySearch, setView }, dispatch);
 
-type ActionsProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
+export type ActionsReduxStateProps = ReturnType<typeof mapStateToProps>;
 
-class Actions extends React.Component<ActionsProps, {}> {
+export type ActionsReduxDispatchProps = ReturnType<typeof mapDispatchToProps>;
+
+export type ActionsReduxProps = ActionsReduxStateProps & ActionsReduxDispatchProps;
+
+export type ActionsProps = ActionsReduxProps;
+
+export class Actions extends React.Component<ActionsProps, {}> {
   constructor(props: ActionsProps) {
     super(props);
     this.queryLatestSearch = this.queryLatestSearch.bind(this);
@@ -26,12 +33,12 @@ class Actions extends React.Component<ActionsProps, {}> {
   }
 
   get showBackToPatternBtn() {
-    const { search } = this.props;
-    return search.query.pattern && search.view === ViewState.Detail;
+    const { query, view } = this.props;
+    return query.pattern && view === ViewState.Detail;
   }
 
   get showBackToIndexPageBtn() {
-    return this.props.search.view !== ViewState.Index;
+    return this.props.view !== ViewState.Index;
   }
 
   openIndex() {
@@ -39,17 +46,24 @@ class Actions extends React.Component<ActionsProps, {}> {
   }
 
   queryLatestSearch() {
-    const searchQuery = this.props.search.query;
-    this.props.querySearch(searchQuery);
+    const { query } = this.props;
+    this.props.querySearch(query);
   }
 
   render() {
     const { openIndex, queryLatestSearch, showBackToPatternBtn, showBackToIndexPageBtn, props } = this;
-    const { search } = props;
+    const { query } = props;
     return (
       <VerticalGroup spacing="xs">
         {showBackToIndexPageBtn && (
-          <Button variant="link" size="md" icon="book" className={actionsBtnWithNoSpacing} onClick={openIndex}>
+          <Button
+            variant="link"
+            size="md"
+            icon="book"
+            className={actionsBtnWithNoSpacing}
+            onClick={openIndex}
+            data-test="back-to-index"
+          >
             Back To Latest Searches &amp; Suggestions
           </Button>
         )}
@@ -60,8 +74,9 @@ class Actions extends React.Component<ActionsProps, {}> {
             icon="arrow-left"
             className={actionsBtnWithNoSpacing}
             onClick={queryLatestSearch}
+            data-test="back-to-results"
           >
-            Back To Results for: <em>{search.query.pattern}</em>
+            Back To Results for: <em>{query.pattern}</em>
           </Button>
         )}
       </VerticalGroup>
@@ -70,4 +85,3 @@ class Actions extends React.Component<ActionsProps, {}> {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Actions);
-export { ActionsProps };

@@ -15,6 +15,11 @@ const mapStateToProps = (state: RootState) => ({
   entity: state.search.entity,
 });
 
+const dispatchProps = {
+  addBookmark,
+  removeBookmark,
+};
+
 export enum DetailPreviewType {
   Graph,
   Table,
@@ -25,18 +30,19 @@ export interface DetailPreview {
   type: DetailPreviewType;
 }
 
-interface DetailEntityPageProps {
+export interface DetailEntityPageProps {
   onBookmark: (item: BookmarkItem) => void;
   onUnbookmark: (item: BookmarkItem) => void;
   onPreview: (item: DetailPreview) => void;
 }
 
-const dispatchProps = {
-  addBookmark,
-  removeBookmark,
-};
+export type DetailPageReduxStateProps = ReturnType<typeof mapStateToProps>;
 
-type DetailPageProps = ReturnType<typeof mapStateToProps> & typeof dispatchProps;
+export type DetailPageReduxDispatchProps = typeof dispatchProps;
+
+export type DetailPageReduxProps = DetailPageReduxStateProps & DetailPageReduxDispatchProps;
+
+export type DetailPageProps = DetailPageReduxProps;
 
 enum EntityTabOpt {
   InstanceDomains = 'instance-domains',
@@ -49,7 +55,7 @@ interface DetailPageState {
   options: Array<SelectableValue<EntityTabOpt>>;
 }
 
-class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
+export class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
   locationSrv: LocationSrv;
 
   constructor(props: DetailPageProps) {
@@ -117,5 +123,3 @@ class DetailPage extends React.Component<DetailPageProps, DetailPageState> {
 }
 
 export default connect(mapStateToProps, dispatchProps)(DetailPage);
-
-export { DetailPageProps, DetailEntityPageProps };
