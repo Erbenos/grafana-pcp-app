@@ -9,26 +9,42 @@ import {
   detailPageActions,
   detailPageProperties,
 } from '../styles';
-import { DetailEntityPageProps, DetailPreviewType } from '../DetailPage';
 import { RootState } from 'store/reducer';
 import { connect } from 'react-redux';
-import { MetricDetailState } from 'store/slices/search/slices/entity/state';
+import { MetricDataState } from 'store/slices/search/slices/entity/state';
 import Loader from 'components/Loader/Loader';
 import { FetchStatus } from 'store/slices/search/shared/state';
 import Series from './Series/Series';
 import { EntityType } from 'models/endpoints/search';
 import Card from 'components/Card/Card';
+import { BookmarkItem } from 'store/slices/search/slices/bookmarks/state';
 
 const mapStateToProps = (state: RootState) => ({
-  metric: (state.search.entity as MetricDetailState).metric,
   bookmarks: state.search.bookmarks,
 });
+
+export interface MetricDetailPageBasicProps {
+  metric: MetricDataState;
+  onBookmark: (item: BookmarkItem) => void;
+  onUnbookmark: (item: BookmarkItem) => void;
+  onPreview: (item: MetricDetailPreview) => void;
+}
+
+export enum MetricPreviewType {
+  Graph,
+  Table,
+}
+
+export interface MetricDetailPreview {
+  id: string;
+  type: MetricPreviewType;
+}
 
 export type MetricDetailPageReduxStateProps = ReturnType<typeof mapStateToProps>;
 
 export type MetricDetailPageReduxProps = MetricDetailPageReduxStateProps;
 
-export type MetricDetailPageProps = MetricDetailPageReduxProps & DetailEntityPageProps;
+export type MetricDetailPageProps = MetricDetailPageReduxProps & MetricDetailPageBasicProps;
 
 export class MetricDetailPage extends React.Component<MetricDetailPageProps, {}> {
   constructor(props: MetricDetailPageProps) {
@@ -71,14 +87,14 @@ export class MetricDetailPage extends React.Component<MetricDetailPageProps, {}>
     if (!data || data.series.length === 0) {
       return;
     }
-    // lets just assume that all series have same type of value
+    // assume that all series have same type of value
     const { meta } = data.series[0];
     switch (meta.type) {
       case 'string':
-        this.props.onPreview({ id: data.name, type: DetailPreviewType.Table });
+        this.props.onPreview({ id: data.name, type: MetricPreviewType.Table });
         return;
       default:
-        this.props.onPreview({ id: data.name, type: DetailPreviewType.Graph });
+        this.props.onPreview({ id: data.name, type: MetricPreviewType.Graph });
         return;
     }
   }
@@ -109,7 +125,7 @@ export class MetricDetailPage extends React.Component<MetricDetailPageProps, {}>
     const { metric } = this.props;
     const { data } = metric;
     if (!data) {
-      return <p>Unable to render description.</p>;
+      return 'Unable to render description.';
     }
     let description = data.oneline ?? 'No help available.';
     if (data.help) {
@@ -122,13 +138,20 @@ export class MetricDetailPage extends React.Component<MetricDetailPageProps, {}>
     const { isBookmarked, onBookmark, onUnbookmark } = this;
     if (!isBookmarked) {
       return (
-        <Button variant="link" size="md" icon="star" className={detailPageBtn} onClick={onBookmark}>
+        <Button
+          variant="link"
+          size="md"
+          icon="star"
+          className={detailPageBtn}
+          onClick={onBookmark}
+          data-test="bookmark-button"
+        >
           Bookmark
         </Button>
       );
     } else {
       return (
-        <Button variant="destructive" size="md" icon="trash-alt" onClick={onUnbookmark}>
+        <Button variant="destructive" size="md" icon="trash-alt" onClick={onUnbookmark} data-test="unbookmark-button">
           Unbookmark
         </Button>
       );
@@ -143,7 +166,14 @@ export class MetricDetailPage extends React.Component<MetricDetailPageProps, {}>
       return;
     }
     return (
-      <Button variant="link" size="md" icon="chart-line" className={detailPageBtn} onClick={onPreview}>
+      <Button
+        variant="link"
+        size="md"
+        icon="chart-line"
+        className={detailPageBtn}
+        onClick={onPreview}
+        data-test="preview-button"
+      >
         Preview
       </Button>
     );
@@ -161,9 +191,13 @@ export class MetricDetailPage extends React.Component<MetricDetailPageProps, {}>
         <Card background="strong">
           <article className={detailPageItem}>
             <header className={detailPageHeader}>
-              <h2 className={detailPageTitle}>{data.name}</h2>
+              <h2 className={detailPageTitle} data-test="name">
+                {data.name}
+              </h2>
             </header>
-            <div className={detailPageDescription}>{description()}</div>
+            <div className={detailPageDescription} data-test="description">
+              {description()}
+            </div>
             <div className={detailPageActions}>
               <HorizontalGroup spacing="lg" justify="space-between">
                 {renderPreviewBtn()}
@@ -174,9 +208,9 @@ export class MetricDetailPage extends React.Component<MetricDetailPageProps, {}>
         </Card>
         <div className={detailPageProperties}>
           <VerticalGroup spacing="lg">
-            {data.series.map(series => (
-              <Card background="weak">
-                <Series series={series} />
+            {data.series.map((series, i) => (
+              <Card background="weak" key={i}>
+                <Series series={series} data-test="series" />
               </Card>
             ))}
           </VerticalGroup>
@@ -188,7 +222,11 @@ export class MetricDetailPage extends React.Component<MetricDetailPageProps, {}>
   render() {
     const { renderDetail, props } = this;
     const { metric } = props;
-    return <Loader loaded={metric.status !== FetchStatus.PENDING}>{renderDetail()}</Loader>;
+    return (
+      <Loader loaded={metric.status !== FetchStatus.PENDING} data-test="loader">
+        {renderDetail()}
+      </Loader>
+    );
   }
 }
 

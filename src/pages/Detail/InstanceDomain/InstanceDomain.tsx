@@ -2,7 +2,6 @@ import React from 'react';
 import { RootState } from 'store/reducer';
 import { connect } from 'react-redux';
 import { Themeable, withTheme, VerticalGroup, HorizontalGroup, Button } from '@grafana/ui';
-import { DetailEntityPageProps } from '../DetailPage';
 import { InstanceDomainDetailState } from 'store/slices/search/slices/entity/state';
 import Loader from 'components/Loader/Loader';
 import {
@@ -18,17 +17,25 @@ import {
 import { FetchStatus } from 'store/slices/search/shared/state';
 import { EntityType } from 'models/endpoints/search';
 import Card from 'components/Card/Card';
+import { BookmarkItem } from 'store/slices/search/slices/bookmarks/state';
 
 const mapStateToProps = (state: RootState) => ({
   indom: (state.search.entity as InstanceDomainDetailState).indom,
   bookmarks: state.search.bookmarks,
 });
 
+export interface InstanceDomainDetailPageBasicProps {
+  onBookmark: (item: BookmarkItem) => void;
+  onUnbookmark: (item: BookmarkItem) => void;
+}
+
 export type InstanceDomainDetailPageReduxStateProps = ReturnType<typeof mapStateToProps>;
 
 export type InstanceDomainDetailPageReduxProps = InstanceDomainDetailPageReduxStateProps;
 
-export type InstanceDomainDetailPageProps = InstanceDomainDetailPageReduxProps & DetailEntityPageProps & Themeable;
+export type InstanceDomainDetailPageProps = InstanceDomainDetailPageReduxProps &
+  InstanceDomainDetailPageBasicProps &
+  Themeable;
 
 export class InstanceDomainDetailPage extends React.Component<InstanceDomainDetailPageProps, {}> {
   constructor(props: InstanceDomainDetailPageProps) {

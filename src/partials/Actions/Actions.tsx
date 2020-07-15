@@ -64,7 +64,7 @@ export class Actions extends React.Component<ActionsProps, {}> {
             onClick={openIndex}
             data-test="back-to-index"
           >
-            Back To Latest Searches &amp; Suggestions
+            Back To Bookmarks &amp; Latest Searches
           </Button>
         )}
         {showBackToPatternBtn && (

@@ -31,7 +31,7 @@ import {
   autosuggestSectionContainerFirst,
   autosuggestSectionTitle,
 } from './styles';
-import { querySearch, clearSearch } from 'store/slices/search/shared/actionCreators';
+import { querySearch } from 'store/slices/search/shared/actionCreators';
 import { RootState } from 'store/reducer';
 import { SearchEntity, AutocompleteSuggestion } from 'models/endpoints/search';
 import withServices, { WithServicesProps } from 'components/withServices/withServices';
@@ -42,7 +42,7 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, null, AnyAction>) =>
-  bindActionCreators({ querySearch, clearSearch }, dispatch);
+  bindActionCreators({ querySearch }, dispatch);
 
 export type SearchFormReduxStateProps = ReturnType<typeof mapStateToProps>;
 
@@ -52,7 +52,7 @@ export type SearchFormReduxProps = SearchFormReduxStateProps & SearchFormReduxDi
 
 export type SearchFormProps = SearchFormReduxProps & WithServicesProps & Themeable;
 
-interface SearchFormState {
+export interface SearchFormState {
   query: {
     pattern: string;
     entityFlags: SearchEntity;
@@ -88,9 +88,7 @@ export class SearchForm extends React.Component<SearchFormProps, SearchFormState
 
   constructor(props: SearchFormProps) {
     super(props);
-    if (props.query) {
-      this.setState({ query: props.query });
-    }
+    this.state = { ...this.state, query: props.query };
     this.autosuggestTheme = {
       container: autosuggestContainer(props.theme),
       containerOpen: autosuggestContainerOpen,
@@ -119,6 +117,22 @@ export class SearchForm extends React.Component<SearchFormProps, SearchFormState
     this.setEntityFlag = this.setEntityFlag.bind(this);
   }
 
+  componentDidUpdate(oldProps: SearchFormProps) {
+    const newProps = this.props;
+    if (
+      oldProps.query.pattern !== newProps.query.pattern ||
+      oldProps.query.entityFlags !== newProps.query.entityFlags
+    ) {
+      this.setState({
+        query: {
+          pattern: newProps.query.pattern,
+          entityFlags: newProps.query.entityFlags,
+        },
+        suggestions: [],
+      });
+    }
+  }
+
   setEntityFlag(entity: SearchEntity) {
     this.setState({
       query: {
@@ -133,8 +147,6 @@ export class SearchForm extends React.Component<SearchFormProps, SearchFormState
 
     if (this.state.query.pattern.trim().length) {
       this.props.querySearch({ ...this.state.query, pageNum: 1 });
-    } else {
-      this.props.clearSearch();
     }
   }
 
@@ -202,6 +214,7 @@ export class SearchForm extends React.Component<SearchFormProps, SearchFormState
       placeholder: 'Search Phrase',
       value: query.pattern,
       onChange: onInputChange,
+      'data-test': 'text-input',
     };
     return (
       <Autosuggest
@@ -215,6 +228,7 @@ export class SearchForm extends React.Component<SearchFormProps, SearchFormState
         // Actually disables suggestions completely
         shouldRenderSuggestions={allowSuggestions}
         inputProps={searchInputProps}
+        data-test="query-input"
       ></Autosuggest>
     );
   }
@@ -222,11 +236,11 @@ export class SearchForm extends React.Component<SearchFormProps, SearchFormState
   render() {
     const { onSubmit, metricFlag, instancesFlag, instanceDomainsFlag, setEntityFlag, renderSearchInput } = this;
     return (
-      <form className={searchContainer} onSubmit={onSubmit}>
+      <form className={searchContainer} onSubmit={onSubmit} data-test="form">
         <VerticalGroup spacing="sm">
           <div className={searchFormGroup}>
             <div className={searchBlockWrapper}>{renderSearchInput()}</div>
-            <Button className={searchSubmitBtn} variant="primary" size="md" type="submit">
+            <Button className={searchSubmitBtn} variant="primary" size="md" type="submit" data-test="submit-button">
               Search
             </Button>
           </div>

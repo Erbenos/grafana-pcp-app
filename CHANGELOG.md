@@ -107,3 +107,7 @@ Made a bunch of unit tests for components that are used across entire app. Parti
 ### 14.07.2020
 
 Made tests for most partials - not sure if SearchForm component should be tested at this point. Edited a lot of exports from all components so they are easier to test - having most props related interfaces proved handy. I made small tweak to displaying 'Similar metrics' - now even the metric that is currently opened will be shown. Tweaked passing Grafana theme in test files - I am just fetching the theme from Grafana itself, this saves me multiple Enzyme .dive() calls, no test is actually testing if components are themed according to current Grafana theme right now - there are other priorities.
+
+### 15.07.2020
+
+More tests for mostly page specific components. Not sure if I should test autocomplete features in &lt;SearchForm&gt;, since they are provided by 3rd party library. Also figured out what caused the weird Grafana related console warning produced when running tests - seems that importing an exported const of module A, which imported a const of module B and vice versa was what caused it. Since the logic of code was weird in these places as well, refactor that followed fixed the warnings. Fixed case when updating search query, by navigating to a different query, saved in query history, did not update query input to latest search.

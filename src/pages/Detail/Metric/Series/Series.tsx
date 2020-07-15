@@ -7,15 +7,16 @@ import { radioBtnGroupContainer } from 'pages/Detail/styles';
 import { MetricEntitySeries } from 'models/entities/metric';
 
 export interface SeriesProps {
+  initTab?: SeriesTabOpt;
   series: MetricEntitySeries;
 }
 
-interface SeriesState {
+export interface SeriesState {
   selectedOption: SeriesTabOpt;
   options: Array<SelectableValue<SeriesTabOpt>>;
 }
 
-enum SeriesTabOpt {
+export enum SeriesTabOpt {
   Labels = 'labels',
   Meta = 'meta',
 }
@@ -25,6 +26,9 @@ export class Series extends React.Component<SeriesProps, SeriesState> {
 
   constructor(props: SeriesProps) {
     super(props);
+    if (props.initTab) {
+      this.state = { ...this.state, selectedOption: props.initTab };
+    }
     this.setSelected = this.setSelected.bind(this);
     this.renderTab = this.renderTab.bind(this);
   }
@@ -46,12 +50,12 @@ export class Series extends React.Component<SeriesProps, SeriesState> {
     switch (selectedOption) {
       case SeriesTabOpt.Labels: {
         if (series.labels) {
-          return <Labels labels={series.labels} />;
+          return <Labels labels={series.labels} data-test="labels" />;
         }
         return <p>Doesn't have labels.</p>;
       }
       case SeriesTabOpt.Meta:
-        return <Meta meta={series.meta} />;
+        return <Meta meta={series.meta} data-test="meta" />;
       default:
         return;
     }
@@ -67,7 +71,9 @@ export class Series extends React.Component<SeriesProps, SeriesState> {
     const { state, renderTab, setSelected, props } = this;
     return (
       <VerticalGroup spacing="md">
-        <h3 title="Series">{props.series.series}</h3>
+        <h3 title="Series" data-test="series-name">
+          {props.series.series}
+        </h3>
         <div className={radioBtnGroupContainer}>
           <RadioButtonGroup
             options={state.options}
@@ -75,6 +81,7 @@ export class Series extends React.Component<SeriesProps, SeriesState> {
             value={state.selectedOption}
             onChange={setSelected}
             size="md"
+            data-test="tab-switcher"
             fullWidth
           />
         </div>

@@ -4,7 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { detailPageContainer } from './styles';
-import MetricDetailPage from './Metric/Metric';
+import MetricDetailPage, { MetricPreviewType, MetricDetailPreview } from './Metric/Metric';
 import InstanceDomainDetailPage from './InstanceDomain/InstanceDomain';
 import { RootState } from 'store/reducer';
 import { BookmarkItem } from 'store/slices/search/slices/bookmarks/state';
@@ -19,22 +19,6 @@ const dispatchProps = {
   addBookmark,
   removeBookmark,
 };
-
-export enum DetailPreviewType {
-  Graph,
-  Table,
-}
-
-export interface DetailPreview {
-  id: string;
-  type: DetailPreviewType;
-}
-
-export interface DetailEntityPageProps {
-  onBookmark: (item: BookmarkItem) => void;
-  onUnbookmark: (item: BookmarkItem) => void;
-  onPreview: (item: DetailPreview) => void;
-}
 
 export type DetailPageReduxStateProps = ReturnType<typeof mapStateToProps>;
 
@@ -61,7 +45,7 @@ export class DetailPage extends React.Component<DetailPageProps, DetailPageState
   constructor(props: DetailPageProps) {
     super(props);
     this.renderDetail = this.renderDetail.bind(this);
-    this.onPreview = this.onPreview.bind(this);
+    this.onMetricPreview = this.onMetricPreview.bind(this);
     this.onBookmark = this.onBookmark.bind(this);
     this.onUnbookmark = this.onUnbookmark.bind(this);
     this.locationSrv = getLocationSrv();
@@ -75,15 +59,15 @@ export class DetailPage extends React.Component<DetailPageProps, DetailPageState
     this.props.removeBookmark(item);
   }
 
-  onPreview(item: DetailPreview) {
+  onMetricPreview(item: MetricDetailPreview) {
     let dashboardName = '';
     let dashboardUid = '';
     switch (item.type) {
-      case DetailPreviewType.Graph:
+      case MetricPreviewType.Graph:
         dashboardName = 'graph-preview';
         dashboardUid = 'grafana-pcp-app-graph-preview';
         break;
-      case DetailPreviewType.Table:
+      case MetricPreviewType.Table:
         dashboardName = 'table-preview';
         dashboardUid = 'grafana-pcp-app-table-preview';
         break;
@@ -101,16 +85,23 @@ export class DetailPage extends React.Component<DetailPageProps, DetailPageState
   }
 
   renderDetail() {
-    const { props, onBookmark, onUnbookmark, onPreview } = this;
+    const { props, onBookmark, onUnbookmark, onMetricPreview } = this;
     if (!props.entity) {
       return <p>Entity state not initialized.</p>;
     }
     switch (props.entity.type) {
       case EntityType.Metric:
-        return <MetricDetailPage onBookmark={onBookmark} onUnbookmark={onUnbookmark} onPreview={onPreview} />;
+        return (
+          <MetricDetailPage
+            metric={props.entity.metric}
+            onBookmark={onBookmark}
+            onUnbookmark={onUnbookmark}
+            onPreview={onMetricPreview}
+          />
+        );
       case EntityType.Instance:
       case EntityType.InstanceDomain:
-        return <InstanceDomainDetailPage onBookmark={onBookmark} onUnbookmark={onUnbookmark} onPreview={onPreview} />;
+        return <InstanceDomainDetailPage onBookmark={onBookmark} onUnbookmark={onUnbookmark} />;
       default:
         return <p>Error rendering entity.</p>;
     }
