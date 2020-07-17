@@ -35,7 +35,6 @@ import { querySearch } from 'store/slices/search/shared/actionCreators';
 import { RootState } from 'store/reducer';
 import { SearchEntity, AutocompleteSuggestion } from 'models/endpoints/search';
 import withServices, { WithServicesProps } from 'components/withServices/withServices';
-import { autocompleteFetchEndpoint } from 'mocks/endpoints';
 
 const mapStateToProps = (state: RootState) => ({
   query: state.search.query,
@@ -160,7 +159,7 @@ export class SearchForm extends React.Component<SearchFormProps, SearchFormState
   }
 
   onSuggestionsFetchRequested(request: SuggestionsFetchRequestedParams): void {
-    autocompleteFetchEndpoint(request.value).then(result => {
+    this.props.services.searchService.autocomplete({ query: request.value }).then(result => {
       this.setState({
         suggestions: result,
       });

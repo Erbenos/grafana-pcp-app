@@ -6,7 +6,7 @@ import { FetchStatus } from 'store/slices/search/shared/state';
 import { initialView, ViewState } from 'store/slices/search/slices/view/state';
 import { initialHistory } from 'store/slices/search/slices/history/state';
 import { initialBookmarks, BookmarkItem } from 'store/slices/search/slices/bookmarks/state';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import { EntityType, SearchEntity } from 'models/endpoints/search';
 import { OpenDetailActionCreator } from 'store/slices/search/shared/actionCreators';
 import { ClearBookmarksActionCreator } from 'store/slices/search/slices/bookmarks/actionCreators';
@@ -45,8 +45,7 @@ describe('<Aside/>', () => {
   });
 
   test('renders without crashing', () => {
-    const wrapper = mount(<Aside {...asideProps} />);
-    wrapper.unmount();
+    shallow(<Aside {...asideProps} />);
   });
 
   test('renders bookmarks and search history on search page', () => {

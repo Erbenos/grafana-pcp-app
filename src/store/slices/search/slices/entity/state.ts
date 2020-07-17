@@ -25,11 +25,6 @@ export interface MetricDetailState {
   type: EntityType.Metric;
   metric: MetricDataState;
   siblings?: MetricSiblingsDataState;
-  // indom?: IndomDataState;
-}
-
-export interface InstanceDetailState {
-  type: EntityType.Instance;
 }
 
 export interface InstanceDomainDetailState {
@@ -37,6 +32,6 @@ export interface InstanceDomainDetailState {
   indom: IndomDataState;
 }
 
-export type EntityState = MetricDetailState | InstanceDetailState | InstanceDomainDetailState | null;
+export type EntityState = MetricDetailState | InstanceDomainDetailState | null;
 
 export const initialEntity = (): EntityState => null;

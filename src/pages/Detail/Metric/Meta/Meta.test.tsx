@@ -1,5 +1,5 @@
 import { Meta, MetaProps } from './Meta';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import React from 'react';
 
 describe('Metric <Meta/>', () => {
@@ -19,8 +19,7 @@ describe('Metric <Meta/>', () => {
   });
 
   test('renders without crashing', () => {
-    const wrapper = mount(<Meta {...metaProps} />);
-    wrapper.unmount();
+    shallow(<Meta {...metaProps} />);
   });
 
   test('displays pmid', () => {

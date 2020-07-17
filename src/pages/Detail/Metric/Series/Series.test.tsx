@@ -1,5 +1,5 @@
 import Series, { SeriesProps, SeriesTabOpt } from './Series';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import React from 'react';
 import { LabelsProps } from '../Labels/Labels';
 
@@ -27,8 +27,7 @@ describe('Metric <Series/>', () => {
   });
 
   test('renders without crashing', () => {
-    const wrapper = mount(<Series {...seriesProps} />);
-    wrapper.unmount();
+    shallow(<Series {...seriesProps} />);
   });
 
   test('renders series name', () => {

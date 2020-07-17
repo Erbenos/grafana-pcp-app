@@ -1,15 +1,15 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import {
   MetricDetailPage,
   MetricDetailPageReduxProps,
   MetricDetailPageProps,
   MetricDetailPageBasicProps,
-  MetricPreviewType,
 } from './Metric';
 import { EntityType } from 'models/endpoints/search';
 import { FetchStatus } from 'store/slices/search/shared/state';
 import { MetricEntity } from 'models/entities/metric';
+import { LoaderBasicProps } from 'components/Loader/Loader';
 
 describe('Detail Page <MetricDetailpage/>', () => {
   let mockReduxProps: MetricDetailPageReduxProps;
@@ -63,8 +63,12 @@ describe('Detail Page <MetricDetailpage/>', () => {
   });
 
   test('renders without crashing', () => {
-    const wrapper = mount(<MetricDetailPage {...metricDetailProps} />);
-    wrapper.unmount();
+    shallow(<MetricDetailPage {...metricDetailProps} />);
+  });
+
+  test('displays preview button', () => {
+    const wrapper = shallow(<MetricDetailPage {...metricDetailProps} />);
+    expect(wrapper.exists('[data-test="preview-button"]')).toBe(true);
   });
 
   test('can trigger preview with table dashboard for string metric type', () => {
@@ -74,7 +78,7 @@ describe('Detail Page <MetricDetailpage/>', () => {
     previewButton.simulate('click');
     const metricName = (metricDetailProps.metric.data as MetricEntity).name;
     const previewCallback: jest.Mock<typeof metricDetailProps.onPreview> = metricDetailProps.onPreview as any;
-    expect(previewCallback.mock.calls[0][0]).toEqual({ id: metricName, type: MetricPreviewType.Table });
+    expect(previewCallback.mock.calls[0][0]).toEqual({ id: metricName, type: 'table' });
     expect(previewCallback).toHaveBeenCalled();
   });
 
@@ -85,7 +89,7 @@ describe('Detail Page <MetricDetailpage/>', () => {
     previewButton.simulate('click');
     const metricName = (metricDetailProps.metric.data as MetricEntity).name;
     const previewCallback: jest.Mock<typeof metricDetailProps.onPreview> = metricDetailProps.onPreview as any;
-    expect(previewCallback.mock.calls[0][0]).toEqual({ id: metricName, type: MetricPreviewType.Graph });
+    expect(previewCallback.mock.calls[0][0]).toEqual({ id: metricName, type: 'graph' });
     expect(previewCallback).toHaveBeenCalled();
   });
 
@@ -123,25 +127,66 @@ describe('Detail Page <MetricDetailpage/>', () => {
     expect(unbookmarkCallback).toHaveBeenCalled();
   });
 
-  // TODO: finish these
+  test('displays title', () => {
+    const wrapper = shallow(<MetricDetailPage {...metricDetailProps} />);
+    const title = wrapper.find('[data-test="title"]');
+    expect(title.exists()).toBe(true);
+    expect(title.text()).toBe(metricDetailProps.metric.data?.name);
+  });
 
-  // test('displays preview button', () => {});
+  test('displays description', () => {
+    const wrapper = shallow(<MetricDetailPage {...metricDetailProps} />);
+    const description = wrapper.find('[data-test="description"]');
+    expect(description.exists());
+  });
 
-  // test('displays title', () => {});
+  test('description prioritizes long help text', () => {
+    const wrapper = shallow(<MetricDetailPage {...metricDetailProps} />);
+    const description = wrapper.find('[data-test="description"]');
+    expect(description.text()).toBe(metricDetailProps.metric.data?.help);
+  });
 
-  // test('displays description', () => {});
+  test('description falls back to oneline help when long help text is not available', () => {
+    (metricDetailProps.metric.data as MetricEntity).help = '';
+    const wrapper = shallow(<MetricDetailPage {...metricDetailProps} />);
+    const description = wrapper.find('[data-test="description"]');
+    expect(description.text()).toBe(metricDetailProps.metric.data?.oneline);
+  });
 
-  // test('description prioritizes long help text in description', () => {});
+  test('displays series', () => {
+    const wrapper = shallow(<MetricDetailPage {...metricDetailProps} />);
+    const series = wrapper.find('[data-test="series"]');
+    expect(series.length).toBe(metricDetailProps.metric.data?.series.length);
+  });
 
-  // test('description falls back to oneline help when long help text is not available', () => {});
+  test('handles lack of metric data gracefully', () => {
+    metricDetailProps.metric.data = null;
+    shallow(<MetricDetailPage {...metricDetailProps} />);
+  });
 
-  // test('displays series', () => {});
+  test('handles error while fetching metric data gracefully', () => {
+    metricDetailProps.metric.data = null;
+    metricDetailProps.metric.status = FetchStatus.ERROR;
+    shallow(<MetricDetailPage {...metricDetailProps} />);
+  });
 
-  // test('handles lack of metric data gracefully', () => {});
+  test('handles lack of series gracefully', () => {
+    (metricDetailProps.metric.data as MetricEntity).series = [];
+    shallow(<MetricDetailPage {...metricDetailProps} />);
+  });
 
-  // test('handles lack of series gracefully', () => {});
+  test('shows loader when metric is being loaded', () => {
+    metricDetailProps.metric.status = FetchStatus.PENDING;
+    const wrapper = shallow(<MetricDetailPage {...metricDetailProps} />);
+    const loader = wrapper.find('[data-test="loader"]');
+    const loaderProps: LoaderBasicProps = loader.props() as any;
+    expect(loaderProps.loaded).toBe(false);
+  });
 
-  // test('shows loader when metric is being loaded', () => {});
-
-  // test('hides loader when metric is loaded', () => {});
+  test('hides loader when metric is loaded', () => {
+    const wrapper = shallow(<MetricDetailPage {...metricDetailProps} />);
+    const loader = wrapper.find('[data-test="loader"]');
+    const loaderProps: LoaderBasicProps = loader.props() as any;
+    expect(loaderProps.loaded).toBe(true);
+  });
 });

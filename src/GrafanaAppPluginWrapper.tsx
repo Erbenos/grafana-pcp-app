@@ -86,7 +86,7 @@ class GrafanaAppPluginWrapper extends React.Component<AppRootProps, AppRootState
           {loaded => (
             <Loader loaded={loaded}>
               <ServicesContext.Provider value={services}>
-                <App {...this.props} />
+                <App />
               </ServicesContext.Provider>
             </Loader>
           )}

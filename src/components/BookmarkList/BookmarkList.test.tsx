@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import { BookmarkItem } from 'store/slices/search/slices/bookmarks/state';
 import { EntityType } from 'models/endpoints/search';
 import { BookmarkList } from './BookmarkList';
@@ -25,8 +25,7 @@ describe('<BookmarkList/>', () => {
   ];
 
   test('renders without crashing', () => {
-    const component = mount(<BookmarkList bookmarks={[]} {...placeholderCallbacks} theme={theme} />);
-    component.unmount();
+    shallow(<BookmarkList bookmarks={[]} {...placeholderCallbacks} theme={theme} />);
   });
 
   test('renders multiple columns by default', () => {

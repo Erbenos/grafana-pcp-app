@@ -4,12 +4,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { detailPageContainer } from './styles';
-import MetricDetailPage, { MetricPreviewType, MetricDetailPreview } from './Metric/Metric';
-import InstanceDomainDetailPage from './InstanceDomain/InstanceDomain';
 import { RootState } from 'store/reducer';
 import { BookmarkItem } from 'store/slices/search/slices/bookmarks/state';
 import { addBookmark, removeBookmark } from 'store/slices/search/slices/bookmarks/actionCreators';
 import { EntityType } from 'models/endpoints/search';
+import MetricDetailPage, { MetricDetailPreview } from './Metric/Metric';
+import InstanceDomainDetailPage from './InstanceDomain/InstanceDomain';
 
 const mapStateToProps = (state: RootState) => ({
   entity: state.search.entity,
@@ -63,11 +63,11 @@ export class DetailPage extends React.Component<DetailPageProps, DetailPageState
     let dashboardName = '';
     let dashboardUid = '';
     switch (item.type) {
-      case MetricPreviewType.Graph:
+      case 'graph':
         dashboardName = 'graph-preview';
         dashboardUid = 'grafana-pcp-app-graph-preview';
         break;
-      case MetricPreviewType.Table:
+      case 'table':
         dashboardName = 'table-preview';
         dashboardUid = 'grafana-pcp-app-table-preview';
         break;
@@ -97,11 +97,18 @@ export class DetailPage extends React.Component<DetailPageProps, DetailPageState
             onBookmark={onBookmark}
             onUnbookmark={onUnbookmark}
             onPreview={onMetricPreview}
+            data-test="metric-detail"
           />
         );
-      case EntityType.Instance:
       case EntityType.InstanceDomain:
-        return <InstanceDomainDetailPage onBookmark={onBookmark} onUnbookmark={onUnbookmark} />;
+        return (
+          <InstanceDomainDetailPage
+            indom={props.entity.indom}
+            onBookmark={onBookmark}
+            onUnbookmark={onUnbookmark}
+            data-test="instance-domain-detail"
+          />
+        );
       default:
         return <p>Error rendering entity.</p>;
     }

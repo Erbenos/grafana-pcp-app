@@ -111,3 +111,12 @@ Made tests for most partials - not sure if SearchForm component should be tested
 ### 15.07.2020
 
 More tests for mostly page specific components. Not sure if I should test autocomplete features in &lt;SearchForm&gt;, since they are provided by 3rd party library. Also figured out what caused the weird Grafana related console warning produced when running tests - seems that importing an exported const of module A, which imported a const of module B and vice versa was what caused it. Since the logic of code was weird in these places as well, refactor that followed fixed the warnings. Fixed case when updating search query, by navigating to a different query, saved in query history, did not update query input to latest search.
+
+### 18.07.2020
+
+Finished all unit tests for React components (with an exception of GrafanaAppPluginWrapper). The weird Grafana warning has reappeared (see below), but this time I have tracked it to be caused by indeed importing some stuff from Grafana packages. Ideally would create minimum reproducible case and add issue to Grafana repo. The test suites that are hit by this issue are easily traceble - they take MUCH longer than any other. For now I am going to leave them in, as fixing them would be be a workaround of what I think is caused by Grafana source and would need time consuming debugging and needless refactor of non-trivial scope.
+
+```
+  console.warn node_modules/@grafana/ui/index.development.js:192163
+    There are multiple versions of G2. Version 3.5.12's reference is 'window.G2_3'
+```

@@ -13,7 +13,8 @@ import SearchResult from 'components/SearchResult/SearchResult';
 import { stripHtml } from 'utils/utils';
 
 const mapStateToProps = (state: RootState) => ({
-  search: state.search,
+  result: state.search.result,
+  query: state.search.query,
 });
 
 const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, null, AnyAction>) =>
@@ -38,7 +39,7 @@ export class SearchPage extends React.Component<SearchPageProps, {}> {
   }
 
   get pagesCount() {
-    const { result } = this.props.search;
+    const { result } = this.props;
     if (result?.data) {
       return Math.ceil(result.data.total / result.data.limit);
     }
@@ -46,7 +47,7 @@ export class SearchPage extends React.Component<SearchPageProps, {}> {
   }
 
   get currentPage() {
-    const { result } = this.props.search;
+    const { result } = this.props;
     if (result?.data) {
       return result.data.offset / result.data.limit + 1;
     }
@@ -54,8 +55,8 @@ export class SearchPage extends React.Component<SearchPageProps, {}> {
   }
 
   onPaginationClick(pageNum: number) {
-    const { search } = this.props;
-    this.props.querySearch({ ...search.query, pageNum });
+    const { query } = this.props;
+    this.props.querySearch({ ...query, pageNum });
   }
 
   onDetailClick(entity: TextItemResponse) {
@@ -65,27 +66,28 @@ export class SearchPage extends React.Component<SearchPageProps, {}> {
   }
 
   renderMatchesDesc() {
-    const { theme, search } = this.props;
-    const { result } = search;
+    const { theme, result } = this.props;
     if (!result?.data) {
       return;
     }
     return (
       <div className={searchPageMatchesDesc(theme)}>
-        <strong>{result.data.total}</strong> results
+        <strong data-test="total">{result.data.total}</strong> results
       </div>
     );
   }
 
   renderSearchElapsedTime() {
-    const { theme, search } = this.props;
-    const { result } = search;
+    const { theme, result } = this.props;
     if (!result?.data) {
       return;
     }
     return (
       <div className={searchPageElapsed(theme)}>
-        Elapsed: <strong>{result.data.elapsed}s</strong>
+        Elapsed:{' '}
+        <strong>
+          <span data-test="elapsed">{result.data.elapsed}</span>s
+        </strong>
       </div>
     );
   }
@@ -100,10 +102,11 @@ export class SearchPage extends React.Component<SearchPageProps, {}> {
       renderMatchesDesc,
       renderSearchElapsedTime,
     } = this;
-    if (!props.search.result) {
+    const { result, query } = props;
+    if (!result) {
       return <p>No result data.</p>;
     }
-    const { data, status } = props.search.result;
+    const { data, status } = result;
     switch (status) {
       case FetchStatus.PENDING:
         if (!data) {
@@ -121,13 +124,18 @@ export class SearchPage extends React.Component<SearchPageProps, {}> {
                 {renderSearchElapsedTime()}
               </HorizontalGroup>
               <VerticalGroup spacing="lg">
-                {data.results.map(x => (
-                  <SearchResult item={x} openDetail={entity => onDetailClick(entity)} />
+                {data.results.map((x, i) => (
+                  <SearchResult data-test={`search-result-${i}`} key={i} item={x} openDetail={onDetailClick} />
                 ))}
               </VerticalGroup>
               {pagesCount > 1 && (
                 <div className={paginationContainer}>
-                  <Pagination numberOfPages={pagesCount} currentPage={currentPage} onNavigate={onPaginationClick} />
+                  <Pagination
+                    data-test="pagination"
+                    numberOfPages={pagesCount}
+                    currentPage={currentPage}
+                    onNavigate={onPaginationClick}
+                  />
                 </div>
               )}
             </VerticalGroup>
@@ -135,7 +143,7 @@ export class SearchPage extends React.Component<SearchPageProps, {}> {
         }
         return (
           <VerticalGroup spacing="lg">
-            <h4>Results for '{props.search.query.pattern}':</h4>
+            <h4>Results for '{query.pattern}':</h4>
             <p>There are no results.</p>
           </VerticalGroup>
         );
@@ -149,7 +157,11 @@ export class SearchPage extends React.Component<SearchPageProps, {}> {
 
   render() {
     const { renderResults, props } = this;
-    return <Loader loaded={props.search.result?.status !== FetchStatus.PENDING}>{renderResults()}</Loader>;
+    return (
+      <Loader data-test="loader" loaded={props.result?.status !== FetchStatus.PENDING}>
+        {renderResults()}
+      </Loader>
+    );
   }
 }
 

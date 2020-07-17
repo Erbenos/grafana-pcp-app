@@ -2,7 +2,7 @@ import React from 'react';
 import { RootState } from 'store/reducer';
 import { connect } from 'react-redux';
 import { Themeable, withTheme, VerticalGroup, HorizontalGroup, Button } from '@grafana/ui';
-import { InstanceDomainDetailState } from 'store/slices/search/slices/entity/state';
+import { IndomDataState } from 'store/slices/search/slices/entity/state';
 import Loader from 'components/Loader/Loader';
 import {
   detailPageDescription,
@@ -20,11 +20,11 @@ import Card from 'components/Card/Card';
 import { BookmarkItem } from 'store/slices/search/slices/bookmarks/state';
 
 const mapStateToProps = (state: RootState) => ({
-  indom: (state.search.entity as InstanceDomainDetailState).indom,
   bookmarks: state.search.bookmarks,
 });
 
 export interface InstanceDomainDetailPageBasicProps {
+  indom: IndomDataState;
   onBookmark: (item: BookmarkItem) => void;
   onUnbookmark: (item: BookmarkItem) => void;
 }
@@ -108,13 +108,20 @@ export class InstanceDomainDetailPage extends React.Component<InstanceDomainDeta
     const { isBookmarked, onBookmark, onUnbookmark } = this;
     if (!isBookmarked) {
       return (
-        <Button variant="link" size="md" icon="star" className={detailPageBtn} onClick={onBookmark}>
+        <Button
+          variant="link"
+          size="md"
+          icon="star"
+          className={detailPageBtn}
+          onClick={onBookmark}
+          data-test="bookmark-button"
+        >
           Bookmark This Result
         </Button>
       );
     } else {
       return (
-        <Button variant="destructive" size="md" icon="trash-alt" onClick={onUnbookmark}>
+        <Button variant="destructive" size="md" icon="trash-alt" onClick={onUnbookmark} data-test="unbookmark-button">
           Unbookmark This Result
         </Button>
       );
@@ -133,15 +140,17 @@ export class InstanceDomainDetailPage extends React.Component<InstanceDomainDeta
         <Card background="strong">
           <article className={detailPageItem}>
             <header className={detailPageHeader}>
-              <h2 className={detailPageTitle}>{data.indom}</h2>
+              <h2 className={detailPageTitle} data-test="title">
+                {data.indom}
+              </h2>
             </header>
-            <div className={detailPageDescription}>
-              <p>{renderDesc()}</p>
+            <div className={detailPageDescription} data-test="description">
+              {renderDesc()}
             </div>
             <div className={detailPageActions}>
-              <VerticalGroup spacing="lg" justify="flex-end">
-                <HorizontalGroup spacing="lg">{renderBookmarkBtn()}</HorizontalGroup>
-              </VerticalGroup>
+              <HorizontalGroup spacing="lg" justify="space-between">
+                {renderBookmarkBtn()}
+              </HorizontalGroup>
             </div>
           </article>
         </Card>
@@ -150,9 +159,10 @@ export class InstanceDomainDetailPage extends React.Component<InstanceDomainDeta
             <VerticalGroup spacing="md">
               <h4>Instances:</h4>
               <ul className={instanceDomainItemList}>
-                {data.instances.map(instance => (
-                  <li>
-                    <strong>{instance.name}</strong> ({instance.instance})
+                {data.instances.map((instance, i) => (
+                  <li key={i} data-test={`${instance.name}-record`}>
+                    <strong data-test="instance-name">{instance.name}</strong>{' '}
+                    <span data-test="instance-value">{instance.instance}</span>
                   </li>
                 ))}
               </ul>
@@ -167,7 +177,11 @@ export class InstanceDomainDetailPage extends React.Component<InstanceDomainDeta
   render() {
     const { renderDetail, props } = this;
     const { indom } = props;
-    return <Loader loaded={indom.status !== FetchStatus.PENDING}>{renderDetail()}</Loader>;
+    return (
+      <Loader loaded={indom.status !== FetchStatus.PENDING} data-test="loader">
+        {renderDetail()}
+      </Loader>
+    );
   }
 }
 

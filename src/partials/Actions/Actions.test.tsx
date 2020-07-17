@@ -2,7 +2,7 @@ import { QueryState, initialQuery } from 'store/slices/search/slices/query/state
 import { ViewState, initialView } from 'store/slices/search/slices/view/state';
 import { Actions } from './Actions';
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import { QuerySearchActionCreator } from 'store/slices/search/shared/actionCreators';
 import { SetViewActionCreator } from 'store/slices/search/slices/view/actionCreators';
 import { SearchEntity } from 'models/endpoints/search';
@@ -37,21 +37,16 @@ describe('<Actions/>', () => {
   });
 
   test('renders without crashing', () => {
-    const wrapper = mount(<Actions {...mockReduxProps} />);
-    wrapper.unmount();
+    shallow(<Actions {...mockReduxProps} />);
   });
 
   test('displays back to index on non-index page', () => {
     const viewSearch: ViewState = ViewState.Search;
-    const wrapperSearch = shallow(<Actions {...{ ...mockReduxProps, view: viewSearch }} />)
-      .dive()
-      .dive();
+    const wrapperSearch = shallow(<Actions {...{ ...mockReduxProps, view: viewSearch }} />);
     expect(wrapperSearch.exists('[data-test="back-to-index"]')).toBe(true);
 
     const viewDetail: ViewState = ViewState.Search;
-    const wrapperDetail = shallow(<Actions {...{ ...mockReduxProps, view: viewDetail }} />)
-      .dive()
-      .dive();
+    const wrapperDetail = shallow(<Actions {...{ ...mockReduxProps, view: viewDetail }} />);
     expect(wrapperDetail.exists('[data-test="back-to-index"]')).toBe(true);
   });
 

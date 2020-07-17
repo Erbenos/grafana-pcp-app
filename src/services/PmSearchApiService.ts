@@ -1,7 +1,15 @@
 import { BackendSrv } from '@grafana/runtime';
 import { DataSourceInstanceSettings } from '@grafana/data';
 import { timeout } from 'utils/utils';
-import { TextQueryParams, TextResponse, AutocompleteQueryParams, AutocompleteResponse } from 'models/endpoints/search';
+import {
+  TextQueryParams,
+  TextResponse,
+  AutocompleteQueryParams,
+  AutocompleteResponse,
+  SearchMaybeResponse,
+  TextMaybeResponse,
+  SearchNoRecordResponse,
+} from 'models/endpoints/search';
 import Config from 'config/config';
 
 class PmSearchApiService {
@@ -28,7 +36,18 @@ class PmSearchApiService {
     return (PmSearchApiService.requestId++).toString();
   }
 
-  async autocomplete(params: AutocompleteQueryParams): Promise<AutocompleteResponse | null> {
+  static isNoRecordResponse(response: SearchMaybeResponse) {
+    if (
+      typeof response === 'object' &&
+      (response as { [key: string]: any }).success !== undefined &&
+      Object.keys(response).length === 1
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  async autocomplete(params: AutocompleteQueryParams): Promise<AutocompleteResponse> {
     const { headers, getRequestId, baseUrl, backendSrv } = this;
     const getParams = new URLSearchParams();
     getParams.append('query', params.query);
@@ -46,7 +65,7 @@ class PmSearchApiService {
       const response: AutocompleteResponse = await timeout(backendSrv.request(options), Config.REQUEST_TIMEOUT);
       return response;
     } catch {
-      return null;
+      return [];
     }
   }
 
@@ -81,16 +100,24 @@ class PmSearchApiService {
     };
     try {
       // TODO: replace monkey patched limit/offset
-      const response: Omit<TextResponse, 'limit' | 'offset'> = await timeout(
-        backendSrv.request(options),
-        Config.REQUEST_TIMEOUT
-      );
+      const response: TextMaybeResponse = await timeout(backendSrv.request(options), Config.REQUEST_TIMEOUT);
+      if (PmSearchApiService.isNoRecordResponse(response)) {
+        // monkey patch
+        return {
+          elapsed: 0,
+          total: 0,
+          results: [],
+          limit: params.limit ? params.limit : 0,
+          offset: params.offset ? params.offset : 0,
+        };
+      }
       return {
-        ...response,
+        ...(response as Exclude<TextResponse, SearchNoRecordResponse>),
         limit: params.limit ? params.limit : 0,
         offset: params.offset ? params.offset : 0,
       };
     } catch {
+      // monkey patch since API just returns { success: "true" }
       return null;
     }
   }

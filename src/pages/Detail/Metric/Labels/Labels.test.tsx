@@ -1,5 +1,5 @@
 import { Labels, LabelsProps } from './Labels';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import React from 'react';
 
 describe('Metric <Labels/>', () => {
@@ -19,8 +19,7 @@ describe('Metric <Labels/>', () => {
   });
 
   test('renders without crashing', () => {
-    const wrapper = mount(<Labels {...labelsProps} />);
-    wrapper.unmount();
+    shallow(<Labels {...labelsProps} />);
   });
 
   test('displays arbitrary labels', () => {

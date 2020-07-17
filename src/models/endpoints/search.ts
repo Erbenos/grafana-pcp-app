@@ -12,6 +12,10 @@ export enum EntityType {
   InstanceDomain = 'indom',
 }
 
+export interface SearchNoRecordResponse {
+  success: boolean;
+}
+
 export interface AutocompleteQueryParams {
   query: string;
   limit?: number;
@@ -59,3 +63,7 @@ export interface TextResponse {
   limit: number;
   offset: number;
 }
+
+export type TextMaybeResponse = TextResponse | SearchNoRecordResponse;
+
+export type SearchMaybeResponse = TextMaybeResponse;

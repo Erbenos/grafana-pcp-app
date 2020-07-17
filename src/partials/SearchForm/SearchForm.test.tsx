@@ -6,12 +6,13 @@ import PmSeriesApiService from 'services/PmSeriesApiService';
 import EntityService from 'services/EntityDetailService';
 import { Services } from 'services/services';
 import { SearchForm, SearchFormReduxProps, SearchFormProps, SearchFormState } from './SearchForm';
-import { SearchEntity } from 'models/endpoints/search';
+import { SearchEntity, AutocompleteSuggestion } from 'models/endpoints/search';
 import { GrafanaThemeType } from '@grafana/data';
 import { getTheme } from '@grafana/ui';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import React from 'react';
 import { QuerySearchActionCreator } from 'store/slices/search/shared/actionCreators';
+import { AutosuggestPropsSingleSection } from 'react-autosuggest';
 
 describe('<SearchForm/>', () => {
   let mockReduxProps: SearchFormReduxProps;
@@ -50,8 +51,7 @@ describe('<SearchForm/>', () => {
   });
 
   test('renders without crashing', () => {
-    const wrapper = mount(<SearchForm {...searchFormProps} />);
-    wrapper.unmount();
+    shallow(<SearchForm {...searchFormProps} />);
   });
 
   test('displays query input', () => {
@@ -83,7 +83,17 @@ describe('<SearchForm/>', () => {
     expect(state.query.entityFlags).toBe(newQuery.entityFlags);
   });
 
-  // TODO: missing <Autosuggest>, how to test?
+  test('suggestions can attempt to fetch items', () => {
+    const wrapper = shallow(<SearchForm {...searchFormProps} />);
+    const autosuggest = wrapper.find('[data-test="query-input"]');
+    const autosuggestProps: AutosuggestPropsSingleSection<AutocompleteSuggestion> = autosuggest.props() as any;
+    const mockQuery = { reason: 'input-changed', value: 'disk' };
+    const autocompleteMock: jest.Mock = searchFormProps.services.searchService.autocomplete as any;
+    autocompleteMock.mockReturnValue(Promise.resolve([]));
+    autosuggestProps.onSuggestionsFetchRequested({ reason: 'input-changed', value: 'disk' });
+    expect(autocompleteMock.mock.calls[0][0]).toEqual({ query: mockQuery.value });
+    expect(autocompleteMock).toHaveBeenCalled();
+  });
 
   test('submiting without query pattern doesnt trigger search', () => {
     const wrapper = shallow(<SearchForm {...searchFormProps} />);

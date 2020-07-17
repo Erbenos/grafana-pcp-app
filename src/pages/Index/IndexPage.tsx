@@ -45,6 +45,7 @@ export class IndexPage extends React.Component<IndexPageProps, {}> {
               bookmarks={props.bookmarks}
               onBookmarkClick={props.openDetail}
               onClearBookmarksClick={props.clearBookmarks}
+              data-test="bookmark-list"
             />
           </Card>
           <Card background="strong">
@@ -54,6 +55,7 @@ export class IndexPage extends React.Component<IndexPageProps, {}> {
               searchHistory={props.searchHistory}
               onSearchHistoryClick={props.querySearch}
               onClearSearchHistoryClick={props.clearSearchHistory}
+              data-test="search-history-list"
             />
           </Card>
         </VerticalGroup>

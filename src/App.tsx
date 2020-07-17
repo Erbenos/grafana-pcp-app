@@ -1,5 +1,4 @@
 import { RootState } from 'store/reducer';
-import { AppRootProps } from '@grafana/data';
 import React from 'react';
 import { ViewState } from 'store/slices/search/slices/view/state';
 import DetailPage from 'pages/Detail/DetailPage';
@@ -17,7 +16,7 @@ const mapStateToProps = (state: RootState) => ({
 
 export type AppReduxStateProps = ReturnType<typeof mapStateToProps>;
 
-export type AppProps = AppReduxStateProps & AppRootProps;
+export type AppProps = AppReduxStateProps;
 
 export class App extends React.Component<AppProps, {}> {
   constructor(props: AppProps) {
@@ -29,11 +28,11 @@ export class App extends React.Component<AppProps, {}> {
 
     switch (view) {
       case ViewState.Detail:
-        return <DetailPage />;
+        return <DetailPage data-test="detail-page" />;
       case ViewState.Search:
-        return <SearchPage />;
+        return <SearchPage data-test="search-page" />;
       case ViewState.Index:
-        return <IndexPage />;
+        return <IndexPage data-test="index-page" />;
       default:
         return;
     }
@@ -42,9 +41,9 @@ export class App extends React.Component<AppProps, {}> {
   render() {
     return (
       <div className={appLayout}>
-        <SearchForm />
-        <Actions />
-        <Aside />
+        <SearchForm data-test="search-form" />
+        <Actions data-test="actions" />
+        <Aside data-test="aside" />
         {this.renderPageComponent()}
       </div>
     );
