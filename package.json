@@ -45,7 +45,7 @@
     "@types/redux-persist-transform-filter": "^0.0.4",
     "@types/redux-thunk": "^2.1.0",
     "emotion": "^10.0.27",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.23",
     "query-string": "^6.12.1",
     "querystring": "^0.2.0",
     "react-autosuggest": "^10.0.2",
